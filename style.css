@@ -7,6 +7,12 @@ body > .container {
   padding-top: 4vh;
 }
 
+.container.container-dark {
+  background: #3870b3;
+  color: #fff;
+  font-size: 2em;
+}
+
 h1, h2, h3, h4, h5 {
   font-family: 'Roboto', sans-serif;
   text-align: center;
