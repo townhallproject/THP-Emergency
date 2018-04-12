@@ -48,6 +48,10 @@ p {
   background-color:rgba(0,0,0,0.0);
 }
 
+#map.leaflet-container .filter-dropshadow {
+  filter: url(#filter-dropshadow);
+}
+
 .mocCounts {
   text-align: center;
   font-size: 2.5em;

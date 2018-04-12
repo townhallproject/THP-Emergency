@@ -29,7 +29,7 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
   });
   var MoCsByState = mapToStateDict(MoCs);
 
-  var geoJsonLayer = new L.GeoJSON.AJAX("states.geojson", {
+  var statesLayer = new L.GeoJSON.AJAX("states.geojson", {
     middleware:function(stateGeoJson) {
       stateGeoJson.features.forEach(function(state) {
         state.properties.MoCs = MoCsByState[state.properties.name];
@@ -40,7 +40,16 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
       return setStyle(state);
     }
   });
-  geoJsonLayer.addTo(map);
+  var outlineLayer = new L.GeoJSON.AJAX("outline.geojson", {
+    style: {
+      weight: 2,
+      opacity: 0.25,
+      color: 'black',
+      className: 'filter-dropshadow'
+    }
+  });
+  statesLayer.addTo(map);
+  outlineLayer.addTo(map);
 
   populateGroups(mapToGroups(MoCs));
 });
