@@ -11,10 +11,17 @@ h1.title {
   font-weight: 900;
   font-size: 4em;
   text-transform: uppercase;
+  margin-top: 4vh;
+  height: 8vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 h3.callToAction {
   font-size: 2.5em;
+  margin-top: 2vh;
+  height: 4vh;
 }
 
 p {
@@ -32,6 +39,7 @@ p {
 .mocCounts {
   text-align: center;
   font-size: 2.5em;
+  height: 56vh;
 }
 
 .mocCounts-opposed {
@@ -103,7 +111,6 @@ p {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    font-weight: 900;
     font-size: 3em;
   }
 
