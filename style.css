@@ -1,3 +1,12 @@
+body {
+  background: #f2f2f2;
+}
+
+body > .container {
+  background: #fff;
+  padding-top: 4vh;
+}
+
 h1, h2, h3, h4, h5 {
   font-family: 'Roboto', sans-serif;
   text-align: center;
@@ -11,7 +20,6 @@ h1.title {
   font-weight: 900;
   font-size: 4em;
   text-transform: uppercase;
-  margin-top: 4vh;
   height: 8vh;
   display: flex;
   flex-direction: column;
@@ -39,7 +47,7 @@ p {
 .mocCounts {
   text-align: center;
   font-size: 2.5em;
-  height: 56vh;
+  height: 57vh;
 }
 
 .mocCounts-opposed {
@@ -61,7 +69,7 @@ p {
 .mocCounts .photos {
   width: 250px;
   height: 180px;
-  margin: 5vh auto 0 auto;
+  margin: 2.5vh auto;
   position: relative;
 }
 
@@ -101,12 +109,12 @@ p {
 .number {
   font-family: 'Merriweather', serif;
   font-size: 2.25em;
+  min-height: 1.5em;
 }
 
 
 @media (min-width: 992px) { 
   h1.title {
-    margin-top: 4vh;
     height: 5vh;
     display: flex;
     flex-direction: column;
@@ -115,17 +123,18 @@ p {
   }
 
   h3.callToAction {
-    margin-top: 1vh;
+    margin-top: 1.5vh;
     height: 4vh;
     font-size: 2.25em;
   }
 
   #map {
     height: 40vh;
+    margin: 3vh 0 2vh 0;
   }
 
   .mocCounts {
-    height: 47vh;
+    height: 41vh;
     font-size: 2em;
   }
 
