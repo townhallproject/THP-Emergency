@@ -42,6 +42,7 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
   });
   geoJsonLayer.addTo(map);
 
+  populateGroups(mapToGroups(MoCs));
 });
 
 function mapToStateDict(MoCs) {
@@ -83,4 +84,17 @@ function mapToGroups(MoCs) {
     unknown: MoCs.filter(function(MoC) { return MoC.party === "Republican" && MoC.type === "sen"; }),
     support: MoCs.filter(function(MoC) { return MoC.party === "Republican" && MoC.type === "rep"; })
   };
+}
+
+function populateGroups(groups) {
+  console.log(groups)
+  Object.keys(groups).forEach(function(key) {
+    document.getElementById("count-" + key).innerHTML = groups[key].length;
+    var photoContainer = document.getElementById("photos-" + key);
+    var membersToDisplay = groups[key].sort(function(a, b){return parseInt(b.seniority) - parseInt(a.seniority)})
+               .slice(0, 15)
+               .forEach(function(MoC) {
+                  photoContainer.innerHTML += '<img src="//www.govtrack.us/data/photos/' + MoC.govtrack_id + '-50px.jpeg" />';
+    });
+  });
 }
