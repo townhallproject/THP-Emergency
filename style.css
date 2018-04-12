@@ -1,0 +1,64 @@
+h1, h2, h3, h4, h5 {
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+}
+
+strong {
+  font-weight: 800;
+}
+
+h1.title {
+  font-weight: 900;
+  font-size: 4em;
+  text-transform: uppercase;
+}
+
+h3.callToAction {
+  font-size: 2.5em;
+}
+
+p {
+  font-family: 'Open Sans', sans-serif;
+}
+
+#map {
+  min-height: 25vh;
+}
+
+#map.leaflet-container {
+  background-color:rgba(0,0,0,0.0);
+}
+
+.mocCounts {
+  text-align: center;
+  font-size: 2.5em;
+}
+
+
+@media (min-width: 992px) { 
+  h1.title {
+    margin-top: 4vh;
+    height: 5vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 3em;
+  }
+
+  h3.callToAction {
+    margin-top: 1vh;
+    height: 4vh;
+    font-size: 2.25em;
+  }
+
+  #map {
+    height: 40vh;
+  }
+
+  .mocCounts {
+    height: 47vh;
+    font-size: 2em;
+  }
+
+}
