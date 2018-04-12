@@ -36,6 +36,9 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
       });
       return stateGeoJson;
     },
+    style: function(state) {
+      return setStyle(state);
+    }
   });
   geoJsonLayer.addTo(map);
 
@@ -51,6 +54,27 @@ function mapToStateDict(MoCs) {
   }, {});
 }
 
+function setStyle(state) {
+  return {
+    fillColor: fillColor(state),
+    weight: 2,
+    opacity: 1,
+    color: 'white',
+    fillOpacity: 1
+  };
+}
+
+function fillColor(state) {
+  // TODO Replace with field relating to crisis
+  var d = state.properties.MoCs.filter(function(MoC) {
+        return MoC.party === "Republican";
+    }).length / state.properties.MoCs.length;
+
+  return  d > 0.75  ? '#c1001a' :
+          d > 0.50  ? '#cecece' :
+          d > 0.25  ? '#84b4d6' :
+                      '#2a70b1';
+}
 
 function mapToGroups(MoCs) {
   return {
