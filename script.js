@@ -88,11 +88,27 @@ function fillColor(state) {
 
 function mapToGroups(MoCs) {
   return {
-    opposed: MoCs.filter(function(MoC) { return MoC.party === "Democratic" && MoC.type === "rep"; }),
-    concerned: MoCs.filter(function(MoC) { return MoC.party === "Democratic" && MoC.type === "sen"; }),
-    unknown: MoCs.filter(function(MoC) { return MoC.party === "Republican" && MoC.type === "sen"; }),
-    support: MoCs.filter(function(MoC) { return MoC.party === "Republican" && MoC.type === "rep"; })
+    opposed: MoCs.filter(filterOpposed),
+    concerned: MoCs.filter(filterConcerned),
+    unknown: MoCs.filter(filterUnknown),
+    support: MoCs.filter(filterSupport)
   };
+}
+
+function filterOpposed(MoC) {
+  return MoC.party === "Democratic" && MoC.type === "rep";
+}
+
+function filterConcerned(MoC) {
+  return MoC.party === "Democratic" && MoC.type === "sen";
+}
+
+function filterUnknown(MoC) {
+  return MoC.party === "Republican" && MoC.type === "sen";
+}
+
+function filterSupport(MoC) {
+  return MoC.party === "Republican" && MoC.type === "rep";
 }
 
 function populateGroups(groups) {
