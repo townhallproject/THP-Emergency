@@ -1,4 +1,4 @@
-var map = {};
+var map;
 
 document.addEventListener("DOMContentLoaded", function(event) {
   map = L.map('map', { zoomControl: false, attributionControl: false }).setView([37.8, -96], 4);
@@ -48,8 +48,17 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
       className: 'filter-dropshadow'
     }
   });
-  statesLayer.addTo(map);
+  statesLayer.bindTooltip(showTooltip).addTo(map);
   outlineLayer.addTo(map);
+
+
+  function showTooltip(e) {
+    return '<h4>' + e.feature.properties.name + ' Reacts:</h4>' +
+    '<h6><b>' + e.feature.properties.MoCs.filter(filterOpposed).length + '</b> reps are opposed.</h6>' +
+    '<h6><b>' + e.feature.properties.MoCs.filter(filterConcerned).length + '</b> reps are concerned.</h6>' +
+    '<h6><b>' + e.feature.properties.MoCs.filter(filterUnknown).length + '</b> reps are not on record.</h6>' +
+    '<h6><b>' + e.feature.properties.MoCs.filter(filterSupport).length + '</b> reps are supportive.</h6>';
+  }
 
   populateGroups(mapToGroups(MoCs));
 });
