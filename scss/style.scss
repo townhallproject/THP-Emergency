@@ -144,9 +144,54 @@ h3.callToAction {
   min-height: 1.5em;
 }
 
+// Make anything under 1400 full bleed
+// Yes, I know we should use columns for this...but it just seems like so much extra code for no good reason
+@media (max-width:1400px) {
+  .container {
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+  }
+}
+
+/* Small desktop */
+@media (min-width: 992px) { 
+  h1.title {
+    height: 5vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 2.5em;
+  }
+
+  h3.callToAction {
+    margin-top: 1.5vh;
+    height: 4vh;
+    font-size: 2em;
+  }
+
+  #map {
+    height: 45vh;
+    margin: 4vh 0 1vh 0;
+  }
+
+  .mocCounts {
+    height: 48vh;
+    font-size: 1.75em;
+
+    .photos {
+      width: 200px;
+      height: 144px;
+
+      img {
+        width: 40px;
+      }
+    }
+  }
+}
 
 /* Large desktop */
-@media (min-width: 992px) { 
+@media (min-width: 1600px) { 
   h1.title {
     height: 5vh;
     display: flex;
@@ -167,7 +212,7 @@ h3.callToAction {
   }
 
   .mocCounts {
-    height: 41vh;
+    height: 48vh;
     font-size: 2em;
 
     .photos {
