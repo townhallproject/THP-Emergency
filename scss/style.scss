@@ -1,0 +1,173 @@
+/* Colors */
+$opposed   : #3870b3;
+$concerned : #84b4d6;
+$unknown   : #cecece;
+$support   : #c1001a;
+$light-grey: #f2f2f2;
+$white     : #ffffff;
+
+/* Global */
+body {
+  background-color: $light-grey;
+
+  > .container {
+    background: $white;
+    padding-top: 4vh;
+  }
+}
+
+.container.container-dark {
+  background: $opposed;
+  color: $white;
+  font-size: 2em;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+}
+
+p {
+  font-family: 'Open Sans', sans-serif;
+}
+
+strong {
+  font-weight: 800;
+}
+
+.red {
+  color: $support;
+}
+
+
+/* Splash page */
+h1.title {
+  font-size: 4em;
+  text-transform: uppercase;
+  height: 8vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h3.callToAction {
+  font-size: 2.5em;
+  margin-top: 2vh;
+  height: 4vh;
+}
+
+#map {
+  min-height: 25vh;
+  
+  &.leaflet-container {
+    background-color:rgba(0,0,0,0.0);
+
+    .filter-dropshadow {
+      filter: url(#filter-dropshadow);
+    }
+  }
+}
+
+.mocCounts {
+  text-align: center;
+  font-size: 2.5em;
+  height: 57vh;
+
+  .photos {
+    width: 250px;
+    height: 180px;
+    margin: 2.5vh auto;
+    position: relative;
+    
+    &:before {
+      content: "";
+      z-index: 10;
+      display: block;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    &#photos-opposed:before {
+      background: rgba($opposed, 0.25);
+    }
+    
+    &#photos-concerned:before {
+      background: rgba($concerned, 0.25);
+    }
+    
+    &#photos-unknown:before {
+      background: rgba($unknown, 0.25);
+    }
+    
+    &#photos-support:before {
+      background: rgba($support, 0.25);
+    }
+    
+    img {
+      -webkit-filter: contrast(160%) brightness(135%) saturate(25%);
+      filter: contrast(160%) brightness(135%) saturate(25%);
+      opacity: 0.5;
+    }
+  }
+}
+
+.mocCounts-opposed {
+  color: $opposed;
+}
+
+.mocCounts-concerned {
+  color: $concerned;
+}
+
+.mocCounts-unkown {
+  color: $unknown;
+}
+
+.mocCounts-support {
+  color: $support;
+}
+
+.number {
+  font-family: 'Merriweather', serif;
+  font-size: 2.25em;
+  min-height: 1.5em;
+}
+
+
+/* Large desktop */
+@media (min-width: 992px) { 
+  h1.title {
+    height: 5vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 3em;
+  }
+
+  h3.callToAction {
+    margin-top: 1.5vh;
+    height: 4vh;
+    font-size: 2.25em;
+  }
+
+  #map {
+    height: 40vh;
+    margin: 4vh 0 1vh 0;
+  }
+
+  .mocCounts {
+    height: 41vh;
+    font-size: 2em;
+
+    .photos {
+      margin: 5vh auto 0 auto;
+    }
+  }
+  
+  .number {
+    font-size: 2.5em;
+  }
+}
