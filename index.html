@@ -11,8 +11,10 @@
 </head>
 <body>
   <div class="container">
-    <h1 class="display-1 title">Congress reacts to Mueller&#8217;s firing</h1>
-    <h3 class="callToAction"><a href="#"><span class="purple">What will <strong>YOU</strong> do?</span> Take action NOW!</a></h3>
+    <h1 class="display-1 title text-center">Congress reacts to Mueller&#8217;s firing</h1>
+    <h3 class="callToAction text-center" onclick="scrollToAnchor(document.body, document.getElementById('takeAction').offsetTop, 250);">
+      <span class="purple">What will <strong>YOU</strong> do?</span> Take action NOW!
+    </h3>
     <div id="map"></div>
     <div class="row mocCounts">
       <div class="col-12 col-md-6 col-lg-3 mocCounts-opposed">
@@ -38,14 +40,24 @@
     </div>
   </div>
 
-  <div class="container container-dark">
-    <h1 class="display-1">Take Action NOW</h1>
+  <div class="container container-dark pl-5 pr-5" id="takeAction">
+    <h1 class="display-1 text-center pb-5">Take Action NOW</h1>
+    <h1>Attend town halls & office hours</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam in scelerisque augue. Duis efficitur ligula vitae quam placerat, eget pellentesque massa blandit. Cras semper vitae elit quis posuere. Morbi blandit magna metus. Cras mollis auctor arcu, at porta tellus gravida in.</p>
+    <h1 class="pt-4">Call your representatives</h1>
+    <p>Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Morbi fermentum leo magna, nec semper erat congue in. Aenean tristique lacus non gravida viverra. Nulla leo ligula, vehicula nec blandit in, vestibulum sit amet metus. Proin in laoreet mi. Nam imperdiet turpis nulla, quis condimentum tortor mollis vitae.</p>
+    <h1 class="pt-4">Attend a sit-in, or organize your own</h1>
+    <p class="pb-5">Aenean nisi erat, blandit sed mi in, tincidunt posuere justo. Ut et venenatis nisi. Suspendisse vitae euismod lorem. Sed convallis dolor sit amet lorem ullamcorper, id consectetur sem dictum. Suspendisse euismod ante nisl, vel laoreet magna vehicula nec. Nunc in odio hendrerit, commodo urna vitae, aliquet odio.</p>
+  </div>
+  <div class="container pl-5 pr-5" style="height: 1000px">
+    <h1 class="display-1 text-center pb-5">On the record</h1>
+    <h1>Show MoCs, broken out by state, and their public stances</h1>
   </div>
 
   <svg xmlns="w3.org/2000/svg" version="1.1" style="width:0; height:0">
     <defs>
       <filter id="filter-dropshadow">
-        <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
+        <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
       </filter>
     </defs>
   </svg>

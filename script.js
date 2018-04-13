@@ -22,8 +22,8 @@ var firebasedb = firebase.database();
 firebasedb.ref('mocData/').once('value').then(function(snapshot) {
   // Get MoCs and flatten into array
   var MoCs = snapshot.val();
-  MoCs = Object.keys(MoCs).map(function(key) { 
-    return MoCs[key]; 
+  MoCs = Object.keys(MoCs).map(function(key) {
+    return MoCs[key];
   }).filter(function(MoC) {
     return MoC.hasOwnProperty('in_office') && MoC.in_office === true;
   });
@@ -132,4 +132,17 @@ function populateGroups(groups) {
                   photoContainer.innerHTML += '<img src="//www.govtrack.us/data/photos/' + MoC.govtrack_id + '-50px.jpeg" />';
     });
   });
+}
+
+function scrollToAnchor(element, to, duration) {
+  var difference = to - element.scrollTop;
+  var perTick = difference / duration * 10;
+
+  setTimeout(function() {
+    element.scrollTop = element.scrollTop + perTick;
+    console.log(element.scrollTop, to);
+    if (element.scrollTop >= to) { console.log('done'); return; }
+    console.log('next')
+    scrollToAnchor(element, to, duration - 10);
+  }, 10);
 }

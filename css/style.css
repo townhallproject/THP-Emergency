@@ -7,13 +7,12 @@ body {
     padding-top: 4vh; }
 
 .container.container-dark {
-  background: #081bc3;
+  background: #0b1886;
   color: #ffffff;
-  font-size: 2em; }
+  font-size: 1.5em; }
 
 h1, h2, h3, h4, h5 {
-  font-family: 'Roboto', sans-serif;
-  text-align: center; }
+  font-family: 'Roboto', sans-serif; }
 
 p {
   font-family: 'Open Sans', sans-serif; }
@@ -36,11 +35,9 @@ h1.title {
 h3.callToAction {
   font-size: 2.5em;
   margin-top: 2vh;
-  height: 4vh; }
-  h3.callToAction a {
-    color: #ff5f00; }
-    h3.callToAction a:hover {
-      text-decoration: none; }
+  height: 4vh;
+  color: #ff5f00;
+  cursor: pointer; }
 
 #map {
   min-height: 25vh; }

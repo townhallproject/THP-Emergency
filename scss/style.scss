@@ -3,7 +3,8 @@ $opposed   : #6809c8;
 $concerned : #a22397;
 $unknown   : #e8e1dd;
 $support   : #ff5f00;
-$dark-blue : #081bc3;
+
+$dark-blue : #0b1886;
 $light-grey: #f2f2f2;
 $red       : #ff2800;
 $white     : #ffffff;
@@ -21,12 +22,11 @@ body {
 .container.container-dark {
   background: $dark-blue;
   color: $white;
-  font-size: 2em;
+  font-size: 1.5em;
 }
 
 h1, h2, h3, h4, h5 {
   font-family: 'Roboto', sans-serif;
-  text-align: center;
 }
 
 p {
@@ -56,17 +56,13 @@ h3.callToAction {
   font-size: 2.5em;
   margin-top: 2vh;
   height: 4vh;
-  a {
-    color: $support;
-    &:hover {
-      text-decoration: none;
-    }
-  }
+  color: $support;
+  cursor: pointer;
 }
 
 #map {
   min-height: 25vh;
-  
+
   &.leaflet-container {
     background-color:rgba(0,0,0,0.0);
 
@@ -86,7 +82,7 @@ h3.callToAction {
     height: 180px;
     margin: 2.5vh auto;
     position: relative;
-    
+
     &:before {
       content: "";
       z-index: 10;
@@ -101,19 +97,19 @@ h3.callToAction {
     &#photos-opposed:before {
       background: rgba($opposed, 0.25);
     }
-    
+
     &#photos-concerned:before {
       background: rgba($concerned, 0.25);
     }
-    
+
     &#photos-unknown:before {
       background: rgba($unknown, 0.25);
     }
-    
+
     &#photos-support:before {
       background: rgba($support, 0.25);
     }
-    
+
     img {
       -webkit-filter: contrast(160%) brightness(135%) saturate(25%);
       filter: contrast(160%) brightness(135%) saturate(25%);
@@ -155,7 +151,7 @@ h3.callToAction {
 }
 
 /* Small desktop */
-@media (min-width: 992px) { 
+@media (min-width: 992px) {
   h1.title {
     height: 5vh;
     display: flex;
@@ -191,7 +187,7 @@ h3.callToAction {
 }
 
 /* Large desktop */
-@media (min-width: 1600px) { 
+@media (min-width: 1600px) {
   h1.title {
     height: 5vh;
     display: flex;
@@ -219,7 +215,7 @@ h3.callToAction {
       margin: 5vh auto 0 auto;
     }
   }
-  
+
   .number {
     font-size: 2.5em;
   }
