@@ -89,10 +89,11 @@ function fillColor(state) {
         return MoC.party === "Republican";
     }).length / state.properties.MoCs.length;
 
-  return  d > 0.75  ? '#c1001a' :
-          d > 0.50  ? '#cecece' :
-          d > 0.25  ? '#84b4d6' :
-                      '#2a70b1';
+
+  return  d > 0.75  ? '#ff5f00' :
+          d > 0.50  ? '#e8e1dd' :
+          d > 0.25  ? '#a22397' :
+                      '#6809c8' ;
 }
 
 function mapToGroups(MoCs) {

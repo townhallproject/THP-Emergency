@@ -7,7 +7,7 @@ body {
     padding-top: 4vh; }
 
 .container.container-dark {
-  background: #3870b3;
+  background: #081bc3;
   color: #ffffff;
   font-size: 2em; }
 
@@ -21,8 +21,8 @@ p {
 strong {
   font-weight: 800; }
 
-.red {
-  color: #c1001a; }
+.purple {
+  color: #6809c8; }
 
 /* Splash page */
 h1.title {
@@ -37,6 +37,10 @@ h3.callToAction {
   font-size: 2.5em;
   margin-top: 2vh;
   height: 4vh; }
+  h3.callToAction a {
+    color: #ff5f00; }
+    h3.callToAction a:hover {
+      text-decoration: none; }
 
 #map {
   min-height: 25vh; }
@@ -64,34 +68,40 @@ h3.callToAction {
       left: 0;
       right: 0; }
     .mocCounts .photos#photos-opposed:before {
-      background: rgba(56, 112, 179, 0.25); }
+      background: rgba(104, 9, 200, 0.25); }
     .mocCounts .photos#photos-concerned:before {
-      background: rgba(132, 180, 214, 0.25); }
+      background: rgba(162, 35, 151, 0.25); }
     .mocCounts .photos#photos-unknown:before {
-      background: rgba(206, 206, 206, 0.25); }
+      background: rgba(232, 225, 221, 0.25); }
     .mocCounts .photos#photos-support:before {
-      background: rgba(193, 0, 26, 0.25); }
+      background: rgba(255, 95, 0, 0.25); }
     .mocCounts .photos img {
       -webkit-filter: contrast(160%) brightness(135%) saturate(25%);
       filter: contrast(160%) brightness(135%) saturate(25%);
       opacity: 0.5; }
 
 .mocCounts-opposed {
-  color: #3870b3; }
+  color: #6809c8; }
 
 .mocCounts-concerned {
-  color: #84b4d6; }
+  color: #a22397; }
 
 .mocCounts-unkown {
-  color: #cecece; }
+  color: #e8e1dd; }
 
 .mocCounts-support {
-  color: #c1001a; }
+  color: #ff5f00; }
 
 .number {
   font-family: 'Merriweather', serif;
   font-size: 2.25em;
   min-height: 1.5em; }
+
+@media screen and (max-width: 768px) {
+  .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0; } }
 
 /* Large desktop */
 @media (min-width: 992px) {

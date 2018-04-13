@@ -1,9 +1,11 @@
 /* Colors */
-$opposed   : #3870b3;
-$concerned : #84b4d6;
-$unknown   : #cecece;
-$support   : #c1001a;
+$opposed   : #6809c8;
+$concerned : #a22397;
+$unknown   : #e8e1dd;
+$support   : #ff5f00;
+$dark-blue : #081bc3;
 $light-grey: #f2f2f2;
+$red       : #ff2800;
 $white     : #ffffff;
 
 /* Global */
@@ -17,7 +19,7 @@ body {
 }
 
 .container.container-dark {
-  background: $opposed;
+  background: $dark-blue;
   color: $white;
   font-size: 2em;
 }
@@ -35,8 +37,8 @@ strong {
   font-weight: 800;
 }
 
-.red {
-  color: $support;
+.purple {
+  color: $opposed;
 }
 
 
@@ -54,6 +56,12 @@ h3.callToAction {
   font-size: 2.5em;
   margin-top: 2vh;
   height: 4vh;
+  a {
+    color: $support;
+    &:hover {
+      text-decoration: none;
+    }
+  }
 }
 
 #map {
