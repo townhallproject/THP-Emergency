@@ -1,0 +1,27 @@
+{
+  "name": "thp-emergency",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "livereload": "livereload . -w 1000 -d",
+    "sass": "node-sass --watch scss -o css",
+    "serve": "http-server -a localhost"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pdvorchik/THP-Emergency.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pdvorchik/THP-Emergency/issues"
+  },
+  "homepage": "https://github.com/pdvorchik/THP-Emergency#readme",
+  "dependencies": {
+    "http-server": "^0.11.1",
+    "livereload": "^0.7.0",
+    "node-sass": "^4.8.3"
+  }
+}
