@@ -1,6 +1,6 @@
 var map;
 var MoCs;
-var MoCsByState;
+var MoCsByDistrict;
 
 // Wait for the DOM to be ready then add the Map and restrict movement
 document.addEventListener("DOMContentLoaded", function(event) {
@@ -31,10 +31,9 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
   }).filter(function(MoC) {
     return MoC.hasOwnProperty('in_office') && MoC.in_office === true;
   });
-  MoCsByState = mapToStateDict(MoCs);
-
-  var statesLayer = new L.GeoJSON.AJAX("states.geojson", {
-    middleware: addMoCsToState,
+  MoCsByDistrict = mapToDistrictDict(MoCs);
+  var districtLayer = new L.GeoJSON.AJAX("districts.geojson", {
+    middleware: addMoCsToDistrict,
     style: function(state) { return setStyle(state); }
   });
 
@@ -42,21 +41,30 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
     style: layerOutlineStyle
   });
 
-  statesLayer.bindTooltip(showTooltip).addTo(map);
+  districtLayer.bindTooltip(showTooltip).addTo(map);
   outlineLayer.addTo(map);
 
   // Fill out the MoC count groups and photos
   populateGroups(mapToGroups(MoCs));
 });
 
+// Static Dicts
+var responseDict = {
+  1: 'supports impeachment.',
+  2: 'supports another action.',
+  3: 'is not on record.',
+  4: 'has voiced concerns.',
+  5: 'supports Trump.',
+}
 
 // Data mapping
-function mapToStateDict(MoCs) {
+function mapToDistrictDict(MoCs) {
   return MoCs.reduce(function(res, MoC) {
-    if (!res.hasOwnProperty(MoC.stateName)) {
-        res[MoC.stateName] = [];
+    if (!MoC.district) { return res; }
+    if (!res.hasOwnProperty(MoC.state + '-' + MoC.district)) {
+        res[MoC.state + '-' + MoC.district] = [];
     }
-    res[MoC.stateName].push(MoC);
+    res[MoC.state + '-' + MoC.district].push(MoC);
     return res;
   }, {});
 }
@@ -107,12 +115,8 @@ function scrollToAnchor(element, to, duration) {
 }
 
 function showTooltip(e) {
-  return '<h4>' + e.feature.properties.name + ' Reacts:</h4>' +
-  '<h6><b>' + e.feature.properties.MoCs.filter(filterImpeachment).length + '</b> reps support impeachment.</h6>' +  
-  '<h6><b>' + e.feature.properties.MoCs.filter(filterAction).length + '</b> reps support other action.</h6>' +
-  '<h6><b>' + e.feature.properties.MoCs.filter(filterUnknown).length + '</b> reps are not on record.</h6>' +
-  '<h6><b>' + e.feature.properties.MoCs.filter(filterConcerned).length + '</b> reps voiced concerns.</h6>' +
-  '<h6><b>' + e.feature.properties.MoCs.filter(filterSupport).length + '</b> reps support Trump.</h6>';
+  return '<h4>' + e.feature.properties.DISTRICT + ' Representatives:</h4>' +
+         '<h6><b>Rep ' + e.feature.properties.MoCs[0].displayName + '</b> ' + responseDict[e.feature.properties.MoCs[0].crisis];
 }
 
 function populateGroups(groups) {
@@ -136,33 +140,47 @@ var layerOutlineStyle = {
   className: 'filter-dropshadow'
 }
 
-function addMoCsToState(stateGeoJson) {
-  stateGeoJson.features.forEach(function(state) {
-    state.properties.MoCs = MoCsByState[state.properties.name];
+function addMoCsToDistrict(districtGeoJson) {
+  districtGeoJson.features.forEach(function(district) {
+    district = districtTHPAdapter(district);
+    district.properties.MoCs = MoCsByDistrict[district.properties.DISTRICT];
+    if (!district.properties.MoCs) { return; }
 
     // Calculate the value that occurs the most often in the dataset
-    var crisisCount = MoCsByState[state.properties.name].map(function(MoC) { return MoC.crisis });
-    state.properties.crisisMode = crisisCount.sort(function(a, b) {
+    var crisisCount = MoCsByDistrict[district.properties.DISTRICT].map(function(MoC) { return MoC.crisis });
+    district.properties.crisisMode = crisisCount.sort(function(a, b) {
       return crisisCount.filter(function(val) { return val === a }).length - crisisCount.filter(function(val) { return val === b }).length;
     }).pop();
   });
-  return stateGeoJson;
+
+  return districtGeoJson;
+}
+
+// Takes a district and transforms all field names and data to THP standards
+function districtTHPAdapter(district) {
+  // Change -00 districts to -At-Large
+  district.properties.DISTRICT = district.properties.DISTRICT.replace("-00", "-At-Large");
+  // Remove leading 0 in district names
+  if (/^.{2}-0\d$/m.test(district.properties.DISTRICT)) {
+    district.properties.DISTRICT = district.properties.DISTRICT.replace("0", "");
+  }
+  return district;
 }
 
 function setStyle(state) {
   return {
     fillColor: fillColor(state),
-    weight: 2,
+    weight: 1,
     opacity: 1,
     color: 'white',
     fillOpacity: 1
   };
 }
 
-function fillColor(state) {
-  return state.properties.crisisMode === 1 ? '#5e3c99' :
-         state.properties.crisisMode === 2 ? '#b2abd2' :
-         state.properties.crisisMode === 3 ? '#e8e1dd' :
-         state.properties.crisisMode === 4 ? '#fdb863' :
-                                             '#e66101' ;
+function fillColor(district) {
+  return district.properties.crisisMode === 1 ? '#5e3c99' :
+         district.properties.crisisMode === 2 ? '#b2abd2' :
+         district.properties.crisisMode === 3 ? '#e8e1dd' :
+         district.properties.crisisMode === 4 ? '#fdb863' :
+                                                '#e66101' ;
 }
