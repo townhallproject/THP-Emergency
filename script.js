@@ -94,13 +94,15 @@ function filterSupport(MoC) {
 
 // View Helpers
 function scrollToAnchor(element, to, duration) {
+  if (duration < 10) { return; }
   var difference = to - element.scrollTop;
   var perTick = difference / duration * 10;
 
   setTimeout(function() {
     element.scrollTop = element.scrollTop + perTick;
-    if (element.scrollTop >= to) { return; }
-    scrollToAnchor(element, to, duration - 10);
+    if (element.scrollTop < to) {
+      scrollToAnchor(element, to, duration - 10);
+    }
   }, 10);
 }
 
