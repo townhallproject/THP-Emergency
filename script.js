@@ -25,7 +25,9 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
   // Get MoCs and flatten into array
   MoCs = snapshot.val();
   MoCs = Object.keys(MoCs).map(function(key) {
-    return MoCs[key];
+    // Add randomly generated values for crisis
+    // TODO: Remove once we have real values
+    return Object.assign({}, MoCs[key], {crisis: Math.floor(Math.random() * 5) + 1});
   }).filter(function(MoC) {
     return MoC.hasOwnProperty('in_office') && MoC.in_office === true;
   });
@@ -61,30 +63,34 @@ function mapToStateDict(MoCs) {
 
 function mapToGroups(MoCs) {
   return {
-    opposed: MoCs.filter(filterOpposed),
-    concerned: MoCs.filter(filterConcerned),
+    impeachment: MoCs.filter(filterImpeachment),
+    action: MoCs.filter(filterAction),
     unknown: MoCs.filter(filterUnknown),
+    concerned: MoCs.filter(filterConcerned),
     support: MoCs.filter(filterSupport)
   };
 }
 
 // Filters
-function filterOpposed(MoC) {
-  return MoC.party === "Democratic" && MoC.type === "rep";
+function filterImpeachment(MoC) {
+  return MoC.crisis === 1;
 }
 
-function filterConcerned(MoC) {
-  return MoC.party === "Democratic" && MoC.type === "sen";
+function filterAction(MoC) {
+  return MoC.crisis === 2;
 }
 
 function filterUnknown(MoC) {
-  return MoC.party === "Republican" && MoC.type === "sen";
+  return MoC.crisis === 3;
+}
+
+function filterConcerned(MoC) {
+  return MoC.crisis === 4;
 }
 
 function filterSupport(MoC) {
-  return MoC.party === "Republican" && MoC.type === "rep";
+  return MoC.crisis === 5;
 }
-
 
 // View Helpers
 function scrollToAnchor(element, to, duration) {
@@ -93,19 +99,18 @@ function scrollToAnchor(element, to, duration) {
 
   setTimeout(function() {
     element.scrollTop = element.scrollTop + perTick;
-    console.log(element.scrollTop, to);
-    if (element.scrollTop >= to) { console.log('done'); return; }
-    console.log('next')
+    if (element.scrollTop >= to) { return; }
     scrollToAnchor(element, to, duration - 10);
   }, 10);
 }
 
 function showTooltip(e) {
   return '<h4>' + e.feature.properties.name + ' Reacts:</h4>' +
-  '<h6><b>' + e.feature.properties.MoCs.filter(filterOpposed).length + '</b> reps are opposed.</h6>' +
-  '<h6><b>' + e.feature.properties.MoCs.filter(filterConcerned).length + '</b> reps are concerned.</h6>' +
+  '<h6><b>' + e.feature.properties.MoCs.filter(filterImpeachment).length + '</b> reps support impeachment.</h6>' +  
+  '<h6><b>' + e.feature.properties.MoCs.filter(filterAction).length + '</b> reps support other action.</h6>' +
   '<h6><b>' + e.feature.properties.MoCs.filter(filterUnknown).length + '</b> reps are not on record.</h6>' +
-  '<h6><b>' + e.feature.properties.MoCs.filter(filterSupport).length + '</b> reps are supportive.</h6>';
+  '<h6><b>' + e.feature.properties.MoCs.filter(filterConcerned).length + '</b> reps voiced concerns.</h6>' +
+  '<h6><b>' + e.feature.properties.MoCs.filter(filterSupport).length + '</b> reps support Trump.</h6>';
 }
 
 function populateGroups(groups) {
@@ -113,7 +118,7 @@ function populateGroups(groups) {
     document.getElementById("count-" + key).innerHTML = groups[key].length;
     var photoContainer = document.getElementById("photos-" + key);
     var membersToDisplay = groups[key].sort(function(a, b){return parseInt(b.seniority) - parseInt(a.seniority)})
-               .slice(0, 15)
+               .slice(0, 12)
                .forEach(function(MoC) {
                   photoContainer.innerHTML += '<img src="//www.govtrack.us/data/photos/' + MoC.govtrack_id + '-50px.jpeg" />';
     });
@@ -132,6 +137,12 @@ var layerOutlineStyle = {
 function addMoCsToState(stateGeoJson) {
   stateGeoJson.features.forEach(function(state) {
     state.properties.MoCs = MoCsByState[state.properties.name];
+
+    // Calculate the value that occurs the most often in the dataset
+    var crisisCount = MoCsByState[state.properties.name].map(function(MoC) { return MoC.crisis });
+    state.properties.crisisMode = crisisCount.sort(function(a, b) {
+      return crisisCount.filter(function(val) { return val === a }).length - crisisCount.filter(function(val) { return val === b }).length;
+    }).pop();
   });
   return stateGeoJson;
 }
@@ -147,14 +158,9 @@ function setStyle(state) {
 }
 
 function fillColor(state) {
-  // TODO Replace with field relating to crisis
-  var d = state.properties.MoCs.filter(function(MoC) {
-        return MoC.party === "Republican";
-    }).length / state.properties.MoCs.length;
-
-
-  return  d > 0.75  ? '#ff5f00' :
-          d > 0.50  ? '#e8e1dd' :
-          d > 0.25  ? '#a22397' :
-                      '#6809c8' ;
+  return state.properties.crisisMode === 1 ? '#5b7111' :
+         state.properties.crisisMode === 2 ? '#f9c200' :
+         state.properties.crisisMode === 3 ? '#e8e1dd' :
+         state.properties.crisisMode === 4 ? '#f67617' :
+                                             '#f53c00' ;
 }

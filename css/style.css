@@ -7,7 +7,7 @@ body {
     padding-top: 4vh; }
 
 .container.container-dark {
-  background: #0b1886;
+  background: #111170;
   color: #ffffff;
   font-size: 1.5em; }
 
@@ -19,9 +19,6 @@ p {
 
 strong {
   font-weight: 800; }
-
-.purple {
-  color: #6809c8; }
 
 /* Splash page */
 h1.title {
@@ -36,7 +33,7 @@ h3.callToAction {
   font-size: 2.5em;
   margin-top: 2vh;
   height: 4vh;
-  color: #ff5f00;
+  color: #f53c00;
   cursor: pointer; }
 
 #map {
@@ -51,7 +48,7 @@ h3.callToAction {
   font-size: 2.5em;
   height: 57vh; }
   .mocCounts .photos {
-    width: 250px;
+    width: 200px;
     height: 180px;
     margin: 2.5vh auto;
     position: relative; }
@@ -64,30 +61,35 @@ h3.callToAction {
       bottom: 0;
       left: 0;
       right: 0; }
-    .mocCounts .photos#photos-opposed:before {
-      background: rgba(104, 9, 200, 0.25); }
-    .mocCounts .photos#photos-concerned:before {
-      background: rgba(162, 35, 151, 0.25); }
+    .mocCounts .photos#photos-impeachment:before {
+      background: rgba(91, 113, 17, 0.25); }
+    .mocCounts .photos#photos-action:before {
+      background: rgba(249, 194, 0, 0.25); }
     .mocCounts .photos#photos-unknown:before {
       background: rgba(232, 225, 221, 0.25); }
+    .mocCounts .photos#photos-concerned:before {
+      background: rgba(246, 118, 23, 0.25); }
     .mocCounts .photos#photos-support:before {
-      background: rgba(255, 95, 0, 0.25); }
+      background: rgba(245, 60, 0, 0.25); }
     .mocCounts .photos img {
       -webkit-filter: contrast(160%) brightness(135%) saturate(25%);
       filter: contrast(160%) brightness(135%) saturate(25%);
       opacity: 0.5; }
 
-.mocCounts-opposed {
-  color: #6809c8; }
+.mocCounts-impeachment {
+  color: #5b7111; }
 
-.mocCounts-concerned {
-  color: #a22397; }
+.mocCounts-action {
+  color: #f9c200; }
 
 .mocCounts-unkown {
   color: #e8e1dd; }
 
+.mocCounts-concerned {
+  color: #f67617; }
+
 .mocCounts-support {
-  color: #ff5f00; }
+  color: #f53c00; }
 
 .number {
   font-family: 'Merriweather', serif;
@@ -119,7 +121,7 @@ h3.callToAction {
     height: 48vh;
     font-size: 1.75em; }
     .mocCounts .photos {
-      width: 200px;
+      width: 160px;
       height: 144px; }
       .mocCounts .photos img {
         width: 40px; } }
@@ -141,8 +143,9 @@ h3.callToAction {
     margin: 4vh 0 1vh 0; }
   .mocCounts {
     height: 48vh;
-    font-size: 2em; }
+    font-size: 2em;
+    line-height: 1.3; }
     .mocCounts .photos {
-      margin: 5vh auto 0 auto; }
+      margin: 2.5vh auto 0 auto; }
   .number {
     font-size: 2.5em; } }
