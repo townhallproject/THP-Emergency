@@ -1,9 +1,9 @@
 /* Colors */
-$impeachment : #5b7111;
-$action      : #f9c200;
+$impeachment : #5e3c99;
+$action      : #b2abd2;
 $unknown     : #e8e1dd;
-$concerned   : #f67617;
-$support     : #f53c00;
+$concerned   : #fdb863;
+$support     : #e66101;
 $dark-blue   : #111170;
 $light-grey  : #eaeaea;
 $red         : #ff2800;
@@ -20,7 +20,7 @@ body {
 }
 
 .container.container-dark {
-  background: $dark-blue;
+  background: $impeachment;
   color: $white;
   font-size: 1.5em;
 }

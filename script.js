@@ -160,9 +160,9 @@ function setStyle(state) {
 }
 
 function fillColor(state) {
-  return state.properties.crisisMode === 1 ? '#5b7111' :
-         state.properties.crisisMode === 2 ? '#f9c200' :
+  return state.properties.crisisMode === 1 ? '#5e3c99' :
+         state.properties.crisisMode === 2 ? '#b2abd2' :
          state.properties.crisisMode === 3 ? '#e8e1dd' :
-         state.properties.crisisMode === 4 ? '#f67617' :
-                                             '#f53c00' ;
+         state.properties.crisisMode === 4 ? '#fdb863' :
+                                             '#e66101' ;
 }
