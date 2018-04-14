@@ -46,7 +46,7 @@ h3.callToAction {
 .mocCounts {
   text-align: center;
   font-size: 2.5em;
-  height: 57vh; }
+  min-height: 57vh; }
   .mocCounts .photos {
     width: 200px;
     height: 180px;
@@ -119,7 +119,8 @@ h3.callToAction {
     margin: 4vh 0 1vh 0; }
   .mocCounts {
     height: 48vh;
-    font-size: 1.75em; }
+    font-size: 1.75em;
+    justify-content: space-evenly; }
     .mocCounts .photos {
       width: 160px;
       height: 144px; }
@@ -142,10 +143,13 @@ h3.callToAction {
     height: 40vh;
     margin: 4vh 0 1vh 0; }
   .mocCounts {
-    height: 48vh;
     font-size: 2em;
     line-height: 1.3; }
     .mocCounts .photos {
       margin: 2.5vh auto 0 auto; }
   .number {
     font-size: 2.5em; } }
+
+@media (min-width: 1700px) {
+  .container {
+    max-width: 1400px; } }
