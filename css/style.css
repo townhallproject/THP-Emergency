@@ -1,14 +1,14 @@
 /* Colors */
 /* Global */
 body {
-  background-color: #f2f2f2; }
+  background-color: #eaeaea; }
   body > .container {
-    background: #ffffff;
+    background: #fefefe;
     padding-top: 4vh; }
 
 .container.container-dark {
   background: #111170;
-  color: #ffffff;
+  color: #fefefe;
   font-size: 1.5em; }
 
 h1, h2, h3, h4, h5 {
