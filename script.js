@@ -4,7 +4,7 @@ var MoCsByDistrict;
 
 // Wait for the DOM to be ready then add the Map and restrict movement
 document.addEventListener("DOMContentLoaded", function(event) {
-  map = L.map('map', { zoomControl: false, attributionControl: false }).setView([37.8, -96], 4);
+  map = L.map('map', { zoomControl: false, zoomSnap: 0.1, attributionControl: false }).setView([37.8, -96], 4.7);
   map.dragging.disable();
   map.touchZoom.disable();
   map.doubleClickZoom.disable();

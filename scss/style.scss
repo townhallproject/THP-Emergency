@@ -4,23 +4,35 @@ $action      : #b2abd2;
 $unknown     : #e8e1dd;
 $concerned   : #fdb863;
 $support     : #e66101;
-$dark-blue   : #111170;
+$dark-blue   : #0d4668;
 $light-grey  : #eaeaea;
 $red         : #ff2800;
 $white       : #fefefe;
+// From THP
+$brand-primary: #0d4668;
+$brand-primary-lighter: lighten($brand-primary, 17.5%);
+$brand-secondary: #ff4741; //red
+$brand-cool: #b6e5fb;
+$brand-text: #132149;
+$brand-gray: #d4e0e5;
+$brand-success: #3facef;
+$brand-info: #132149;
+$brand-secondary-dark : darken($brand-secondary, 20%);
+$brand-white: #ffffff;
 
 /* Global */
 body {
-  background-color: $light-grey;
-
-  > .container {
-    background: $white;
-    padding-top: 4vh;
+  > .container-fluid {
+    padding-top: 2.5vh;
   }
 }
 
-.container.container-dark {
-  background: $impeachment;
+.container-light {
+  background: $light-grey;
+  font-size: 1.5em;
+}
+.container-dark {
+  background: $dark-blue;
   color: $white;
   font-size: 1.5em;
 }
@@ -50,14 +62,14 @@ h1.title {
 
 h3.callToAction {
   font-size: 2.5em;
-  margin-top: 2vh;
-  height: 4vh;
+  margin-top: 1vh;
+  height: 3vh;
   color: $support;
   cursor: pointer;
 }
 
 #map {
-  min-height: 25vh;
+  min-height: 30vh;
 
   &.leaflet-container {
     background-color:rgba(0,0,0,0.0);
@@ -141,7 +153,8 @@ h3.callToAction {
 .number {
   font-family: 'Merriweather', serif;
   font-size: 2.25em;
-  min-height: 1.5em;
+  min-height: 1em;
+  line-height: 1;
 }
 
 // Make anything under 1400 full bleed
@@ -157,7 +170,7 @@ h3.callToAction {
 /* Small desktop */
 @media (min-width: 992px) {
   h1.title {
-    height: 5vh;
+    height: 4vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -165,13 +178,11 @@ h3.callToAction {
   }
 
   h3.callToAction {
-    margin-top: 1.5vh;
-    height: 4vh;
     font-size: 2em;
   }
 
   #map {
-    height: 45vh;
+    height: 50vh;
     margin: 4vh 0 1vh 0;
   }
 
@@ -193,8 +204,13 @@ h3.callToAction {
 
 /* Large desktop */
 @media (min-width: 1600px) {
+  .container-fluid {
+    padding-left: 10vw;
+    padding-right: 10vw;
+  }
+
   h1.title {
-    height: 5vh;
+    height: 4vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -202,19 +218,19 @@ h3.callToAction {
   }
 
   h3.callToAction {
-    margin-top: 1.5vh;
-    height: 4vh;
     font-size: 2.25em;
   }
 
   #map {
-    height: 40vh;
+    height: 50vh;
     margin: 4vh 0 1vh 0;
   }
 
   .mocCounts {
     font-size: 2em;
     line-height: 1.3;
+    min-height: 38vh;
+    height: 38vh;
 
     .photos {
       margin: 2.5vh auto 0 auto;
