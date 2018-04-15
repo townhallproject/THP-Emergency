@@ -5,11 +5,13 @@ body {
 
 .navbar.navbar-light {
   border-bottom: #ff4741 2px solid;
-  padding-left: 15vw;
-  background: #fefefe; }
+  padding-left: 3vw;
+  background: #fefefe;
+  font-size: 2em; }
   .navbar.navbar-light .navbar-brand {
     color: #0d4668;
-    font-weight: 700; }
+    font-weight: 700;
+    font-size: 1.25em; }
   .navbar.navbar-light .navbar-nav {
     padding-top: 0.25rem; }
   .navbar.navbar-light a.nav-link {
@@ -57,7 +59,7 @@ h3.callToAction {
 
 #map {
   min-height: 31vh;
-  margin: 4.5vh 0; }
+  margin: 4vh 0; }
   #map.leaflet-container {
     background-color: transparent; }
     #map.leaflet-container .filter-dropshadow {
@@ -119,6 +121,13 @@ h3.callToAction {
   min-height: 1em;
   line-height: 1; }
 
+/* On The Record */
+#onTheRecord .btn-group .dropdown .btn {
+  background-color: #ff4741;
+  color: #fefefe;
+  margin-right: 1em;
+  font-size: 1.5em; }
+
 @media (max-width: 1400px) {
   .container {
     width: 100%;
@@ -127,8 +136,14 @@ h3.callToAction {
 
 /* Small desktop */
 @media (min-width: 992px) {
+  .navbar.navbar-light {
+    padding-left: 15vw; }
+    .navbar.navbar-light .navbar-brand {
+      font-size: 1.25rem; }
+    .navbar.navbar-light .nav-link {
+      font-size: 1rem; }
   h1.title {
-    height: 4vh;
+    height: 6vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -137,7 +152,7 @@ h3.callToAction {
     font-size: 2em; }
   #map {
     height: 80vh;
-    margin: 4vh 0 1vh 0; }
+    margin: 2vh 0 1vh 0; }
   .mocCounts {
     height: 48vh;
     font-size: 1.75em;
@@ -154,7 +169,7 @@ h3.callToAction {
     border-right: auto solid #D5E0E6;
     max-width: 1140px; }
   h1.title {
-    height: 4vh;
+    height: 6vh;
     display: flex;
     flex-direction: column;
     justify-content: center;

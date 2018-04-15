@@ -26,12 +26,14 @@ body {
 
 .navbar.navbar-light {
   border-bottom: $brand-secondary 2px solid;
-  padding-left: 15vw;
+  padding-left: 3vw;
   background: $white;
+  font-size: 2em;
 
   .navbar-brand {
     color: $brand-primary;
     font-weight: 700;
+    font-size: 1.25em;
   }
 
   .navbar-nav {
@@ -94,7 +96,7 @@ h3.callToAction {
 
 #map {
   min-height: 31vh;
-  margin: 4.5vh 0;
+  margin: 4vh 0;
 
   &.leaflet-container {
     background-color:rgba(0,0,0,0.0);
@@ -186,8 +188,19 @@ h3.callToAction {
   line-height: 1;
 }
 
-// Make anything under 1400 full bleed
-// Yes, I know we should use columns for this...but it just seems like so much extra code for no good reason
+
+/* On The Record */
+#onTheRecord {
+  .btn-group .dropdown .btn {
+    background-color: $brand-secondary;
+    color: $white;
+    margin-right: 1em;
+    font-size: 1.5em;
+  }
+}
+
+
+// Make anything under 1400 full bleed.   Yes, I know we should use columns for this...but it just seems like so much extra code for no good reason
 @media (max-width:1400px) {
   .container {
       width: 100%;
@@ -198,8 +211,17 @@ h3.callToAction {
 
 /* Small desktop */
 @media (min-width: 992px) {
+  .navbar.navbar-light {
+    padding-left: 15vw;
+    .navbar-brand {
+      font-size: 1.25rem;
+    }
+    .nav-link {
+      font-size: 1rem;
+    }
+  }
   h1.title {
-    height: 4vh;
+    height: 6vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -212,7 +234,7 @@ h3.callToAction {
 
   #map {
     height: 80vh;
-    margin: 4vh 0 1vh 0;
+    margin: 2vh 0 1vh 0;
   }
 
   .mocCounts {
@@ -234,13 +256,12 @@ h3.callToAction {
 /* Large desktop */
 @media (min-width: 1600px) {
   .container-fluid {
-    // border-left: 10vw solid $light-grey;
     border-right: auto solid $light-grey;
     max-width: 1140px;
   }
 
   h1.title {
-    height: 4vh;
+    height: 6vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
