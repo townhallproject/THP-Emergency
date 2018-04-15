@@ -1,10 +1,28 @@
 /* Colors */
 /* Global */
-body > .container-fluid {
-  padding-top: 2.5vh; }
+body {
+  background: #D5E0E6; }
+
+.navbar.navbar-light {
+  border-bottom: #ff4741 2px solid;
+  padding-left: 15vw;
+  background: #fefefe; }
+  .navbar.navbar-light .navbar-brand {
+    color: #0d4668;
+    font-weight: 700; }
+  .navbar.navbar-light .navbar-nav {
+    padding-top: 0.25rem; }
+  .navbar.navbar-light a.nav-link {
+    color: #0d4668; }
+    .navbar.navbar-light a.nav-link:hover {
+      color: #3facef; }
+
+.container-fluid, .container {
+  padding-top: 2.5vh;
+  background: #fefefe; }
 
 .container-light {
-  background: #eaeaea;
+  background: #D5E0E6;
   font-size: 1.5em; }
 
 .container-dark {
@@ -25,7 +43,7 @@ strong {
 h1.title {
   font-size: 4em;
   text-transform: uppercase;
-  height: 8vh;
+  height: 4vh;
   display: flex;
   flex-direction: column;
   justify-content: center; }
@@ -38,19 +56,22 @@ h3.callToAction {
   cursor: pointer; }
 
 #map {
-  min-height: 30vh; }
+  min-height: 31vh;
+  margin: 4.5vh 0; }
   #map.leaflet-container {
     background-color: transparent; }
     #map.leaflet-container .filter-dropshadow {
       filter: url(#filter-dropshadow); }
+  #map .leaflet-tooltip {
+    padding: 1.5em; }
 
 .mocCounts {
   text-align: center;
   font-size: 2.5em;
-  min-height: 57vh; }
+  min-height: 48vh; }
   .mocCounts .photos {
     width: 200px;
-    height: 180px;
+    height: 120px;
     margin: 2.5vh auto;
     position: relative; }
     .mocCounts .photos:before {
@@ -115,7 +136,7 @@ h3.callToAction {
   h3.callToAction {
     font-size: 2em; }
   #map {
-    height: 50vh;
+    height: 51vh;
     margin: 4vh 0 1vh 0; }
   .mocCounts {
     height: 48vh;
@@ -123,15 +144,15 @@ h3.callToAction {
     justify-content: space-evenly; }
     .mocCounts .photos {
       width: 160px;
-      height: 144px; }
+      height: 96px; }
       .mocCounts .photos img {
         width: 40px; } }
 
 /* Large desktop */
 @media (min-width: 1600px) {
   .container-fluid {
-    padding-left: 10vw;
-    padding-right: 10vw; }
+    border-right: auto solid #D5E0E6;
+    max-width: 1140px; }
   h1.title {
     height: 4vh;
     display: flex;
@@ -139,9 +160,9 @@ h3.callToAction {
     justify-content: center;
     font-size: 3em; }
   h3.callToAction {
-    font-size: 2.25em; }
+    font-size: 2em; }
   #map {
-    height: 50vh;
+    height: 51vh;
     margin: 4vh 0 1vh 0; }
   .mocCounts {
     font-size: 2em;
@@ -154,5 +175,5 @@ h3.callToAction {
     font-size: 2.5em; } }
 
 @media (min-width: 1700px) {
-  .container {
+  .container, .container-fluid {
     max-width: 1400px; } }

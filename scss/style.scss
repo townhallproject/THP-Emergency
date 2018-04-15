@@ -4,8 +4,6 @@ $action      : #b2abd2;
 $unknown     : #e8e1dd;
 $concerned   : #fdb863;
 $support     : #e66101;
-$dark-blue   : #0d4668;
-$light-grey  : #eaeaea;
 $red         : #ff2800;
 $white       : #fefefe;
 // From THP
@@ -15,6 +13,7 @@ $brand-secondary: #ff4741; //red
 $brand-cool: #b6e5fb;
 $brand-text: #132149;
 $brand-gray: #d4e0e5;
+$light-grey  : #D5E0E6;
 $brand-success: #3facef;
 $brand-info: #132149;
 $brand-secondary-dark : darken($brand-secondary, 20%);
@@ -22,9 +21,34 @@ $brand-white: #ffffff;
 
 /* Global */
 body {
-  > .container-fluid {
-    padding-top: 2.5vh;
+  background: $light-grey;
+}
+
+.navbar.navbar-light {
+  border-bottom: $brand-secondary 2px solid;
+  padding-left: 15vw;
+  background: $white;
+
+  .navbar-brand {
+    color: $brand-primary;
+    font-weight: 700;
   }
+
+  .navbar-nav {
+    padding-top: 0.25rem;
+  }
+
+  a.nav-link {
+    color: $brand-primary;
+    &:hover {
+      color: $brand-success;
+    }
+  }
+}
+
+.container-fluid, .container {
+  padding-top: 2.5vh;
+  background: $white;
 }
 
 .container-light {
@@ -32,7 +56,7 @@ body {
   font-size: 1.5em;
 }
 .container-dark {
-  background: $dark-blue;
+  background: $brand-primary;
   color: $white;
   font-size: 1.5em;
 }
@@ -54,7 +78,7 @@ strong {
 h1.title {
   font-size: 4em;
   text-transform: uppercase;
-  height: 8vh;
+  height: 4vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -69,7 +93,8 @@ h3.callToAction {
 }
 
 #map {
-  min-height: 30vh;
+  min-height: 31vh;
+  margin: 4.5vh 0;
 
   &.leaflet-container {
     background-color:rgba(0,0,0,0.0);
@@ -78,16 +103,20 @@ h3.callToAction {
       filter: url(#filter-dropshadow);
     }
   }
+
+  .leaflet-tooltip {
+    padding: 1.5em;
+  }
 }
 
 .mocCounts {
   text-align: center;
   font-size: 2.5em;
-  min-height: 57vh;
+  min-height: 48vh;
 
   .photos {
     width: 200px;
-    height: 180px;
+    height: 120px;
     margin: 2.5vh auto;
     position: relative;
 
@@ -182,7 +211,7 @@ h3.callToAction {
   }
 
   #map {
-    height: 50vh;
+    height: 51vh;
     margin: 4vh 0 1vh 0;
   }
 
@@ -193,7 +222,7 @@ h3.callToAction {
 
     .photos {
       width: 160px;
-      height: 144px;
+      height: 96px;
 
       img {
         width: 40px;
@@ -205,8 +234,9 @@ h3.callToAction {
 /* Large desktop */
 @media (min-width: 1600px) {
   .container-fluid {
-    padding-left: 10vw;
-    padding-right: 10vw;
+    // border-left: 10vw solid $light-grey;
+    border-right: auto solid $light-grey;
+    max-width: 1140px;
   }
 
   h1.title {
@@ -218,11 +248,11 @@ h3.callToAction {
   }
 
   h3.callToAction {
-    font-size: 2.25em;
+    font-size: 2em;
   }
 
   #map {
-    height: 50vh;
+    height: 51vh;
     margin: 4vh 0 1vh 0;
   }
 
@@ -244,7 +274,7 @@ h3.callToAction {
 
 // Extra Large Desktop
 @media (min-width: 1700px) {
-  .container {
+  .container, .container-fluid {
     max-width: 1400px;
   }
 }

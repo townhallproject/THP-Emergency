@@ -124,7 +124,7 @@ function populateGroups(groups) {
     document.getElementById("count-" + key).innerHTML = groups[key].length;
     var photoContainer = document.getElementById("photos-" + key);
     var membersToDisplay = groups[key].sort(function(a, b){return parseInt(b.seniority) - parseInt(a.seniority)})
-               .slice(0, 12)
+               .slice(0, 8)
                .forEach(function(MoC) {
                   photoContainer.innerHTML += '<img src="//www.govtrack.us/data/photos/' + MoC.govtrack_id + '-50px.jpeg" />';
     });
