@@ -4,7 +4,7 @@ var MoCsByDistrict;
 
 // Wait for the DOM to be ready then add the Map and restrict movement
 document.addEventListener("DOMContentLoaded", function(event) {
-  map = L.map('map', { zoomControl: false, zoomSnap: 0.1, attributionControl: false }).setView([37.8, -96], 4.7);
+  map = L.map('map', { zoomControl: false, zoomSnap: 0.1, attributionControl: false }).setView([37.8, -96], calculateZoom());
   map.dragging.disable();
   map.touchZoom.disable();
   map.doubleClickZoom.disable();
@@ -138,6 +138,14 @@ var layerOutlineStyle = {
   opacity: 0.25,
   color: 'black',
   className: 'filter-dropshadow'
+}
+
+function calculateZoom() {
+  var sw = screen.width;
+
+  return sw >= 1700 ? 4.7 :
+         sw >= 1600 ? 4.3 :
+                      4.5 ;
 }
 
 function addMoCsToDistrict(districtGeoJson) {

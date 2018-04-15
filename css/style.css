@@ -136,7 +136,7 @@ h3.callToAction {
   h3.callToAction {
     font-size: 2em; }
   #map {
-    height: 51vh;
+    height: 80vh;
     margin: 4vh 0 1vh 0; }
   .mocCounts {
     height: 48vh;
@@ -162,8 +162,8 @@ h3.callToAction {
   h3.callToAction {
     font-size: 2em; }
   #map {
-    height: 51vh;
-    margin: 4vh 0 1vh 0; }
+    height: 56vh;
+    margin: 3vh 0 1vh 0; }
   .mocCounts {
     font-size: 2em;
     line-height: 1.3;
