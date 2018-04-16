@@ -31,6 +31,11 @@ body {
   background: #0d4668;
   color: #fefefe;
   font-size: 1.5em; }
+  .container-dark a {
+    color: #fefefe;
+    text-decoration: underline; }
+    .container-dark a:hover, .container-dark a:visited {
+      color: #fefefe; }
 
 h1, h2, h3, h4, h5 {
   font-family: 'Roboto', sans-serif; }
