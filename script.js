@@ -112,17 +112,10 @@ function filterSupport(MoC) {
 }
 
 // View Helpers
-function scrollToAnchor(element, to, duration) {
-  if (duration < 10) { return; }
-  var difference = to - element.scrollTop;
-  var perTick = difference / duration * 10;
-
-  setTimeout(function() {
-    element.scrollTop = element.scrollTop + perTick;
-    if (element.scrollTop < to) {
-      scrollToAnchor(element, to, duration - 10);
-    }
-  }, 10);
+function scrollToAnchor(target) {
+  $('html, body').animate({
+    scrollTop: $(target).offset().top,
+  }, 1000);
 }
 
 function showTooltip(e) {
@@ -241,19 +234,19 @@ function createMoCCard(MoC) {
 
   res += '<div class="col-12 col-sm-7 p-0 text-right">';
 
-  if (twitter.length) {
+  if (twitter && twitter.length) {
     res += '<a href="//twitter.com/' + twitter + '" class="social-icon" target="_blank">' +
               '<i class="fa fa-twitter-square" aria-hidden="true"></i>' +
             '</a>'
   }
 
-  if (facebook.length) {
+  if (facebook && facebook.length) {
     res += '<a href="//facebook.com/' + facebook + '" class="social-icon" target="_blank">' +
               '<i class="fa fa-facebook-square" aria-hidden="true"></i>' +
             '</a>'
   }
 
-  if (website.length) {
+  if (website && website.length) {
     res += '<a href="' + website + '" class="social-icon" target="_blank">' +
               '<i class="fa fa fa-external-link-square" aria-hidden="true"></i>' +
             '</a>'
