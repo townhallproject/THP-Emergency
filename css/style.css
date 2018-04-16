@@ -35,11 +35,28 @@ body {
 h1, h2, h3, h4, h5 {
   font-family: 'Roboto', sans-serif; }
 
-p {
+body {
   font-family: 'Open Sans', sans-serif; }
 
 strong {
   font-weight: 800; }
+
+.background-impeachment {
+  color: #fefefe;
+  background-color: #5e3c99; }
+
+.background-action {
+  background-color: #b2abd2; }
+
+.background-unknown {
+  background-color: #e8e1dd; }
+
+.background-concerned {
+  background-color: #fdb863; }
+
+.background-support {
+  color: #fefefe;
+  background-color: #e66101; }
 
 /* Splash page */
 h1.title {
@@ -127,6 +144,30 @@ h3.callToAction {
   color: #fefefe;
   margin-right: 1em;
   font-size: 1.5em; }
+
+#onTheRecord .card {
+  min-width: 300px;
+  max-width: 395px;
+  margin: 20px 25px; }
+  #onTheRecord .card .card-header {
+    height: 84px;
+    padding-left: 0;
+    padding-right: 0; }
+    #onTheRecord .card .card-header img {
+      filter: saturate(0%);
+      height: 100%; }
+    #onTheRecord .card .card-header h4, #onTheRecord .card .card-header small {
+      display: block;
+      text-align: center;
+      padding-top: 0.4em; }
+    #onTheRecord .card .card-header small {
+      font-size: 1em; }
+  #onTheRecord .card .card-body .fa {
+    color: #0d4668;
+    font-size: 2.25em;
+    padding: 0 0.125em; }
+    #onTheRecord .card .card-body .fa:hover {
+      color: #3facef; }
 
 @media (max-width: 1400px) {
   .container {

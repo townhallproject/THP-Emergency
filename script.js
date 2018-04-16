@@ -1,6 +1,8 @@
+// TODO add babel so we can use ES6 like sane people
 var map;
 var MoCs;
 var MoCsByDistrict;
+var filters;
 
 // Wait for the DOM to be ready then add the Map and restrict movement
 document.addEventListener("DOMContentLoaded", function(event) {
@@ -11,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   map.scrollWheelZoom.disable();
 });
 
+// TODO break this out into setup file
 var fbconfig = {
   apiKey: 'AIzaSyDwZ41RWIytGELNBnVpDr7Y_k1ox2F2Heg',
   authDomain: 'townhallproject-86312.firebaseapp.com',
@@ -25,8 +28,7 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
   // Get MoCs and flatten into array
   MoCs = snapshot.val();
   MoCs = Object.keys(MoCs).map(function(key) {
-    // Add randomly generated values for crisis
-    // TODO: Remove once we have real values
+    // TODO: Remove once we have real values for crisis stance
     return Object.assign({}, MoCs[key], {crisis: Math.floor(Math.random() * 5) + 1});
   }).filter(function(MoC) {
     return MoC.hasOwnProperty('in_office') && MoC.in_office === true;
@@ -44,8 +46,9 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
   districtLayer.bindTooltip(showTooltip).addTo(map);
   outlineLayer.addTo(map);
 
-  // Fill out the MoC count groups and photos
+  // Fill out the MoC stance groups, add photos, and generate all MoC cards
   populateGroups(mapToGroups(MoCs));
+  addMoCCards(MoCs, filters);
 });
 
 // Static Dicts
@@ -55,6 +58,14 @@ var responseDict = {
   3: 'is not on record.',
   4: 'has voiced concerns.',
   5: 'supports Trump.',
+}
+
+var responseClass = {
+  1: 'impeachment',
+  2: 'action',
+  3: 'unknown',
+  4: 'concerned',
+  5: 'support'
 }
 
 // Data mapping
@@ -191,4 +202,62 @@ function fillColor(district) {
          district.properties.crisisMode === 3 ? '#e8e1dd' :
          district.properties.crisisMode === 4 ? '#fdb863' :
                                                 '#e66101' ;
+}
+
+// MoC section
+function addMoCCards(MoCs, filters) {
+  var container = $('#onTheRecord .row');
+  container.empty();
+  // Filtering goes here
+  MoCs.forEach(function(MoC) {
+    container.append(createMoCCard(MoC));
+  })
+}
+
+function createMoCCard(MoC) {
+  // TODO break this out into template
+  var facebook = MoC.facebook_official_account || MoC.facebook_account || MoC.facebook;
+  var twitter = MoC.twitter_account || MoC.twitter;
+  var website = MoC.contact_form || MoC.url;
+  
+  var res = '<div class="col card">' + 
+      '<div class="card-header p-0">' +
+        '<div class="row background-' + responseClass[MoC.crisis] + '">' +
+          '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/data/photos/' + MoC.govtrack_id + '-100px.jpeg"></div>' +
+          '<div class="col-8 col-sm-9 p-0">' +
+            '<h4>' + MoC.displayName + '</h4>' +
+            '<small class="rep-card-subtitle">' + 
+              (!MoC.district ? 'Sen. ' : '' ) + MoC.state + (MoC.district ? '-' + MoC.district : '') +
+            '</small>' + 
+          '</div>' + 
+        '</div>' +
+      '</div>' +
+      '<div class="card-body">' +
+        '<div class="row">';
+  
+  if (MoC.phone) {
+    res += '<div class="col-12 col-sm-5 p-0">Office Phone:<div>' + MoC.phone + '</div></div>';
+  }
+
+  res += '<div class="col-12 col-sm-7 p-0 text-right">';
+
+  if (twitter.length) {
+    res += '<a href="//twitter.com/' + twitter + '" class="social-icon" target="_blank">' +
+              '<i class="fa fa-twitter-square" aria-hidden="true"></i>' +
+            '</a>'
+  }
+
+  if (facebook.length) {
+    res += '<a href="//facebook.com/' + facebook + '" class="social-icon" target="_blank">' +
+              '<i class="fa fa-facebook-square" aria-hidden="true"></i>' +
+            '</a>'
+  }
+
+  if (website.length) {
+    res += '<a href="' + website + '" class="social-icon" target="_blank">' +
+              '<i class="fa fa fa-external-link-square" aria-hidden="true"></i>' +
+            '</a>'
+  }
+
+  return res += '</div></div></div>';
 }
