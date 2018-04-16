@@ -87,7 +87,7 @@ h3.callToAction {
     #map.leaflet-container .filter-dropshadow {
       filter: url(#filter-dropshadow); }
   #map .leaflet-tooltip {
-    padding: 1.5em; }
+    padding: 2em; }
 
 .mocCounts {
   text-align: center;

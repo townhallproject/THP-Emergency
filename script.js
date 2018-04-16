@@ -2,6 +2,7 @@
 var map;
 var MoCs;
 var MoCsByDistrict;
+var senatorsByState;
 var filters;
 
 // Wait for the DOM to be ready then add the Map and restrict movement
@@ -34,6 +35,7 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
     return MoC.hasOwnProperty('in_office') && MoC.in_office === true;
   });
   MoCsByDistrict = mapToDistrictDict(MoCs);
+  senatorsByState = mapToStateDict(MoCs);
   var districtLayer = new L.GeoJSON.AJAX("districts.geojson", {
     middleware: addMoCsToDistrict,
     style: function(state) { return setStyle(state); }
@@ -80,6 +82,17 @@ function mapToDistrictDict(MoCs) {
   }, {});
 }
 
+function mapToStateDict(MoCs) {
+  return MoCs.reduce(function(res, MoC) {
+    if (MoC.district) { return res; }
+    if (!res.hasOwnProperty(MoC.state)) {
+        res[MoC.state] = [];
+    }
+    res[MoC.state].push(MoC);
+    return res;
+  }, {});
+}
+
 function mapToGroups(MoCs) {
   return {
     impeachment: MoCs.filter(filterImpeachment),
@@ -119,8 +132,11 @@ function scrollToAnchor(target) {
 }
 
 function showTooltip(e) {
-  return '<h4>' + e.feature.properties.DISTRICT + ' Representatives:</h4>' +
-         '<h6><b>Rep ' + e.feature.properties.MoCs[0].displayName + '</b> ' + responseDict[e.feature.properties.MoCs[0].crisis];
+  var tooltip = '<h4>' + e.feature.properties.DISTRICT + ' Representatives:</h4>';
+  senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)].forEach(function(senator) {
+    tooltip += '<h6>Sen <b>' + senator.displayName + '</b> ' + responseDict[senator.crisis];
+  });
+  return tooltip += '<h6>Rep <b>' + e.feature.properties.MoCs[0].displayName + '</b> ' + responseDict[e.feature.properties.MoCs[0].crisis];
 }
 
 function populateGroups(groups) {
