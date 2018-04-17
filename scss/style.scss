@@ -6,6 +6,7 @@ $concerned   : #fdb863;
 $support     : #e66101;
 $red         : #ff2800;
 $white       : #fefefe;
+$middle-grey:  #bcc8d3;
 // From THP
 $brand-primary: #0d4668;
 $brand-primary-lighter: lighten($brand-primary, 17.5%);
@@ -54,8 +55,13 @@ body {
 }
 
 .container-light {
-  background: $light-grey;
-  font-size: 1.5em;
+  color: $brand-text;
+  background: $middle-grey;
+  font-size: 0.5em;
+
+  .checkbox-inline {
+    padding-top: 1em;
+  }
 }
 .container-dark {
   background: $brand-primary;

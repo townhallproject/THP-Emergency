@@ -24,8 +24,11 @@ body {
   background: #fefefe; }
 
 .container-light {
-  background: #D5E0E6;
-  font-size: 1.5em; }
+  color: #132149;
+  background: #bcc8d3;
+  font-size: 0.5em; }
+  .container-light .checkbox-inline {
+    padding-top: 1em; }
 
 .container-dark {
   background: #0d4668;
