@@ -3,7 +3,7 @@ var map;
 var MoCs;
 var MoCsByDistrict;
 var senatorsByState;
-var filters;
+var filters = {};
 
 // Wait for the DOM to be ready then add the Map and restrict movement
 document.addEventListener("DOMContentLoaded", function(event) {
@@ -50,7 +50,8 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
 
   // Fill out the MoC stance groups, add photos, and generate all MoC cards
   populateGroups(mapToGroups(MoCs));
-  addMoCCards(MoCs, filters);
+  bindFilterEvents();
+  addMoCCards();
 });
 
 // Static Dicts
@@ -214,11 +215,11 @@ function fillColor(district) {
 }
 
 // MoC section
-function addMoCCards(MoCs, filters) {
-  var container = $('#onTheRecord .row');
+function addMoCCards() {
+  var container = $('#MoCCardContainer');
   container.empty();
   // Filtering goes here
-  MoCs.forEach(function(MoC) {
+  filterMoCs().forEach(function(MoC) {
     container.append(createMoCCard(MoC));
   })
 }
@@ -269,4 +270,52 @@ function createMoCCard(MoC) {
   }
 
   return res += '</div></div></div>';
+}
+
+function bindFilterEvents() {
+  $('#onTheRecord .dropdown .dropdown-item').click(setFilter);
+  $(document).on('click', '#filter-info > button > i.fa-times', removeFilter);
+}
+
+function setFilter(e) {
+  var type  = e.currentTarget.getAttribute('data-type');
+  var value = e.currentTarget.getAttribute('data-value');
+      value = parseInt(value) || value;
+  
+  if (Object.keys(filters).indexOf(type) === -1) {
+    filters[type] = [];
+  }
+  
+  if (filters[type].indexOf(value) === -1) {
+    filters[type].push(value);
+    $('#filter-info').append(
+      '<button class="btn btn-secondary btn-xs" data-type="' + type + '" data-value="' + value + '">' +
+      e.currentTarget.innerText + '<i class="fa fa-times" aria-hidden="true"></i></button>'
+    )
+    addMoCCards();
+  }
+}
+
+function removeFilter(e) {
+  var type  = e.currentTarget.parentElement.getAttribute('data-type');
+  var value = e.currentTarget.parentElement.getAttribute('data-value');
+      value = parseInt(value) || value;
+  if (filters.hasOwnProperty(type) && filters[type].indexOf(value) !== -1 ) {
+    filters[type].splice(filters[type].indexOf(value), 1);
+  }
+  if (filters.hasOwnProperty(type) && filters[type].length === 0) {
+    delete filters[type];
+  }
+  e.currentTarget.parentElement.remove();
+  addMoCCards();
+}
+
+function filterMoCs() {
+  var filteredMoCs = MoCs;
+  Object.keys(filters).forEach(function(key) {
+    filteredMoCs = filteredMoCs.filter(function(MoC) {
+      return filters[key].indexOf(MoC[key]) !== -1;
+    })
+  })
+  return filteredMoCs;
 }

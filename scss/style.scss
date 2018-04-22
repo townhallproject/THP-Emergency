@@ -229,10 +229,34 @@ h3.callToAction {
 /* On The Record */
 #onTheRecord {
   .btn-group .dropdown .btn {
-    background-color: $brand-secondary;
+    background-color: $brand-secondary-dark;
     color: $white;
+    padding: 0.15em 0.5em;
     margin-right: 1em;
     font-size: 1.5em;
+  }
+
+  .dropdown-menu {
+    max-height: 50em;
+    overflow-y: auto;
+    
+    .dropdown-item {
+      cursor: pointer;
+    }
+  }
+
+  #filter-info {
+    margin-top: 0.75em;
+    button {
+      background: $brand-secondary;
+      border-color: $brand-secondary-dark;
+      margin: 0 0.75em 0.75em 0;
+      cursor: default;
+      .fa.fa-times {
+        margin-left: 0.5em;
+        cursor: pointer;        
+      }
+    }
   }
 
   .card {

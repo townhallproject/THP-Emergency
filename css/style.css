@@ -148,10 +148,28 @@ h3.callToAction {
 
 /* On The Record */
 #onTheRecord .btn-group .dropdown .btn {
-  background-color: #ff4741;
+  background-color: #da0700;
   color: #fefefe;
+  padding: 0.15em 0.5em;
   margin-right: 1em;
   font-size: 1.5em; }
+
+#onTheRecord .dropdown-menu {
+  max-height: 50em;
+  overflow-y: auto; }
+  #onTheRecord .dropdown-menu .dropdown-item {
+    cursor: pointer; }
+
+#onTheRecord #filter-info {
+  margin-top: 0.75em; }
+  #onTheRecord #filter-info button {
+    background: #ff4741;
+    border-color: #da0700;
+    margin: 0 0.75em 0.75em 0;
+    cursor: default; }
+    #onTheRecord #filter-info button .fa.fa-times {
+      margin-left: 0.5em;
+      cursor: pointer; }
 
 #onTheRecord .card {
   min-width: 300px;
