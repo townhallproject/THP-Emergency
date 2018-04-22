@@ -247,7 +247,7 @@ function createMoCCard(MoC) {
         '<div class="row">';
   
   if (MoC.phone) {
-    res += '<div class="col-12 col-sm-5 p-0">Office Phone:<div>' + MoC.phone + '</div></div>';
+    res += '<div class="col-12 col-sm-5 p-0">D.C. Office Phone:<div>' + MoC.phone + '</div></div>';
   }
 
   res += '<div class="col-12 col-sm-7 p-0 text-right">';
