@@ -236,6 +236,7 @@ function createMoCCard(MoC) {
           '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/data/photos/' + MoC.govtrack_id + '-50px.jpeg"></div>' +
           '<div class="col-8 col-sm-9 p-0">' +
             '<h4>' + MoC.displayName + '</h4>' +
+            '<small class="rep-card-position">' + responseDict[MoC.crisis] + '</small>' +
             '<small class="rep-card-subtitle">' + 
               (!MoC.district ? 'Sen. ' : '' ) + MoC.state + (MoC.district ? '-' + MoC.district : '') +
             '</small>' + 

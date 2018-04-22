@@ -184,10 +184,16 @@ h3.callToAction {
       height: 100%; }
     #onTheRecord .card .card-header h4, #onTheRecord .card .card-header small {
       display: block;
-      text-align: center;
+      text-align: center; }
+    #onTheRecord .card .card-header h4 {
+      margin-bottom: 0;
       padding-top: 0.4em; }
-    #onTheRecord .card .card-header small {
-      font-size: 1em; }
+    #onTheRecord .card .card-header .rep-card-position {
+      font-size: 0.9em;
+      font-style: italic; }
+    #onTheRecord .card .card-header .rep-card-subtitle {
+      font-size: 1.1em;
+      padding: 0.4em 0; }
   #onTheRecord .card .card-body .fa {
     color: #0d4668;
     font-size: 2.25em;

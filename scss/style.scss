@@ -277,11 +277,21 @@ h3.callToAction {
       h4, small {
         display: block;
         text-align: center;
+      }
+
+      h4 {
+        margin-bottom: 0;
         padding-top: 0.4em;
       }
 
-      small {
-        font-size: 1em;
+      .rep-card-position {
+        font-size: 0.9em;
+        font-style: italic;
+      }
+
+      .rep-card-subtitle {
+        font-size: 1.1em;
+        padding: 0.4em 0;
       }
     }
 
