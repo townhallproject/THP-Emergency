@@ -1,3 +1,5 @@
+window.alert("NB:  This site is currently in testing mode.  All data is randomly generated.")
+
 // TODO add babel so we can use ES6 like sane people
 var map;
 var MoCs;
