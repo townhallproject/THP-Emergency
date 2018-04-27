@@ -146,6 +146,13 @@ h3.callToAction {
   min-height: 1em;
   line-height: 1; }
 
+/* SignUp Form */
+#email-signup-form #email-signup-form-errors > .col {
+  color: #ff2800;
+  font-size: 1.75em;
+  font-weight: 700;
+  letter-spacing: 2; }
+
 /* On The Record */
 #onTheRecord .btn-group .dropdown .btn {
   background-color: #da0700;
