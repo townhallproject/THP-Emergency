@@ -231,23 +231,23 @@ function createMoCCard(MoC) {
   var facebook = MoC.facebook_official_account || MoC.facebook_account || MoC.facebook;
   var twitter = MoC.twitter_account || MoC.twitter;
   var website = MoC.contact_form || MoC.url;
-  
-  var res = '<div class="card">' + 
+
+  var res = '<div class="card">' +
       '<div class="card-header p-0">' +
         '<div class="row background-' + responseClass[MoC.crisis] + ' m-0">' +
           '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/data/photos/' + MoC.govtrack_id + '-50px.jpeg"></div>' +
           '<div class="col-8 col-sm-9">' +
             '<h4>' + MoC.displayName + '</h4>' +
             '<small class="rep-card-position">' + responseDict[MoC.crisis] + '</small>' +
-            '<small class="rep-card-subtitle">' + 
+            '<small class="rep-card-subtitle">' +
               (!MoC.district ? 'Sen. ' : '' ) + MoC.state + (MoC.district ? '-' + MoC.district : '') +
-            '</small>' + 
-          '</div>' + 
+            '</small>' +
+          '</div>' +
         '</div>' +
       '</div>' +
       '<div class="card-body">' +
         '<div class="row m-0 pt-2">';
-  
+
   if (MoC.phone) {
     res += '<div class="col-12 col-sm-5 p-0">D.C. Office Phone:<div>' + MoC.phone + '</div></div>';
   }
@@ -284,11 +284,11 @@ function setFilter(e) {
   var type  = e.currentTarget.getAttribute('data-type');
   var value = e.currentTarget.getAttribute('data-value');
       value = parseInt(value) || value;
-  
+
   if (Object.keys(filters).indexOf(type) === -1) {
     filters[type] = [];
   }
-  
+
   if (filters[type].indexOf(value) === -1) {
     filters[type].push(value);
     $('#filter-info').append(
@@ -321,4 +321,62 @@ function filterMoCs() {
     })
   })
   return filteredMoCs;
+}
+
+function signUp(form) {
+  var zipcodeRegEx = /^(\d{5}-\d{4}|\d{5}|\d{9})$|^([a-zA-Z]\d[a-zA-Z] \d[a-zA-Z]\d)$/g;
+  var emailRegEx = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+  var phoneRegEx = /^(\d{11})$/;
+  var errors = [];
+
+  if (!form.last.value || !form.first.value || !form.zipcode.value || !form.email.value || !form.phone.value) {
+    errors.push("Please fill in all fields.")
+  }
+
+  if (!emailRegEx.test(form.email.value)) {
+    errors.push("Please enter a valid email.")
+  }
+
+  if (!zipcodeRegEx.test(form.zipcode.value)) {
+    errors.push("Please enter a valid zipcode.")
+  }
+
+  if (!phoneRegEx.test(form.phone.value)) {
+    errors.push("Please enter an 11 digit phone number. Do not include hyphens, parentheses, or spaces.")
+  }
+
+  if (errors.length !== 0) {
+    $('#email-signup-form-errors > .col').html(errors.join('<br />'))
+    return false;
+  }
+
+  var person = {
+    'person' : {
+      'family_name': form.last.value,
+      'given_name': form.first.value,
+      'postal_addresses': [{ 'postal_code': form.zipcode.value}],
+      'email_addresses': [{ 'address': form.email.value }],
+      'phone_numbers': [{ 'number': form.phone.value }]
+    }
+  };
+
+  $.ajax({
+    url: 'https://actionnetwork.org/api/v2/forms/47264a33-be61-4e91-aa5d-2a66b4a207d7/submissions',
+    method: 'POST',
+    dataType: 'json',
+    contentType: 'application/json',
+    data: JSON.stringify(person),
+    success: function() {
+      $('#email-signup').html('<div class="container container-fluid container-light pl-5 pr-5 pb-2">' +
+                                '<h1 class="text-center pb-3">Thanks for signing up. We&rsquo;ll be in touch!</h1>' +
+                              '</div>');
+    },
+    error: function() {
+      $('#email-signup').html('<div class="container container-fluid container-light pl-5 pr-5 pb-2">' +
+                                '<h1 class="text-center pb-3">An error has occured, please try again later.</h1>' +
+                              '</div>');
+    }
+  });
+
+  return false;
 }

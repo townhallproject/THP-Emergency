@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "livereload": "livereload . -w 1000 -d",
     "sass": "node-sass --watch scss -o css",
-    "serve": "http-server -a localhost"
+    "serve": "http-server -a localhost --cors"
   },
   "repository": {
     "type": "git",

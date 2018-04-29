@@ -169,7 +169,7 @@ h3.callToAction {
       left: 0;
       right: 0;
     }
-    
+
     &#photos-impeachment:before {
       background: rgba($impeachment, 0.25);
     }
@@ -225,6 +225,17 @@ h3.callToAction {
   line-height: 1;
 }
 
+/* SignUp Form */
+
+
+#email-signup-form {
+  #email-signup-form-errors > .col {
+    color: $red;
+    font-size: 1.75em;
+    font-weight: 700;
+    letter-spacing: 2;
+  }
+}
 
 /* On The Record */
 #onTheRecord {
@@ -239,7 +250,7 @@ h3.callToAction {
   .dropdown-menu {
     max-height: 50em;
     overflow-y: auto;
-    
+
     .dropdown-item {
       cursor: pointer;
     }
@@ -254,7 +265,7 @@ h3.callToAction {
       cursor: default;
       .fa.fa-times {
         margin-left: 0.5em;
-        cursor: pointer;        
+        cursor: pointer;
       }
     }
   }
