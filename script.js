@@ -232,11 +232,11 @@ function createMoCCard(MoC) {
   var twitter = MoC.twitter_account || MoC.twitter;
   var website = MoC.contact_form || MoC.url;
   
-  var res = '<div class="col card">' + 
+  var res = '<div class="card">' + 
       '<div class="card-header p-0">' +
-        '<div class="row background-' + responseClass[MoC.crisis] + '">' +
+        '<div class="row background-' + responseClass[MoC.crisis] + ' m-0">' +
           '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/data/photos/' + MoC.govtrack_id + '-50px.jpeg"></div>' +
-          '<div class="col-8 col-sm-9 p-0">' +
+          '<div class="col-8 col-sm-9">' +
             '<h4>' + MoC.displayName + '</h4>' +
             '<small class="rep-card-position">' + responseDict[MoC.crisis] + '</small>' +
             '<small class="rep-card-subtitle">' + 
@@ -246,7 +246,7 @@ function createMoCCard(MoC) {
         '</div>' +
       '</div>' +
       '<div class="card-body">' +
-        '<div class="row">';
+        '<div class="row m-0 pt-2">';
   
   if (MoC.phone) {
     res += '<div class="col-12 col-sm-5 p-0">D.C. Office Phone:<div>' + MoC.phone + '</div></div>';

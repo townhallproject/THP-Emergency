@@ -173,8 +173,7 @@ h3.callToAction {
 
 #onTheRecord .card {
   min-width: 300px;
-  max-width: 395px;
-  margin: 20px 25px; }
+  margin-top: 20px; }
   #onTheRecord .card .card-header {
     height: 84px;
     padding-left: 0;
@@ -234,7 +233,9 @@ h3.callToAction {
       width: 160px;
       height: 96px; }
       .mocCounts .photos img {
-        width: 40px; } }
+        width: 40px; }
+  #onTheRecord .card {
+    min-width: 440px; } }
 
 /* Large desktop */
 @media (min-width: 1600px) {
@@ -264,4 +265,6 @@ h3.callToAction {
 
 @media (min-width: 1700px) {
   .container, .container-fluid {
-    max-width: 1400px; } }
+    max-width: 1400px; }
+  #onTheRecord .card {
+    min-width: 350px; } }

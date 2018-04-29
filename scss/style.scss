@@ -261,8 +261,7 @@ h3.callToAction {
 
   .card {
     min-width: 300px;
-    max-width: 395px;
-    margin: 20px 25px;
+    margin-top: 20px;
 
     .card-header {
       height: 84px; //Size of header on THP MoC cards
@@ -360,6 +359,10 @@ h3.callToAction {
       }
     }
   }
+
+  #onTheRecord .card {
+    min-width: 440px;
+  }
 }
 
 /* Large desktop */
@@ -406,5 +409,9 @@ h3.callToAction {
 @media (min-width: 1700px) {
   .container, .container-fluid {
     max-width: 1400px;
+  }
+
+  #onTheRecord .card {
+    min-width: 350px;
   }
 }
