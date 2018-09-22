@@ -61,7 +61,7 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
 
 // Static Dicts
 var responseDict = {
-  1: 'supports impeachment.',
+  1: 'supports impeachment',
   2: 'supports Trump&apos;s resignation',
   3: 'supports other action(s)',
   4: 'has voiced concerns',
@@ -250,8 +250,13 @@ function createMoCCard(MoC) {
           '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/data/photos/' + MoC.govtrack_id + '-50px.jpeg"></div>' +
           '<div class="col-8 col-sm-9">' +
             '<h4>' + MoC.displayName + '</h4>' +
-            '<small class="rep-card-position">' + responseDict[MoC.crisis_status] + '</small>' +
-            '<small class="rep-card-subtitle">' +
+            '<small class="rep-card-position">'
+      
+    res += MoC.crisis_status === 6 ? responseDict[MoC.crisis_status] + '</small>' : 
+                                    '<a href="' + MoC.crisis_status_source + '" target="blank">' +
+                                    responseDict[MoC.crisis_status] + '</a></small>';
+
+    res += '<small class="rep-card-subtitle">' +
               (!MoC.district ? 'Sen. ' : '' ) + MoC.state + (MoC.district ? '-' + MoC.district : '') +
             '</small>' +
           '</div>' +

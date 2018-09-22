@@ -311,6 +311,11 @@ h3.callToAction {
       .rep-card-position {
         font-size: 0.9em;
         font-style: italic;
+
+        a {
+          color: inherit;
+          text-decoration: underline;
+        }
       }
 
       .rep-card-subtitle {

@@ -206,6 +206,9 @@ h3.callToAction {
     #onTheRecord .card .card-header .rep-card-position {
       font-size: 0.9em;
       font-style: italic; }
+      #onTheRecord .card .card-header .rep-card-position a {
+        color: inherit;
+        text-decoration: underline; }
     #onTheRecord .card .card-header .rep-card-subtitle {
       font-size: 1.1em;
       padding: 0.4em 0; }
