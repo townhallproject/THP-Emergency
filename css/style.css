@@ -245,7 +245,7 @@ h3.callToAction {
     height: 80vh;
     margin: 2vh 0 1vh 0; }
   .mocCounts {
-    height: 48vh;
+    height: 60vh;
     font-size: 1.5em;
     justify-content: space-evenly; }
     .mocCounts .photos {
@@ -255,6 +255,11 @@ h3.callToAction {
         width: 40px; }
   #onTheRecord .card {
     min-width: 440px; } }
+
+/* Macbook Air */
+@media (min-width: 1300px) and (max-width: 1599px) {
+  .d-macbook-inline {
+    display: inline !important; } }
 
 /* Large desktop */
 @media (min-width: 1600px) {

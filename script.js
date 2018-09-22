@@ -1,4 +1,4 @@
-// window.alert("NB:  This site is currently in testing mode.  Data is incomplete, and may not be accurate.")
+window.alert("NB:  This site is currently in testing mode.  Data is incomplete, and may be inaccurate.")
 
 // TODO add babel so we can use ES6 like sane people
 var map;

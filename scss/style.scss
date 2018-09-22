@@ -376,7 +376,7 @@ h3.callToAction {
   }
 
   .mocCounts {
-    height: 48vh;
+    height: 60vh;
     font-size: 1.5em;
     justify-content: space-evenly;
 
@@ -392,6 +392,13 @@ h3.callToAction {
 
   #onTheRecord .card {
     min-width: 440px;
+  }
+}
+
+/* Macbook Air */
+@media (min-width: 1300px) and (max-width: 1599px) {
+  .d-macbook-inline {
+    display: inline!important;
   }
 }
 
