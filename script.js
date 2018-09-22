@@ -156,7 +156,7 @@ function populateGroups(groups) {
   Object.keys(groups).forEach(function(key) {
     document.getElementById("count-" + key).innerHTML = groups[key].length;
     var photoContainer = document.getElementById("photos-" + key);
-    var membersToDisplay = groups[key].sort(function(a, b){return parseInt(b.seniority) - parseInt(a.seniority)})
+    groups[key].sort(function(a, b){return parseInt(b.seniority) - parseInt(a.seniority)})
                .slice(0, 8)
                .forEach(function(MoC) {
                   photoContainer.innerHTML += '<img src="//www.govtrack.us/data/photos/' + MoC.govtrack_id + '-50px.jpeg" />';
@@ -221,9 +221,11 @@ function setStyle(state) {
 function fillColor(district) {
   return district.properties.crisisMode === 1 ? '#5e3c99' :
          district.properties.crisisMode === 2 ? '#b2abd2' :
-         district.properties.crisisMode === 3 ? '#e8e1dd' :
+         district.properties.crisisMode === 3 ? '#ddcae5' :
+         district.properties.crisisMode === 6 ? '#e8e1dd' :
          district.properties.crisisMode === 4 ? '#fdb863' :
-                                                '#e66101' ;
+         district.properties.crisisMode === 5 ? '#e66101' :
+                                                '#ffffff';
 }
 
 // MoC section

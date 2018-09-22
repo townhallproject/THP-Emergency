@@ -53,8 +53,12 @@ strong {
   color: #fefefe;
   background-color: #5e3c99; }
 
-.background-action {
+.background-resignation {
+  color: #fefefe;
   background-color: #b2abd2; }
+
+.background-action {
+  background-color: #ddcae5; }
 
 .background-unknown {
   background-color: #e8e1dd; }
@@ -112,8 +116,10 @@ h3.callToAction {
       right: 0; }
     .mocCounts .photos#photos-impeachment:before {
       background: rgba(94, 60, 153, 0.25); }
-    .mocCounts .photos#photos-action:before {
+    .mocCounts .photos#photos-resignation:before {
       background: rgba(178, 171, 210, 0.25); }
+    .mocCounts .photos#photos-action:before {
+      background: rgba(221, 202, 229, 0.25); }
     .mocCounts .photos#photos-unknown:before {
       background: rgba(232, 225, 221, 0.25); }
     .mocCounts .photos#photos-concerned:before {
@@ -128,8 +134,11 @@ h3.callToAction {
 .mocCounts-impeachment {
   color: #5e3c99; }
 
-.mocCounts-action {
+.mocCounts-resignation {
   color: #b2abd2; }
+
+.mocCounts-action {
+  color: #ddcae5; }
 
 .mocCounts-unkown {
   color: #e8e1dd; }

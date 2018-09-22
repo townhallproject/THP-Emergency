@@ -1,6 +1,7 @@
 /* Colors */
 $impeachment : #5e3c99;
-$action      : #b2abd2;
+$resignation : #b2abd2;
+$action      : #ddcae5;
 $unknown     : #e8e1dd;
 $concerned   : #fdb863;
 $support     : #e66101;
@@ -94,6 +95,11 @@ strong {
   background-color: $impeachment;
 }
 
+.background-resignation {
+  color: $white;
+  background-color: $resignation;
+}
+
 .background-action {
   background-color: $action;
 }
@@ -174,6 +180,10 @@ h3.callToAction {
       background: rgba($impeachment, 0.25);
     }
 
+    &#photos-resignation:before {
+      background: rgba($resignation, 0.25);
+    }
+
     &#photos-action:before {
       background: rgba($action, 0.25);
     }
@@ -200,6 +210,10 @@ h3.callToAction {
 
 .mocCounts-impeachment {
   color: $impeachment;
+}
+
+.mocCounts-resignation {
+  color: $resignation;
 }
 
 .mocCounts-action {
