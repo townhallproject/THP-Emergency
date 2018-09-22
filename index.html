@@ -46,6 +46,11 @@
         Support impeachment
         <div id="photos-impeachment" class="photos"></div>
       </div>
+      <div class="col-4 col-lg-2 col-lg-offset-1 mocCounts-resignation">
+        <div class="number" id="count-resignation"></div>
+        Support resignation
+        <div id="photos-resignation" class="photos"></div>
+      </div>
       <div class="col-4 col-lg-2 col-lg-offset-1 mocCounts-action">
         <div class="number" id="count-action"></div>
         Support <span class="d-lg-none d-xl-inline">other </span>action
@@ -126,11 +131,12 @@
           Public position
         </button>
         <div class="dropdown-menu" aria-labelledby="buttonPosition">
-          <div class="dropdown-item" data-type="crisis" data-value="1">Support impeachment</div>
-          <div class="dropdown-item" data-type="crisis" data-value="2">Support other action</div>
-          <div class="dropdown-item" data-type="crisis" data-value="3">Are not yet on record</div>
-          <div class="dropdown-item" data-type="crisis" data-value="4">Have voiced concerns</div>
-          <div class="dropdown-item" data-type="crisis" data-value="5">Support Trump</div>
+          <div class="dropdown-item" data-type="crisis_status" data-value="1">Support impeachment</div>
+          <div class="dropdown-item" data-type="crisis_status" data-value="2">Support resignation</div>
+          <div class="dropdown-item" data-type="crisis_status" data-value="3">Support other action</div>
+          <div class="dropdown-item" data-type="crisis_status" data-value="4">Have voiced concerns</div>
+          <div class="dropdown-item" data-type="crisis_status" data-value="5">Oppose impeachment</div>
+          <div class="dropdown-item" data-type="crisis_status" data-value="6">Are not yet on record</div>
         </div>
       </div>
       <div class="dropdown">
@@ -212,7 +218,7 @@
           <div class="dropdown-item" data-type="state" data-value="WA">Washington</div>
           <div class="dropdown-item" data-type="state" data-value="WV">West Virginia</div>
           <div class="dropdown-item" data-type="state" data-value="WI">Wisconsin</div>
-          <div class="dropdown-item" data-type="state" data-value="WY">Wyomin</div>
+          <div class="dropdown-item" data-type="state" data-value="WY">Wyoming</div>
         </div>
       </div>
     </div>

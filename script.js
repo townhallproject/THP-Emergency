@@ -1,4 +1,4 @@
-window.alert("NB:  This site is currently in testing mode.  All data is randomly generated.")
+// window.alert("NB:  This site is currently in testing mode.  Data is incomplete, and may not be accurate.")
 
 // TODO add babel so we can use ES6 like sane people
 var map;
@@ -31,10 +31,13 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
   // Get MoCs and flatten into array
   MoCs = snapshot.val();
   MoCs = Object.keys(MoCs).map(function(key) {
-    // TODO: Remove once we have real values for crisis stance
-    return Object.assign({}, MoCs[key], {crisis: Math.floor(Math.random() * 5) + 1});
+    // TODO once all MoCs have crisis values remove this stub
+    var MoC = MoCs[key];
+    MoC.crisis_status = MoC.crisis_status || 6;
+    return MoC;
   }).filter(function(MoC) {
-    return MoC.hasOwnProperty('in_office') && MoC.in_office === true;
+    // Remove out of office people, and test data
+    return MoC.hasOwnProperty('in_office') && MoC.in_office === true && MoC.ballotpedia_id !== 'Testing McTesterson';
   });
   MoCsByDistrict = mapToDistrictDict(MoCs);
   senatorsByState = mapToStateDict(MoCs);
@@ -59,18 +62,20 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
 // Static Dicts
 var responseDict = {
   1: 'supports impeachment.',
-  2: 'supports another action.',
-  3: 'is not on record.',
-  4: 'has voiced concerns.',
-  5: 'supports Trump.',
+  2: 'supports Trump&apos;s resignation',
+  3: 'supports other action(s)',
+  4: 'has voiced concerns',
+  5: 'opposes impeachment',
+  6: 'not yet on record',
 }
 
 var responseClass = {
   1: 'impeachment',
-  2: 'action',
-  3: 'unknown',
+  2: 'resignation',
+  3: 'action',
   4: 'concerned',
-  5: 'support'
+  5: 'support',
+  6: 'unknown',
 }
 
 // Data mapping
@@ -99,32 +104,37 @@ function mapToStateDict(MoCs) {
 function mapToGroups(MoCs) {
   return {
     impeachment: MoCs.filter(filterImpeachment),
+    resignation: MoCs.filter(filterResignation),
     action: MoCs.filter(filterAction),
-    unknown: MoCs.filter(filterUnknown),
     concerned: MoCs.filter(filterConcerned),
-    support: MoCs.filter(filterSupport)
+    support: MoCs.filter(filterSupport),
+    unknown: MoCs.filter(filterUnknown),
   };
 }
 
 // Filters
 function filterImpeachment(MoC) {
-  return MoC.crisis === 1;
+  return MoC.crisis_status === 1;
+}
+
+function filterResignation(MoC) {
+  return MoC.crisis_status === 2;
 }
 
 function filterAction(MoC) {
-  return MoC.crisis === 2;
-}
-
-function filterUnknown(MoC) {
-  return MoC.crisis === 3;
+  return MoC.crisis_status === 3;
 }
 
 function filterConcerned(MoC) {
-  return MoC.crisis === 4;
+  return MoC.crisis_status === 4;
 }
 
 function filterSupport(MoC) {
-  return MoC.crisis === 5;
+  return MoC.crisis_status === 5;
+}
+
+function filterUnknown(MoC) {
+  return MoC.crisis_status === 6;
 }
 
 // View Helpers
@@ -137,9 +147,9 @@ function scrollToAnchor(target) {
 function showTooltip(e) {
   var tooltip = '<h4>' + e.feature.properties.DISTRICT + ' Representatives:</h4>';
   senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)].forEach(function(senator) {
-    tooltip += '<h6>Sen <b>' + senator.displayName + '</b> ' + responseDict[senator.crisis];
+    tooltip += '<h6>Sen <b>' + senator.displayName + '</b> ' + responseDict[senator.crisis_status];
   });
-  return tooltip += '<h6>Rep <b>' + e.feature.properties.MoCs[0].displayName + '</b> ' + responseDict[e.feature.properties.MoCs[0].crisis];
+  return tooltip += '<h6>Rep <b>' + e.feature.properties.MoCs[0].displayName + '</b> ' + responseDict[e.feature.properties.MoCs[0].crisis_status];
 }
 
 function populateGroups(groups) {
@@ -178,7 +188,7 @@ function addMoCsToDistrict(districtGeoJson) {
     if (!district.properties.MoCs) { return; }
 
     // Calculate the value that occurs the most often in the dataset
-    var crisisCount = MoCsByDistrict[district.properties.DISTRICT].map(function(MoC) { return MoC.crisis });
+    var crisisCount = MoCsByDistrict[district.properties.DISTRICT].map(function(MoC) { return MoC.crisis_status });
     district.properties.crisisMode = crisisCount.sort(function(a, b) {
       return crisisCount.filter(function(val) { return val === a }).length - crisisCount.filter(function(val) { return val === b }).length;
     }).pop();
@@ -220,7 +230,7 @@ function fillColor(district) {
 function addMoCCards() {
   var container = $('#MoCCardContainer');
   container.empty();
-  // Filtering goes here
+  // Filter MoCs and render results
   filterMoCs().forEach(function(MoC) {
     container.append(createMoCCard(MoC));
   })
@@ -234,11 +244,11 @@ function createMoCCard(MoC) {
 
   var res = '<div class="card">' +
       '<div class="card-header p-0">' +
-        '<div class="row background-' + responseClass[MoC.crisis] + ' m-0">' +
+        '<div class="row background-' + responseClass[MoC.crisis_status] + ' m-0">' +
           '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/data/photos/' + MoC.govtrack_id + '-50px.jpeg"></div>' +
           '<div class="col-8 col-sm-9">' +
             '<h4>' + MoC.displayName + '</h4>' +
-            '<small class="rep-card-position">' + responseDict[MoC.crisis] + '</small>' +
+            '<small class="rep-card-position">' + responseDict[MoC.crisis_status] + '</small>' +
             '<small class="rep-card-subtitle">' +
               (!MoC.district ? 'Sen. ' : '' ) + MoC.state + (MoC.district ? '-' + MoC.district : '') +
             '</small>' +
