@@ -223,7 +223,7 @@ function fillColor(district) {
          district.properties.crisisMode === 2 ? '#b2abd2' :
          district.properties.crisisMode === 3 ? '#ddcae5' :
          district.properties.crisisMode === 6 ? '#e8e1dd' :
-         district.properties.crisisMode === 4 ? '#fdb863' :
+         district.properties.crisisMode === 4 ? '#edeb6b' :
          district.properties.crisisMode === 5 ? '#e66101' :
                                                 '#ffffff';
 }

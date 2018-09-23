@@ -64,7 +64,7 @@ strong {
   background-color: #e8e1dd; }
 
 .background-concerned {
-  background-color: #fdb863; }
+  background-color: #edeb6b; }
 
 .background-support {
   color: #fefefe;
@@ -123,7 +123,7 @@ h3.callToAction {
     .mocCounts .photos#photos-unknown:before {
       background: rgba(232, 225, 221, 0.25); }
     .mocCounts .photos#photos-concerned:before {
-      background: rgba(253, 184, 99, 0.25); }
+      background: rgba(237, 235, 107, 0.25); }
     .mocCounts .photos#photos-support:before {
       background: rgba(230, 97, 1, 0.25); }
     .mocCounts .photos img {
@@ -144,7 +144,7 @@ h3.callToAction {
   color: #e8e1dd; }
 
 .mocCounts-concerned {
-  color: #fdb863; }
+  color: #edeb6b; }
 
 .mocCounts-support {
   color: #e66101; }
