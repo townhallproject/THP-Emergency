@@ -1,13 +1,14 @@
 /* Colors */
-$impeachment : #5e3c99;
-$resignation : #b2abd2;
+$impeachment : #542788;
+$resignation : #998ec3;
 $action      : #ddcae5;
-$unknown     : #e8e1dd;
-$concerned   : #edeb6b;
-$support     : #e66101;
+$unknown     : #c6c6c6;
+$concerned   : #f1a340;
+$support     : #b35806;
 $red         : #ff2800;
 $white       : #fefefe;
 $middle-grey:  #bcc8d3;
+
 // From THP
 $brand-primary: #0d4668;
 $brand-primary-lighter: lighten($brand-primary, 17.5%);
@@ -143,10 +144,6 @@ h3.callToAction {
 
   &.leaflet-container {
     background-color:rgba(0,0,0,0.0);
-
-    .filter-dropshadow {
-      filter: url(#filter-dropshadow);
-    }
   }
 
   .leaflet-tooltip {

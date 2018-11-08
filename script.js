@@ -1,4 +1,4 @@
-window.alert("NB:  This site is currently in testing mode.  Data is incomplete, and may be inaccurate.")
+// window.alert("NB:  This site is currently in testing mode.  Data is incomplete, and may be inaccurate.")
 
 // TODO add babel so we can use ES6 like sane people
 var map;
@@ -33,11 +33,14 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
   MoCs = Object.keys(MoCs).map(function(key) {
     // TODO once all MoCs have crisis values remove this stub
     var MoC = MoCs[key];
-    MoC.crisis_status = MoC.crisis_status || 6;
+    MoC.crisis_status = Number(MoC.crisis_status) || 6;
     return MoC;
   }).filter(function(MoC) {
     // Remove out of office people, and test data
-    return MoC.hasOwnProperty('in_office') && MoC.in_office === true && MoC.ballotpedia_id !== 'Testing McTesterson';
+    return MoC.hasOwnProperty('in_office') && 
+      MoC.in_office === true && 
+      MoC.type === 'sen' || MoC.type === 'rep' &&
+      MoC.ballotpedia_id !== 'Testing McTesterson';
   });
   MoCsByDistrict = mapToDistrictDict(MoCs);
   senatorsByState = mapToStateDict(MoCs);
@@ -46,12 +49,7 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
     style: function(state) { return setStyle(state); }
   });
 
-  var outlineLayer = new L.GeoJSON.AJAX("outline.geojson", {
-    style: layerOutlineStyle
-  });
-
   districtLayer.bindTooltip(showTooltip).addTo(map);
-  outlineLayer.addTo(map);
 
   // Fill out the MoC stance groups, add photos, and generate all MoC cards
   populateGroups(mapToGroups(MoCs));
@@ -76,6 +74,15 @@ var responseClass = {
   4: 'concerned',
   5: 'support',
   6: 'unknown',
+}
+
+const mapColors = {
+  1: '#542788', 
+  2: '#998ec3',
+  3: '#d8daeb',
+  4: '#f1a340',
+  5: '#b35806',
+  6: '#e3e3e3',
 }
 
 // Data mapping
@@ -149,29 +156,28 @@ function showTooltip(e) {
   senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)].forEach(function(senator) {
     tooltip += '<h6>Sen <b>' + senator.displayName + '</b> ' + responseDict[senator.crisis_status];
   });
-  return tooltip += '<h6>Rep <b>' + e.feature.properties.MoCs[0].displayName + '</b> ' + responseDict[e.feature.properties.MoCs[0].crisis_status];
+  tooltip += '<h6>Rep <b>' + e.feature.properties.MoCs[0].displayName + '</b> ' + responseDict[e.feature.properties.MoCs[0].crisis_status];
+  return tooltip;
 }
 
 function populateGroups(groups) {
   Object.keys(groups).forEach(function(key) {
     document.getElementById("count-" + key).innerHTML = groups[key].length;
     var photoContainer = document.getElementById("photos-" + key);
-    groups[key].sort(function(a, b){return parseInt(b.seniority) - parseInt(a.seniority)})
+
+    groups[key].sort(function(a, b){
+      return parseInt(b.seniority) - parseInt(a.seniority)})
                .slice(0, 8)
                .forEach(function(MoC) {
-                  photoContainer.innerHTML += '<img src="//www.govtrack.us/data/photos/' + MoC.govtrack_id + '-50px.jpeg" />';
+                 if (MoC.govtrack_id){
+                   photoContainer.innerHTML += '<img src="//www.govtrack.us/data/photos/' + MoC.govtrack_id + '-50px.jpeg" />';
+                 }
     });
   });
 }
 
 
 // Map Helpers
-var layerOutlineStyle = {
-  weight: 2,
-  opacity: 0.25,
-  color: 'black',
-  className: 'filter-dropshadow'
-}
 
 function calculateZoom() {
   var sw = screen.width;
@@ -219,13 +225,7 @@ function setStyle(state) {
 }
 
 function fillColor(district) {
-  return district.properties.crisisMode === 1 ? '#5e3c99' :
-         district.properties.crisisMode === 2 ? '#b2abd2' :
-         district.properties.crisisMode === 3 ? '#ddcae5' :
-         district.properties.crisisMode === 6 ? '#e8e1dd' :
-         district.properties.crisisMode === 4 ? '#edeb6b' :
-         district.properties.crisisMode === 5 ? '#e66101' :
-                                                '#ffffff';
+  return mapColors[district.properties.crisisMode] || '#c6c6c6';
 }
 
 // MoC section
