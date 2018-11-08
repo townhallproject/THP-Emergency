@@ -49,7 +49,9 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
     style: function(state) { return setStyle(state); }
   });
 
-  districtLayer.bindTooltip(showTooltip).addTo(map);
+  districtLayer.bindTooltip(showTooltip, {
+    sticky: true,
+  }).addTo(map);
 
   // Fill out the MoC stance groups, add photos, and generate all MoC cards
   populateGroups(mapToGroups(MoCs));
@@ -65,6 +67,16 @@ var responseDict = {
   4: 'has voiced concerns',
   5: 'opposes impeachment',
   6: 'not yet on record',
+}
+
+const responseDictPopover = {
+    1: 'for impeachment',
+    2: 'for resignation',
+    3: 'for other action(s)',
+    4: 'has voiced concerns',
+    5: 'opposes impeachment',
+    6: 'unknown',
+  
 }
 
 var responseClass = {
@@ -151,12 +163,19 @@ function scrollToAnchor(target) {
   }, 1000);
 }
 
+function makeRow(name, status){
+   return '<div class="d-flex justify-content-between"><span>' + name + '</span><span class="response background-' + responseClass[status] + '"> ' + responseDictPopover[status] + '</span></div > ';
+}
 function showTooltip(e) {
-  var tooltip = '<h4>' + e.feature.properties.DISTRICT + ' Representatives:</h4>';
+  var tooltip = 
+    '<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">' + e.feature.properties.DISTRICT + '</h4><h4>Position</h4></div>';
+  tooltip += '<div class="subtitle">HOUSE</div>'
+  tooltip += makeRow(e.feature.properties.MoCs[0].displayName, e.feature.properties.MoCs[0].crisis_status)
+  tooltip += '<div class="subtitle">SENATE</div>'
   senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)].forEach(function(senator) {
-    tooltip += '<h6>Sen <b>' + senator.displayName + '</b> ' + responseDict[senator.crisis_status];
+    tooltip += makeRow(senator.displayName, senator.crisis_status)
   });
-  tooltip += '<h6>Rep <b>' + e.feature.properties.MoCs[0].displayName + '</b> ' + responseDict[e.feature.properties.MoCs[0].crisis_status];
+  tooltip += '</div>'
   return tooltip;
 }
 

@@ -91,8 +91,16 @@ h3.callToAction {
   margin: 4vh 0; }
   #map.leaflet-container {
     background-color: transparent; }
-  #map .leaflet-tooltip {
-    padding: 2em; }
+  #map .leaflet-tooltip .tooltip-container {
+    min-width: 200px; }
+  #map .leaflet-tooltip .response {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    text-align: right; }
+  #map .leaflet-tooltip .subtitle {
+    color: ligten(#132149, 80%);
+    font-size: .6em;
+    border-bottom: 0.5px solid ligten(#132149, 50%); }
 
 .mocCounts {
   text-align: center;
