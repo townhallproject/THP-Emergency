@@ -1,10 +1,10 @@
 /* Colors */
-$impeachment : #542788;
-$resignation : #998ec3;
-$action      : #ddcae5;
-$unknown     : #c6c6c6;
-$concerned   : #f1a340;
-$support     : #b35806;
+$dark-purple      : #542788;
+$light-purple     : #998ec3;
+$lighest-purple   : #ddcae5;
+$midtone     : #c6c6c6;
+$orange     : #f1a340;
+$brown     : #b35806;
 $red         : #ff2800;
 $white       : #fefefe;
 $middle-grey:  #bcc8d3;
@@ -90,32 +90,31 @@ strong {
   font-weight: 800;
 }
 
-.background-impeachment {
+.background-support {
   color: $white;
-  background-color: $impeachment;
+  background-color: $dark-purple;
 }
 
 .background-resignation {
   color: $white;
-  background-color: $resignation;
+  background-color: $light-purple;
 }
 
 .background-action {
-  background-color: $action;
+  background-color: $light-purple;
 }
 
 .background-unknown {
-  background-color: $unknown;
+  background-color: $midtone;
 }
 
 .background-concerned {
-
-  background-color: $concerned;
+  background-color: $lighest-purple;
 }
 
-.background-support {
+.background-oppose {
   color: $white;
-  background-color: $support;
+  background-color: $orange;
 }
 
 
@@ -130,7 +129,7 @@ h1.title {
 
 h3.callToAction {
   margin-top: 1vh;
-  color: $impeachment;
+  color: $dark-purple;
   cursor: pointer;
 }
 
@@ -171,11 +170,14 @@ h3.callToAction {
   text-align: center;
   .count-container {
     max-width: 200px;
+    display: flex;
+    flex-flow: column;
   }
   .photos {
     width: 200px;
     height: 120px;
-    margin: 2.5vh auto;
+    margin: auto;
+    margin-bottom: 2.5vh;
     position: relative;
 
     &:before {
@@ -189,28 +191,28 @@ h3.callToAction {
       right: 0;
     }
 
-    &#photos-impeachment:before {
-      background: rgba($impeachment, 0.25);
+    &#photos-support:before {
+      background: rgba($dark-purple, 0.25);
     }
 
     &#photos-resignation:before {
-      background: rgba($resignation, 0.25);
+      background: rgba($light-purple, 0.25);
     }
 
     &#photos-action:before {
-      background: rgba($action, 0.25);
+      background: rgba($light-purple, 0.25);
     }
 
     &#photos-unknown:before {
-      background: rgba($unknown, 0.25);
+      background: rgba($midtone, 0.25);
     }
 
     &#photos-concerned:before {
-      background: rgba($concerned, 0.25);
+      background: rgba($lighest-purple, 0.25);
     }
 
-    &#photos-support:before {
-      background: rgba($support, 0.25);
+    &#photos-oppose:before {
+      background: rgba($orange, 0.25);
     }
 
     img {
@@ -221,28 +223,28 @@ h3.callToAction {
   }
 }
 
-.mocCounts-impeachment {
-  color: $impeachment;
+.mocCounts-support {
+  color: $dark-purple;
 }
 
 .mocCounts-resignation {
-  color: $resignation;
+  color: $light-purple;
 }
 
 .mocCounts-action {
-  color: $action;
+  color: $light-purple;
 }
 
 .mocCounts-unkown {
-  color: $unknown;
+  color: $midtone;
 }
 
 .mocCounts-concerned {
-  color: $concerned;
+  color: $lighest-purple;
 }
 
-.mocCounts-support {
-  color: $support;
+.mocCounts-oppose {
+  color: $orange;
 }
 
 .number {
@@ -302,7 +304,7 @@ h3.callToAction {
     margin-top: 20px;
 
     .card-header {
-      height: 84px; //Size of header on THP MoC cards
+      height: 100px; //Size of header on THP MoC cards
       padding-left: 0;
       padding-right: 0;
 
