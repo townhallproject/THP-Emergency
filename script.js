@@ -2,7 +2,7 @@
 
 // TODO add babel so we can use ES6 like sane people
 var map;
-var MoCs;
+var MoCs = [];
 var MoCsByDistrict;
 var senatorsByState;
 var filters = {};
@@ -27,21 +27,23 @@ var fbconfig = {
 firebase.initializeApp(fbconfig);
 var firebasedb = firebase.database();
 
-firebasedb.ref('mocData/').once('value').then(function(snapshot) {
+firebasedb.ref('mocData/').once('value')
+.then(function(snapshot) {
   // Get MoCs and flatten into array
-  MoCs = snapshot.val();
-  MoCs = Object.keys(MoCs).map(function(key) {
+  snapshot.forEach(function(ele) {
     // TODO once all MoCs have crisis values remove this stub
-    var MoC = MoCs[key];
+    var MoC = ele.val();
     MoC.crisis_status = Number(MoC.crisis_status) || 6;
-    return MoC;
-  }).filter(function(MoC) {
+    MoCs.push(MoC);
+  })
+  MoCs = MoCs.filter(function (MoC) {
     // Remove out of office people, and test data
     return MoC.hasOwnProperty('in_office') && 
       MoC.in_office === true && 
-      MoC.type === 'sen' || MoC.type === 'rep' &&
+      (MoC.type === 'sen' || MoC.type === 'rep') &&
       MoC.ballotpedia_id !== 'Testing McTesterson';
   });
+
   MoCsByDistrict = mapToDistrictDict(MoCs);
   senatorsByState = mapToStateDict(MoCs);
   var districtLayer = new L.GeoJSON.AJAX("districts.geojson", {
@@ -318,6 +320,7 @@ function removeFilter(e) {
 
 function filterMoCs() {
   var filteredMoCs = MoCs;
+  console.log(filteredMoCs)
   Object.keys(filters).forEach(function(key) {
     filteredMoCs = filteredMoCs.filter(function(MoC) {
       return filters[key].indexOf(MoC[key]) !== -1;
