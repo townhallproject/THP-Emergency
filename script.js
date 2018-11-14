@@ -61,40 +61,31 @@ firebasedb.ref('mocData/').once('value').then(function(snapshot) {
 
 // Static Dicts
 var responseDict = {
-  1: 'supports impeachment',
-  2: 'supports Trump&apos;s resignation',
-  3: 'supports other action(s)',
-  4: 'has voiced concerns',
-  5: 'opposes impeachment',
-  6: 'not yet on record',
+  1: 'Supports Special Counsel Independence and Integrity Act',
+  2: 'Supports Other Action',
+  3: 'Opposes Special Counsel Independence and Integrity Act',
+  4: 'Not on record',
 }
 
 const responseDictPopover = {
-    1: 'for impeachment',
-    2: 'for resignation',
-    3: 'for other action(s)',
-    4: 'has voiced concerns',
-    5: 'opposes impeachment',
-    6: 'unknown',
-  
+    1: 'supports bill',
+    2: 'for other action(s)',
+    3: 'opposes bill',
+    4: 'unknown',
 }
 
 var responseClass = {
-  1: 'impeachment',
-  2: 'resignation',
-  3: 'action',
-  4: 'concerned',
-  5: 'support',
-  6: 'unknown',
+  1: 'support',
+  2: 'action',
+  3: 'oppose',
+  4: 'unknown',
 }
 
 const mapColors = {
-  1: '#542788', 
+  1: '#542788',
   2: '#998ec3',
-  3: '#d8daeb',
-  4: '#f1a340',
-  5: '#b35806',
-  6: '#e3e3e3',
+  3: '#f1a340',
+  4: '#e3e3e3',
 }
 
 // Data mapping
@@ -121,39 +112,16 @@ function mapToStateDict(MoCs) {
 }
 
 function mapToGroups(MoCs) {
-  return {
-    impeachment: MoCs.filter(filterImpeachment),
-    resignation: MoCs.filter(filterResignation),
-    action: MoCs.filter(filterAction),
-    concerned: MoCs.filter(filterConcerned),
-    support: MoCs.filter(filterSupport),
-    unknown: MoCs.filter(filterUnknown),
-  };
-}
-
-// Filters
-function filterImpeachment(MoC) {
-  return MoC.crisis_status === 1;
-}
-
-function filterResignation(MoC) {
-  return MoC.crisis_status === 2;
-}
-
-function filterAction(MoC) {
-  return MoC.crisis_status === 3;
-}
-
-function filterConcerned(MoC) {
-  return MoC.crisis_status === 4;
-}
-
-function filterSupport(MoC) {
-  return MoC.crisis_status === 5;
-}
-
-function filterUnknown(MoC) {
-  return MoC.crisis_status === 6;
+  return MoCs.reduce(function(acc, curr){
+    var statusName = responseClass[curr.crisis_status];
+    if (statusName) {
+      if (!acc[statusName]){
+        acc[statusName] = [];
+      }
+      acc[statusName].push(curr);
+    }
+    return acc;
+  }, {})
 }
 
 // View Helpers
@@ -180,6 +148,7 @@ function showTooltip(e) {
 }
 
 function populateGroups(groups) {
+  console.log(groups)
   Object.keys(groups).forEach(function(key) {
     document.getElementById("count-" + key).innerHTML = groups[key].length;
     var photoContainer = document.getElementById("photos-" + key);
@@ -262,7 +231,9 @@ function createMoCCard(MoC) {
   var facebook = MoC.facebook_official_account || MoC.facebook_account || MoC.facebook;
   var twitter = MoC.twitter_account || MoC.twitter;
   var website = MoC.contact_form || MoC.url;
-
+  if (!responseDict[MoC.crisis_status]){
+    console.log(MoC.crisis_status)
+  }
   var res = '<div class="card">' +
       '<div class="card-header p-0">' +
         '<div class="row background-' + responseClass[MoC.crisis_status] + ' m-0">' +
@@ -271,9 +242,9 @@ function createMoCCard(MoC) {
             '<h4>' + MoC.displayName + '</h4>' +
             '<small class="rep-card-position">'
       
-    res += MoC.crisis_status === 6 ? responseDict[MoC.crisis_status] + '</small>' : 
+    res += responseDict[MoC.crisis_status] ? MoC.crisis_status === 4 ? responseDict[MoC.crisis_status] + '</small>' :
                                     '<a href="' + MoC.crisis_status_source + '" target="blank">' +
-                                    responseDict[MoC.crisis_status] + '</a></small>';
+                                    responseDict[MoC.crisis_status] + '</a></small>' : '';
 
     res += '<small class="rep-card-subtitle">' +
               (!MoC.district ? 'Sen. ' : '' ) + MoC.state + (MoC.district ? '-' + MoC.district : '') +
