@@ -148,7 +148,6 @@ function showTooltip(e) {
 }
 
 function populateGroups(groups) {
-  console.log(groups)
   Object.keys(groups).forEach(function(key) {
     document.getElementById("count-" + key).innerHTML = groups[key].length;
     var photoContainer = document.getElementById("photos-" + key);
@@ -231,9 +230,6 @@ function createMoCCard(MoC) {
   var facebook = MoC.facebook_official_account || MoC.facebook_account || MoC.facebook;
   var twitter = MoC.twitter_account || MoC.twitter;
   var website = MoC.contact_form || MoC.url;
-  if (!responseDict[MoC.crisis_status]){
-    console.log(MoC.crisis_status)
-  }
   var res = '<div class="card">' +
       '<div class="card-header p-0">' +
         '<div class="row background-' + responseClass[MoC.crisis_status] + ' m-0">' +
