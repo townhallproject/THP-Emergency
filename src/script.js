@@ -1,6 +1,7 @@
 // window.alert("NB:  This site is currently in testing mode.  Data is incomplete, and may be inaccurate.")
 
-// TODO add babel so we can use ES6 like sane people
+import "./scss/style.scss";
+
 var map;
 var MoCs = [];
 var MoCsByDistrict;
@@ -46,7 +47,7 @@ firebasedb.ref('mocData/').once('value')
 
   MoCsByDistrict = mapToDistrictDict(MoCs);
   senatorsByState = mapToStateDict(MoCs);
-  var districtLayer = new L.GeoJSON.AJAX("districts.geojson", {
+  var districtLayer = new L.GeoJSON.AJAX("/data/districts.geojson", {
     middleware: addMoCsToDistrict,
     style: function(state) { return setStyle(state); }
   });
@@ -320,7 +321,6 @@ function removeFilter(e) {
 
 function filterMoCs() {
   var filteredMoCs = MoCs;
-  console.log(filteredMoCs)
   Object.keys(filters).forEach(function(key) {
     filteredMoCs = filteredMoCs.filter(function(MoC) {
       return filters[key].indexOf(MoC[key]) !== -1;

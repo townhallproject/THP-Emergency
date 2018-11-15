@@ -7,7 +7,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "livereload": "livereload . -w 1000 -d",
     "sass": "node-sass --watch scss -o css",
-    "serve": "http-server -a localhost --cors"
+    "serve": "http-server -a localhost --cors",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "build": "webpack --config webpack.prod.js",
+    "prebuild": "rm -rf build/bundle.*",
+    "watch": "webpack-dev-server --inline --hot --public --config webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -21,8 +26,31 @@
   "homepage": "https://github.com/pdvorchik/THP-Emergency#readme",
   "dependencies": {
     "http-server": "^0.11.1",
-    "livereload": "^0.7.0",
-    "node-sass": "^4.8.3"
+    "livereload": "^0.7.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "copy-webpack-plugin": "^4.6.0",
+    "css-loader": "^1.0.1",
+    "dotenv": "^6.1.0",
+    "extract-text-webpack-plugin": "^4.0.0",
+    "gh-pages": "^2.0.1",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.4.4",
+    "node-sass": "^4.10.0",
+    "postcss-loader": "^3.0.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "uglifyjs-webpack-plugin": "^2.0.1",
+    "url-loader": "^1.1.2",
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10",
+    "webpack-merge": "^4.1.4"
+  }
 }
