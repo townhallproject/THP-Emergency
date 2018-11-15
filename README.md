@@ -2,8 +2,8 @@
 
 ### Development
 * npm install
-* npm run serve
-* npm run sass
-* npm run livereload (you'll need a browser extension http://livereload.com/extensions/)
+* npm run watch
+* load 8080
 
-TODO: Use gulp or grunt
+### Deploy
+* npm run deploy
