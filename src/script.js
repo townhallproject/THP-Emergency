@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // TODO break this out into setup file
 let fbconfig = {
-  apiKey: 'AIzaSyDwZ41RWIytGELNBnVpDr7Y_k1ox2F2Heg',
+  apiKey: 'AIzaSyCXyjAOvBKDEX5pckTwuI7LODWKNlL21gc',
   authDomain: 'townhallproject-86312.firebaseapp.com',
   databaseURL: 'https://townhallproject-86312.firebaseio.com',
   storageBucket: 'townhallproject-86312.appspot.com',
