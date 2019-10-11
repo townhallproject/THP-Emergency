@@ -159,7 +159,7 @@ function populateGroups(groups) {
                .slice(0, 8)
                .forEach(function(MoC) {
                  if (MoC.govtrack_id){
-                   photoContainer.innerHTML += '<img src="//www.govtrack.us/data/photos/' + MoC.govtrack_id + '-50px.jpeg" />';
+                   photoContainer.innerHTML += '<img src="//www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-50px.jpeg" />';
                  }
     });
   });
@@ -235,7 +235,7 @@ function createMoCCard(MoC) {
   var res = '<div class="card">' +
       '<div class="card-header p-0">' +
         '<div class="row background-' + responseClass[MoC.crisis_status] + ' m-0">' +
-          '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/data/photos/' + MoC.govtrack_id + '-50px.jpeg"></div>' +
+          '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-50px.jpeg"></div>' +
           '<div class="col-8 col-sm-9">' +
             '<h4>' + MoC.displayName + '</h4>' +
             '<small class="rep-card-position">'
@@ -386,3 +386,15 @@ function signUp(form) {
 
   return false;
 }
+
+$.ajax({
+  url: 'https://sheets.googleapis.com/v4/spreadsheets/1ulV1QPinFiHIT0e688kaz_2LRE-7HaUtz3Y9z5L0Lt4?key=AIzaSyCS80PR3qP0top2NLFu_YIz2Ihnm9MtvKc',
+  dataType: 'json',
+  sucess: (data) => {
+    console.log('data', data);
+  },
+  error: (xhr, ajaxOptions, thrownError) => {
+    console.log(xhr);
+    console.log(thrownError)
+  }
+});
