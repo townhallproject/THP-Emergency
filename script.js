@@ -320,7 +320,6 @@ function removeFilter(e) {
 
 function filterMoCs() {
   var filteredMoCs = MoCs;
-  console.log(filteredMoCs)
   Object.keys(filters).forEach(function(key) {
     filteredMoCs = filteredMoCs.filter(function(MoC) {
       return filters[key].indexOf(MoC[key]) !== -1;
