@@ -91,6 +91,10 @@ $.ajax({
     districtLayer.bindTooltip(showTooltip, {
       sticky: true,
     }).addTo(map);
+
+    populateGroups(mapToGroups(MoCs));
+    bindFilterEvents();
+    addMoCCards();
   },
   error: (xhr, ajaxOptions, thrownError) => {
     console.log(xhr);
@@ -156,7 +160,7 @@ function mapToStateDict(MoCs) {
 
 function mapToGroups(MoCs) {
   return MoCs.reduce(function(acc, curr){
-    var statusName = responseClass[curr.crisis_status];
+    var statusName = responseClass[curr.status];
     if (statusName) {
       if (!acc[statusName]){
         acc[statusName] = [];
@@ -191,16 +195,17 @@ function showTooltip(e) {
 }
 
 function populateGroups(groups) {
+  console.log(groups)
   Object.keys(groups).forEach(function(key) {
     document.getElementById("count-" + key).innerHTML = groups[key].length;
     var photoContainer = document.getElementById("photos-" + key);
 
     groups[key].sort(function(a, b){
-      return parseInt(b.seniority) - parseInt(a.seniority)})
+      return parseInt(b.id) - parseInt(a.id)})
                .slice(0, 8)
                .forEach(function(MoC) {
-                 if (MoC.govtrack_id){
-                   photoContainer.innerHTML += '<img src="//www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-50px.jpeg" />';
+                 if (MoC.id){
+                   photoContainer.innerHTML += '<img src="//www.govtrack.us/static/legislator-photos/' + MoC.id + '-50px.jpeg" />';
                  }
     });
   });
