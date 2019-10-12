@@ -65,7 +65,6 @@ $.ajax({
   url: 'https://sheets.googleapis.com/v4/spreadsheets/1ulV1QPinFiHIT0e688kaz_2LRE-7HaUtz3Y9z5L0Lt4/values/A2:H?key=AIzaSyCS80PR3qP0top2NLFu_YIz2Ihnm9MtvKc',
   dataType: 'json',
   success: (data) => {
-    console.log('data:', data);
     data.values.forEach((row) => {
       const MoC = {
         id: row[0],
@@ -87,7 +86,6 @@ $.ajax({
       middleware: addMoCsToDistrict,
       style: function(state) { return setStyle(state); }
     });
-    console.log(districtLayer);
     districtLayer.bindTooltip(showTooltip, {
       sticky: true,
     }).addTo(map);
@@ -223,7 +221,6 @@ function calculateZoom() {
 }
 
 function addMoCsToDistrict(districtGeoJson) {
-  console.log(districtGeoJson);
   districtGeoJson.features.forEach(function(district) {
     district = districtTHPAdapter(district);
     district.properties.MoCs = MoCsByDistrict[district.properties.DISTRICT];
@@ -235,7 +232,6 @@ function addMoCsToDistrict(districtGeoJson) {
       return crisisCount.filter(function(val) { return val === a }).length - crisisCount.filter(function(val) { return val === b }).length;
     }).pop();
   });
-  console.log(districtGeoJson);
   return districtGeoJson;
 }
 
@@ -286,15 +282,15 @@ function createMoCCard(MoC) {
   var website = MoC.contact_form || MoC.url;
   var res = '<div class="card">' +
       '<div class="card-header p-0">' +
-        '<div class="row background-' + responseClass[MoC.crisis_status] + ' m-0">' +
-          '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-100px.jpeg"></div>' +
+        '<div class="row background-' + responseClass[MoC.status] + ' m-0">' +
+          '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/static/legislator-photos/' + MoC.id + '-100px.jpeg"></div>' +
           '<div class="col-8 col-sm-9">' +
-            '<h4>' + MoC.displayName + '</h4>' +
+            '<h4>' + MoC.name + '</h4>' +
             '<small class="rep-card-position">'
       
-    res += responseDict[MoC.crisis_status] ? MoC.crisis_status === 4 ? responseDict[MoC.crisis_status] + '</small>' :
-                                    '<a href="' + MoC.crisis_status_source + '" target="blank">' +
-                                    responseDict[MoC.crisis_status] + '</a></small>' : '';
+    res += responseDict[MoC.status] ? MoC.status === 4 ? responseDict[MoC.status] + '</small>' :
+                                    '<a href="' + MoC.link + '" target="blank">' +
+                                    responseDict[MoC.status] + '</a></small>' : '';
 
     res += '<small class="rep-card-subtitle">' +
               (!MoC.district ? 'Sen. ' : '' ) + MoC.state + (MoC.district ? '-' + MoC.district : '') +
