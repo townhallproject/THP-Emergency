@@ -49,26 +49,23 @@ body {
 strong {
   font-weight: 800; }
 
-.background-support {
+.background-impeachment {
   color: #fefefe;
   background-color: #542788; }
 
-.background-resignation {
+.background-inquiry {
   color: #fefefe;
   background-color: #998ec3; }
 
-.background-action {
-  background-color: #998ec3; }
+.background-no-position {
+  background-color: #bcc8d3; }
 
-.background-unknown {
-  background-color: #c6c6c6; }
+.background-concerns {
+  background-color: #FFE400; }
 
-.background-concerned {
-  background-color: #ddcae5; }
-
-.background-oppose {
+.background-no-impeachment {
   color: #fefefe;
-  background-color: #f1a340; }
+  background-color: #D37000; }
 
 /* Splash page */
 h1.title {
@@ -90,7 +87,7 @@ h3.callToAction {
   min-height: 80vh;
   margin: 4vh 0; }
   #map.leaflet-container {
-    background-color: transparent; }
+    background-color: rgba(0, 0, 0, 0); }
   #map .leaflet-tooltip .tooltip-container {
     min-width: 200px; }
   #map .leaflet-tooltip .response {
@@ -140,23 +137,20 @@ h3.callToAction {
       filter: contrast(160%) brightness(135%) saturate(25%);
       opacity: 0.5; }
 
-.mocCounts-support {
+.mocCounts-impeachment {
   color: #542788; }
 
-.mocCounts-resignation {
+.mocCounts-inquiry {
   color: #998ec3; }
 
-.mocCounts-action {
-  color: #998ec3; }
+.mocCounts-no-position {
+  color: #bcc8d3; }
 
-.mocCounts-unkown {
-  color: #c6c6c6; }
+.mocCounts-concerns {
+  color: #FFE400; }
 
-.mocCounts-concerned {
-  color: #ddcae5; }
-
-.mocCounts-oppose {
-  color: #f1a340; }
+.mocCounts-no-impeachment {
+  color: #D37000; }
 
 .number {
   font-family: 'Merriweather', serif;

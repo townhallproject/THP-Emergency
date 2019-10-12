@@ -74,7 +74,7 @@ $.ajax({
         chamber: row[3],
         state: row[4],
         district: row[5],
-        status: row[6],
+        status: parseInt(row[6].slice(0,1)),
         link: row[7],
       }
       MoCs.push(MoC);
@@ -124,9 +124,9 @@ var responseClass = {
 }
 
 const mapColors = {
-  1: '#1B063D',
-  2: '#946FCF',
-  3: '#979797',
+  1: '#542788',
+  2: '#998ec3',
+  3: '#bcc8d3',
   4: '#FFE400',
   5: '#D37000',
 }
@@ -181,10 +181,10 @@ function showTooltip(e) {
   var tooltip = 
     '<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">' + e.feature.properties.DISTRICT + '</h4><h4>Position</h4></div>';
   tooltip += '<div class="subtitle">HOUSE</div>'
-  tooltip += makeRow(e.feature.properties.MoCs[0].displayName, e.feature.properties.MoCs[0].crisis_status)
+  tooltip += makeRow(e.feature.properties.MoCs[0].name, e.feature.properties.MoCs[0].status);
   tooltip += '<div class="subtitle">SENATE</div>'
   senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)].forEach(function(senator) {
-    tooltip += makeRow(senator.displayName, senator.crisis_status)
+    tooltip += makeRow(senator.name, senator.status)
   });
   tooltip += '</div>'
   return tooltip;
@@ -246,7 +246,6 @@ function districtTHPAdapter(district) {
 }
 
 function setStyle(district) {
-  console.log(district);
   return {
     fillColor: fillColor(district),
     weight: 1,
@@ -258,15 +257,11 @@ function setStyle(district) {
 
 function fillColor(district) {
   if (district.properties.MoCs) {
-    return mapColors[district.properties.MoCs[0].status.slice(0,1 )];
+    return mapColors[district.properties.MoCs[0].status];
   } else {
-    return '#c6c6c6';
+    console.log(district);
+    return '#ff0000';
   }
-  // // const status = parseInt(district.properties.status.slice(0, 1));
-  
-  // return '#c6c6c6';
-  // // return mapColors[status];
-  // return mapColors[district.properties.crisisMode] || ;
 }
 
 // MoC section
