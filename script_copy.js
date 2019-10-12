@@ -1,4 +1,6 @@
+// window.alert("NB:  This site is currently in testing mode.  Data is incomplete, and may be inaccurate.")
 
+// TODO add babel so we can use ES6 like sane people
 var map;
 var MoCs = [];
 var MoCsByDistrict;
@@ -25,78 +27,66 @@ var fbconfig = {
 firebase.initializeApp(fbconfig);
 var firebasedb = firebase.database();
 
-// firebasedb.ref('mocData/').once('value')
-// .then(function(snapshot) {
-//   // Get MoCs and flatten into array
-//   snapshot.forEach(function(ele) {
-//     // TODO once all MoCs have crisis values remove this stub
-//     var MoC = ele.val();
-//     MoC.crisis_status = Number(MoC.crisis_status) || 6;
-//     MoCs.push(MoC);
-//   })
-//   MoCs = MoCs.filter(function (MoC) {
-//     // Remove out of office people, and test data
-//     return MoC.hasOwnProperty('in_office') && 
-//       MoC.in_office === true && 
-//       (MoC.type === 'sen' || MoC.type === 'rep') &&
-//       MoC.ballotpedia_id !== 'Testing McTesterson';
-//   });
+firebasedb.ref('mocData/').once('value')
+.then(function(snapshot) {
+  // Get MoCs and flatten into array
+  snapshot.forEach(function(ele) {
+    // TODO once all MoCs have crisis values remove this stub
+    var MoC = ele.val();
+    MoC.crisis_status = Number(MoC.crisis_status) || 6;
+    MoCs.push(MoC);
+  })
+  MoCs = MoCs.filter(function (MoC) {
+    // Remove out of office people, and test data
+    return MoC.hasOwnProperty('in_office') && 
+      MoC.in_office === true && 
+      (MoC.type === 'sen' || MoC.type === 'rep') &&
+      MoC.ballotpedia_id !== 'Testing McTesterson';
+  });
 
-//   MoCsByDistrict = mapToDistrictDict(MoCs);
-//   senatorsByState = mapToStateDict(MoCs);
-//   console.log(MoCsByDistrict);
-//   console.log(senatorsByState);
-//   var districtLayer = new L.GeoJSON.AJAX("districts.geojson", {
-//     middleware: addMoCsToDistrict,
-//     style: function(state) { return setStyle(state); }
-//   });
+  MoCsByDistrict = mapToDistrictDict(MoCs);
+  senatorsByState = mapToStateDict(MoCs);
+  console.log(MoCsByDistrict);
+  console.log(senatorsByState);
+  var districtLayer = new L.GeoJSON.AJAX("districts.geojson", {
+    middleware: addMoCsToDistrict,
+    style: function(state) { return setStyle(state); }
+  });
 
-//   districtLayer.bindTooltip(showTooltip, {
-//     sticky: true,
-//   }).addTo(map);
+  districtLayer.bindTooltip(showTooltip, {
+    sticky: true,
+  }).addTo(map);
 
-//   // Fill out the MoC stance groups, add photos, and generate all MoC cards
-//   populateGroups(mapToGroups(MoCs));
-//   bindFilterEvents();
-//   addMoCCards();
-// });
-
-$.ajax({
-  url: 'https://sheets.googleapis.com/v4/spreadsheets/1ulV1QPinFiHIT0e688kaz_2LRE-7HaUtz3Y9z5L0Lt4/values/A2:H?key=AIzaSyCS80PR3qP0top2NLFu_YIz2Ihnm9MtvKc',
-  dataType: 'json',
-  success: (data) => {
-    console.log('data:', data);
-    data.values.forEach((row) => {
-      const MoC = {
-        id: row[0],
-        name: row[1],
-        party: row[2],
-        chamber: row[3],
-        state: row[4],
-        district: row[5],
-        status: row[6],
-        link: row[7],
-      }
-      MoCs.push(MoC);
-    });
-    MoCsByDistrict = mapToDistrictDict(MoCs);
-    senatorsByState = mapToStateDict(MoCs);
-    console.log(MoCsByDistrict);
-    console.log(senatorsByState);
-    var districtLayer = new L.GeoJSON.AJAX("districts.geojson", {
-      middleware: addMoCsToDistrict,
-      style: function(state) { return setStyle(state); }
-    });
-    console.log(districtLayer);
-    districtLayer.bindTooltip(showTooltip, {
-      sticky: true,
-    }).addTo(map);
-  },
-  error: (xhr, ajaxOptions, thrownError) => {
-    console.log(xhr);
-    console.log(thrownError)
-  }
+  // Fill out the MoC stance groups, add photos, and generate all MoC cards
+  populateGroups(mapToGroups(MoCs));
+  bindFilterEvents();
+  addMoCCards();
 });
+
+// $.ajax({
+//   url: 'https://sheets.googleapis.com/v4/spreadsheets/1ulV1QPinFiHIT0e688kaz_2LRE-7HaUtz3Y9z5L0Lt4/values/A2:H?key=AIzaSyCS80PR3qP0top2NLFu_YIz2Ihnm9MtvKc',
+//   dataType: 'json',
+//   success: (data) => {
+//     console.log('data:', data);
+//     data.values.forEach((row) => {
+//       const MoC = {
+//         id: row[0],
+//         name: row[1],
+//         party: row[2],
+//         chamber: row[3],
+//         state: row[4],
+//         district: row[5],
+//         status: row[6],
+//         link: row[7],
+//       }
+//       MoCs.push(MoC);
+//     });
+//   },
+//   error: (xhr, ajaxOptions, thrownError) => {
+//     console.log(xhr);
+//     console.log(thrownError)
+//   }
+// });
 
 // Static Dicts
 var responseDict = {
@@ -218,7 +208,6 @@ function calculateZoom() {
 }
 
 function addMoCsToDistrict(districtGeoJson) {
-  console.log(districtGeoJson);
   districtGeoJson.features.forEach(function(district) {
     district = districtTHPAdapter(district);
     district.properties.MoCs = MoCsByDistrict[district.properties.DISTRICT];
@@ -230,7 +219,7 @@ function addMoCsToDistrict(districtGeoJson) {
       return crisisCount.filter(function(val) { return val === a }).length - crisisCount.filter(function(val) { return val === b }).length;
     }).pop();
   });
-  console.log(districtGeoJson);
+
   return districtGeoJson;
 }
 
@@ -245,10 +234,9 @@ function districtTHPAdapter(district) {
   return district;
 }
 
-function setStyle(district) {
-  console.log(district);
+function setStyle(state) {
   return {
-    fillColor: fillColor(district),
+    fillColor: fillColor(state),
     weight: 1,
     opacity: 1,
     color: 'white',
@@ -257,16 +245,7 @@ function setStyle(district) {
 }
 
 function fillColor(district) {
-  if (district.properties.MoCs) {
-    return mapColors[district.properties.MoCs[0].status.slice(0,1 )];
-  } else {
-    return '#c6c6c6';
-  }
-  // // const status = parseInt(district.properties.status.slice(0, 1));
-  
-  // return '#c6c6c6';
-  // // return mapColors[status];
-  // return mapColors[district.properties.crisisMode] || ;
+  return mapColors[district.properties.crisisMode] || '#c6c6c6';
 }
 
 // MoC section
