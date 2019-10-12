@@ -34,6 +34,7 @@ firebasedb.ref('mocData/').once('value')
     // TODO once all MoCs have crisis values remove this stub
     var MoC = ele.val();
     MoC.crisis_status = Number(MoC.crisis_status) || 6;
+    console.log(MoC);
     MoCs.push(MoC);
   })
   MoCs = MoCs.filter(function (MoC) {
@@ -63,31 +64,35 @@ firebasedb.ref('mocData/').once('value')
 
 // Static Dicts
 var responseDict = {
-  1: 'Supports Special Counsel Independence and Integrity Act',
-  2: 'Supports Other Action',
-  3: 'Opposes Special Counsel Independence and Integrity Act',
-  4: 'Not on record',
+  1: 'Full Support for Impeachment',
+  2: 'Supports Impeachment Inquiry',
+  3: 'No Position',
+  4: 'Expressed Concerns',
+  5: 'Opposed to Impeachment',
 }
 
 const responseDictPopover = {
-    1: 'supports bill',
-    2: 'for other action(s)',
-    3: 'opposes bill',
-    4: 'unknown',
+  1: 'supports impeachment',
+  2: 'supports inquiry',
+  3: 'no position',
+  4: 'expressed concerns',
+  5: 'opposes impeachment',
 }
 
 var responseClass = {
-  1: 'support',
-  2: 'action',
-  3: 'oppose',
-  4: 'unknown',
+  1: 'impeachment',
+  2: 'inquiry',
+  3: 'no-position',
+  4: 'concerns',
+  5: 'no-impeachment',
 }
 
 const mapColors = {
-  1: '#542788',
-  2: '#998ec3',
-  3: '#f1a340',
-  4: '#e3e3e3',
+  1: '#1B063D',
+  2: '#946FCF',
+  3: '#979797',
+  4: '#FFE400',
+  5: '#D37000',
 }
 
 // Data mapping
@@ -235,7 +240,7 @@ function createMoCCard(MoC) {
   var res = '<div class="card">' +
       '<div class="card-header p-0">' +
         '<div class="row background-' + responseClass[MoC.crisis_status] + ' m-0">' +
-          '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-50px.jpeg"></div>' +
+          '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-100px.jpeg"></div>' +
           '<div class="col-8 col-sm-9">' +
             '<h4>' + MoC.displayName + '</h4>' +
             '<small class="rep-card-position">'
@@ -388,9 +393,9 @@ function signUp(form) {
 }
 
 $.ajax({
-  url: 'https://sheets.googleapis.com/v4/spreadsheets/1ulV1QPinFiHIT0e688kaz_2LRE-7HaUtz3Y9z5L0Lt4?key=AIzaSyCS80PR3qP0top2NLFu_YIz2Ihnm9MtvKc',
+  url: 'https://sheets.googleapis.com/v4/spreadsheets/1ulV1QPinFiHIT0e688kaz_2LRE-7HaUtz3Y9z5L0Lt4/values/A:H?key=AIzaSyCS80PR3qP0top2NLFu_YIz2Ihnm9MtvKc',
   dataType: 'json',
-  sucess: (data) => {
+  success: (data) => {
     console.log('data', data);
   },
   error: (xhr, ajaxOptions, thrownError) => {
