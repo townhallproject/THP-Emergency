@@ -1,12 +1,25 @@
+// window.alert("NB:  This site is currently in testing mode.  Data is incomplete, and may be inaccurate.")
+import {
+  responseClass,
+  mapColors,
+  responseDict,
+  responseDictPopover,
+} from './constants';
 
-var map;
-var MoCs = [];
-var MoCsByDistrict;
-var senatorsByState;
-var filters = {};
+import {
+  get116thCongress,
+} from './mocs';
+
+import "./scss/style.scss";
+
+let map;
+let MoCs = [];
+let MoCsByDistrict;
+let senatorsByState;
+const filters = {};
 
 // Wait for the DOM to be ready then add the Map and restrict movement
-document.addEventListener("DOMContentLoaded", function(event) {
+document.addEventListener("DOMContentLoaded", function() {
   map = L.map('map', { zoomControl: false, zoomSnap: 0.1, attributionControl: false }).setView([37.8, -96], calculateZoom());
   map.dragging.disable();
   map.touchZoom.disable();
@@ -15,38 +28,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
 });
 
 // TODO break this out into setup file
-var fbconfig = {
-  apiKey: 'AIzaSyDwZ41RWIytGELNBnVpDr7Y_k1ox2F2Heg',
-  authDomain: 'townhallproject-86312.firebaseapp.com',
-  databaseURL: 'https://townhallproject-86312.firebaseio.com',
-  storageBucket: 'townhallproject-86312.appspot.com',
-  messagingSenderId: '208752196071'
-};
-firebase.initializeApp(fbconfig);
-var firebasedb = firebase.database();
+// var fbconfig = {
+//   apiKey: 'AIzaSyDwZ41RWIytGELNBnVpDr7Y_k1ox2F2Heg',
+//   authDomain: 'townhallproject-86312.firebaseapp.com',
+//   databaseURL: 'https://townhallproject-86312.firebaseio.com',
+//   storageBucket: 'townhallproject-86312.appspot.com',
+//   messagingSenderId: '208752196071'
+// };
+// firebase.initializeApp(fbconfig);
+// var firebasedb = firebase.database();
 
-// firebasedb.ref('mocData/').once('value')
-// .then(function(snapshot) {
-//   // Get MoCs and flatten into array
-//   snapshot.forEach(function(ele) {
-//     // TODO once all MoCs have crisis values remove this stub
-//     var MoC = ele.val();
-//     MoC.crisis_status = Number(MoC.crisis_status) || 6;
-//     MoCs.push(MoC);
-//   })
-//   MoCs = MoCs.filter(function (MoC) {
-//     // Remove out of office people, and test data
-//     return MoC.hasOwnProperty('in_office') && 
-//       MoC.in_office === true && 
-//       (MoC.type === 'sen' || MoC.type === 'rep') &&
-//       MoC.ballotpedia_id !== 'Testing McTesterson';
-//   });
+// get116thCongress()
+// .then(function (MoCs) {
 
 //   MoCsByDistrict = mapToDistrictDict(MoCs);
 //   senatorsByState = mapToStateDict(MoCs);
-//   console.log(MoCsByDistrict);
-//   console.log(senatorsByState);
-//   var districtLayer = new L.GeoJSON.AJAX("districts.geojson", {
+//   let districtLayer = new L.GeoJSON.AJAX("/data/districts.geojson", {
 //     middleware: addMoCsToDistrict,
 //     style: function(state) { return setStyle(state); }
 //   });
@@ -100,38 +97,6 @@ $.ajax({
   }
 });
 
-// Static Dicts
-var responseDict = {
-  1: 'Full Support for Impeachment',
-  2: 'Supports Impeachment Inquiry',
-  3: 'No Position',
-  4: 'Expressed Concerns',
-  5: 'Opposed to Impeachment',
-}
-
-const responseDictPopover = {
-  1: 'supports impeachment',
-  2: 'supports inquiry',
-  3: 'no position',
-  4: 'expressed concerns',
-  5: 'opposes impeachment',
-}
-
-var responseClass = {
-  1: 'impeachment',
-  2: 'inquiry',
-  3: 'no-position',
-  4: 'concerns',
-  5: 'no-impeachment',
-}
-
-const mapColors = {
-  1: '#542788',
-  2: '#998ec3',
-  3: '#bcc8d3',
-  4: '#FFE400',
-  5: '#D37000',
-}
 
 // Data mapping
 function mapToDistrictDict(MoCs) {
@@ -180,7 +145,7 @@ function makeRow(name, status){
    return '<div class="d-flex justify-content-between"><span>' + name + '</span><span class="response background-' + responseClass[status] + '"> ' + responseDictPopover[status] + '</span></div > ';
 }
 function showTooltip(e) {
-  var tooltip = 
+  let tooltip = 
     '<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">' + e.feature.properties.DISTRICT + '</h4><h4>Position</h4></div>';
   tooltip += '<div class="subtitle">HOUSE</div>'
   tooltip += makeRow(e.feature.properties.MoCs[0].name, e.feature.properties.MoCs[0].status);
@@ -195,9 +160,15 @@ function showTooltip(e) {
 function populateGroups(groups) {
   console.log(groups)
   Object.keys(groups).forEach(function(key) {
-    document.getElementById("count-" + key).innerHTML = groups[key].length;
-    var photoContainer = document.getElementById("photos-" + key);
-
+    const id = `count-${key}`
+    const el = document.getElementById(id);
+    if (el) {
+      el.innerHTML = groups[key].length;
+    }
+    let photoContainer = document.getElementById("photos-" + key);
+    if (!photoContainer) {
+      return;
+    }
     groups[key].sort(function(a, b){
       return parseInt(b.id) - parseInt(a.id)})
                .slice(0, 8)
@@ -213,7 +184,7 @@ function populateGroups(groups) {
 // Map Helpers
 
 function calculateZoom() {
-  var sw = screen.width;
+  let sw = screen.width;
 
   return sw >= 1700 ? 4.7 :
          sw >= 1600 ? 4.3 :
@@ -227,7 +198,7 @@ function addMoCsToDistrict(districtGeoJson) {
     if (!district.properties.MoCs) { return; }
 
     // Calculate the value that occurs the most often in the dataset
-    var crisisCount = MoCsByDistrict[district.properties.DISTRICT].map(function(MoC) { return MoC.crisis_status });
+    let crisisCount = MoCsByDistrict[district.properties.DISTRICT].map(function(MoC) { return MoC.crisis_status });
     district.properties.crisisMode = crisisCount.sort(function(a, b) {
       return crisisCount.filter(function(val) { return val === a }).length - crisisCount.filter(function(val) { return val === b }).length;
     }).pop();
@@ -248,11 +219,11 @@ function districtTHPAdapter(district) {
 
 function setStyle(district) {
   return {
-    fillColor: fillColor(district),
-    weight: 1,
-    opacity: 1,
     color: 'white',
-    fillOpacity: 1
+    fillColor: fillColor(state),
+    fillOpacity: 1,
+    opacity: 1,
+    weight: 1,
   };
 }
 
@@ -267,7 +238,7 @@ function fillColor(district) {
 
 // MoC section
 function addMoCCards() {
-  var container = $('#MoCCardContainer');
+  let container = $('#MoCCardContainer');
   container.empty();
   // Filter MoCs and render results
   filterMoCs().forEach(function(MoC) {
@@ -277,10 +248,10 @@ function addMoCCards() {
 
 function createMoCCard(MoC) {
   // TODO break this out into template
-  var facebook = MoC.facebook_official_account || MoC.facebook_account || MoC.facebook;
-  var twitter = MoC.twitter_account || MoC.twitter;
-  var website = MoC.contact_form || MoC.url;
-  var res = '<div class="card">' +
+  let facebook = MoC.facebook_official_account || MoC.facebook_account || MoC.facebook;
+  let twitter = MoC.twitter_account || MoC.twitter;
+  let website = MoC.contact_form || MoC.url;
+  let res = '<div class="card">' +
       '<div class="card-header p-0">' +
         '<div class="row background-' + responseClass[MoC.status] + ' m-0">' +
           '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/static/legislator-photos/' + MoC.id + '-100px.jpeg"></div>' +
@@ -334,8 +305,8 @@ function bindFilterEvents() {
 }
 
 function setFilter(e) {
-  var type  = e.currentTarget.getAttribute('data-type');
-  var value = e.currentTarget.getAttribute('data-value');
+  let type  = e.currentTarget.getAttribute('data-type');
+  let value = e.currentTarget.getAttribute('data-value');
       value = parseInt(value) || value;
 
   if (Object.keys(filters).indexOf(type) === -1) {
@@ -353,8 +324,8 @@ function setFilter(e) {
 }
 
 function removeFilter(e) {
-  var type  = e.currentTarget.parentElement.getAttribute('data-type');
-  var value = e.currentTarget.parentElement.getAttribute('data-value');
+  let type  = e.currentTarget.parentElement.getAttribute('data-type');
+  let value = e.currentTarget.parentElement.getAttribute('data-value');
       value = parseInt(value) || value;
   if (filters.hasOwnProperty(type) && filters[type].indexOf(value) !== -1 ) {
     filters[type].splice(filters[type].indexOf(value), 1);
@@ -367,8 +338,7 @@ function removeFilter(e) {
 }
 
 function filterMoCs() {
-  var filteredMoCs = MoCs;
-  console.log(filteredMoCs)
+  let filteredMoCs = MoCs;
   Object.keys(filters).forEach(function(key) {
     filteredMoCs = filteredMoCs.filter(function(MoC) {
       return filters[key].indexOf(MoC[key]) !== -1;
@@ -378,10 +348,10 @@ function filterMoCs() {
 }
 
 function signUp(form) {
-  var zipcodeRegEx = /^(\d{5}-\d{4}|\d{5}|\d{9})$|^([a-zA-Z]\d[a-zA-Z] \d[a-zA-Z]\d)$/g;
-  var emailRegEx = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-  var phoneRegEx = /^(\d{11})$/;
-  var errors = [];
+  let zipcodeRegEx = /^(\d{5}-\d{4}|\d{5}|\d{9})$|^([a-zA-Z]\d[a-zA-Z] \d[a-zA-Z]\d)$/g;
+  let emailRegEx = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+  let phoneRegEx = /^(\d{11})$/;
+  let errors = [];
 
   if (!form.last.value || !form.first.value || !form.zipcode.value || !form.email.value || !form.phone.value) {
     errors.push("Please fill in all fields.")
@@ -404,7 +374,7 @@ function signUp(form) {
     return false;
   }
 
-  var person = {
+  let person = {
     'person' : {
       'family_name': form.last.value,
       'given_name': form.first.value,

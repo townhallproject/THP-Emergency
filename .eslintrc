@@ -1,0 +1,32 @@
+{
+  "globals": {
+    "L": true,
+    "firebase": true,
+    "$": true
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+ "env": {
+    "es6": true,
+    "node": true,
+    "browser": true
+  },
+  "rules": {
+    "max-len":"off",
+    "no-param-reassign":"off",
+    "sort-keys": [
+      "warn",
+      "asc",
+      {
+        "caseSensitive": true,
+        "natural": false
+      }
+    ],
+    "no-console": [0]
+  },
+  "extends": "eslint:recommended",
+  "plugins": [
+      "import"
+  ]
+}

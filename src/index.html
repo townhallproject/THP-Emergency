@@ -5,15 +5,12 @@
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
   <link href="https://fonts.googleapis.com/css?family=Raleway:300,900" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Merriweather|Open+Sans|Roboto" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Anton" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.js"></script>
   <script src="https://use.fontawesome.com/316bfde8e8.js"></script>
   <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
-  <script src="script.js"></script>
-  <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-light">
@@ -48,28 +45,28 @@
     <div class="d-flex justify-content-around flex-wrap align-self-end mocCounts pl-5 pr-5">
       <div class="mocCounts-impeachment count-container align-self-stretch">
         <div class="number" id="count-impeachment"></div>
-        Fully support impeachment
+        Supports impeachment
         <div id="photos-impeachment" class="photos"></div>
       </div>
       <div class="mocCounts-inquiry count-container align-self-stretch">
         <div class="number" id="count-inquiry"></div>
-        Support impeachment inquiry
+        Supports impeachment inquiry
         <div id="photos-inquiry" class="photos"></div>
       </div>
-      <div class="mocCounts-no-position count-container align-self-stretch">
-        <div class="number" id="count-no-position"></div>
-        Have taken no position
-        <div id="photos-no-position" class="photos"></div>
+      <div class="mocCounts-unclear count-container align-self-stretch">
+        <div class="number" id="count-unclear"></div>
+        Not <span class="d-lg-none d-xl-inline">yet </span>on record
+        <div id="photos-unclear" class="photos"></div>
       </div>
-      <div class="mocCounts-concerns count-container align-self-stretch">
-        <div class="number" id="count-concerns"></div>
-        Have expressed concerns
-        <div id="photos-concerns" class="photos"></div>
+      <div class="mocCounts-concerned count-container align-self-stretch">
+        <div class="number" id="count-concerned"></div>
+          Have expressed concerns
+        <div id="photos-concerned" class="photos"></div>
       </div>
-      <div class="mocCounts-no-impeachment count-container align-self-stretch">
-        <div class="number" id="count-no-impeachment"></div>
-        Are opposed to impeachment
-        <div id="photos-no-impeachment" class="photos"></div>
+      <div class="mocCounts-opposed count-container align-self-stretch">
+        <div class="number" id="count-opposed"></div>
+        Oppose impeachment
+        <div id="photos-opposed" class="photos"></div>
       </div>
     </div>
   </div>
@@ -125,12 +122,10 @@
           Public position
         </button>
         <div class="dropdown-menu" aria-labelledby="buttonPosition">
-          <div class="dropdown-item" data-type="crisis_status" data-value="1">Support impeachment</div>
-          <div class="dropdown-item" data-type="crisis_status" data-value="2">Support resignation</div>
-          <div class="dropdown-item" data-type="crisis_status" data-value="3">Support other action</div>
-          <div class="dropdown-item" data-type="crisis_status" data-value="4">Have voiced concerns</div>
-          <div class="dropdown-item" data-type="crisis_status" data-value="5">Oppose impeachment</div>
-          <div class="dropdown-item" data-type="crisis_status" data-value="6">Are not yet on record</div>
+          <div class="dropdown-item" data-type="crisis_status" data-value="1">Support bill</div>
+          <div class="dropdown-item" data-type="crisis_status" data-value="2">Support other action</div>
+          <div class="dropdown-item" data-type="crisis_status" data-value="3">Oppose bill</div>
+          <div class="dropdown-item" data-type="crisis_status" data-value="4">Are not yet on record</div>
         </div>
       </div>
       <div class="dropdown">

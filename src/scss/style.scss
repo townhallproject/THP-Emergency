@@ -103,17 +103,21 @@ strong {
   background-color: $light-purple;
 }
 
-.background-no-position {
-  background-color: $middle-grey;
+.background-inquiry {
+  background-color: $light-purple;
 }
 
-.background-concerns {
-  background-color: $yellow;
+.background-unclear {
+  background-color: $midtone;
 }
 
-.background-no-impeachment {
+.background-concerned {
+  background-color: $orange;
+}
+
+.background-opposed {
   color: $white;
-  background-color: $dark-orange;
+  background-color: $brown;
 }
 
 
@@ -264,11 +268,11 @@ h3.callToAction {
 /* On The Record */
 #onTheRecord {
   .btn-group .dropdown .btn {
-    background: $brand-white;
-    color: $brand-primary;
+    background: $brand-secondary;
+    color: $brand-white;
     padding: 0.15em 0.5em;
     margin-right: 1em;
-    font-size: 1.5em;
+    font-size: 1em;
   }
 
   .dropdown-menu {
