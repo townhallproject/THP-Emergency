@@ -227,9 +227,8 @@ function createMoCCard(MoC) {
             '<h4>' + MoC.displayName + '</h4>' +
             '<small class="rep-card-position">'
       
-    res += responseDict[MoC.crisis_status] ? MoC.crisis_status === 4 ? responseDict[MoC.crisis_status] + '</small>' :
-                                    '<a href="' + MoC.crisis_status_source + '" target="blank">' +
-                                    responseDict[MoC.crisis_status] + '</a></small>' : '';
+    res += responseDict[MoC.crisis_status] ? 
+      '<a href="' + MoC.crisis_status_source + '" target="blank">' + responseDict[MoC.crisis_status] + '</a></small>' : '';
 
     res += '<small class="rep-card-subtitle">' +
               (!MoC.district ? 'Sen. ' : '' ) + MoC.state + (MoC.district ? '-' + MoC.district : '') +
