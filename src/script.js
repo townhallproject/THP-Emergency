@@ -98,10 +98,26 @@ $('.scroll-link').on('click', (e) => {
 })
 
 function makeRow(name, status){
+  if (!status) {
+   return '<div class="d-flex justify-content-between"><span>' + name + '</span><span class="response background-' + 'NA' + '"> ' + 'NA' + '</span></div > ';
+  }
    return '<div class="d-flex justify-content-between"><span>' + name + '</span><span class="response background-' + responseClass[status] + '"> ' + responseDictPopover[status] + '</span></div > ';
 }
 
 function showTooltip(e) {
+  if (!e.feature.properties.MoCs || !e.feature.properties.MoCs.length) {
+    console.log(e.feature.properties)
+      let tooltip =
+        '<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">' + e.feature.properties.DISTRICT + '</h4><h4>Position</h4></div>';
+      tooltip += '<div class="subtitle">HOUSE</div>'
+      tooltip += makeRow('vacant')
+      tooltip += '<div class="subtitle">SENATE</div>'
+      senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)].forEach(function (senator) {
+        tooltip += makeRow(senator.displayName, senator.crisis_status)
+      });
+      tooltip += '</div>'
+    return tooltip;
+  }
   let tooltip = 
     '<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">' + e.feature.properties.DISTRICT + '</h4><h4>Position</h4></div>';
   tooltip += '<div class="subtitle">HOUSE</div>'
@@ -151,7 +167,10 @@ function addMoCsToDistrict(districtGeoJson) {
   districtGeoJson.features.forEach(function(district) {
     district = districtTHPAdapter(district);
     district.properties.MoCs = MoCsByDistrict[district.properties.DISTRICT];
-    if (!district.properties.MoCs) { return; }
+    if (!district.properties.MoCs) { 
+      console.log('no mocs for district', district.properties.DISTRICT)
+      return; 
+    }
 
     // Calculate the value that occurs the most often in the dataset
     let crisisCount = MoCsByDistrict[district.properties.DISTRICT].map(function(MoC) { return MoC.crisis_status });
@@ -165,12 +184,12 @@ function addMoCsToDistrict(districtGeoJson) {
 
 // Takes a district and transforms all field names and data to THP standards
 function districtTHPAdapter(district) {
+  let formattedDistrict = district.properties.GEOID.substring(2);
   // Change -00 districts to -At-Large
-  district.properties.DISTRICT = district.properties.DISTRICT.replace("-00", "-At-Large");
-  // Remove leading 0 in district names
-  if (/^.{2}-0\d$/m.test(district.properties.DISTRICT)) {
-    district.properties.DISTRICT = district.properties.DISTRICT.replace("0", "");
-  }
+  // remove leading zeros to numbers
+  formattedDistrict = formattedDistrict === '00' ? formattedDistrict.replace('00', 'At-Large') : Number(formattedDistrict);
+  formattedDistrict = `${district.properties.ABR}-${formattedDistrict}`;
+  district.properties.DISTRICT = formattedDistrict;
   return district;
 }
 
