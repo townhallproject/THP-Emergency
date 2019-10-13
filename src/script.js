@@ -79,14 +79,14 @@ $.ajax({
     senatorsByState = mapToStateDict(MoCs);
     console.log(MoCsByDistrict);
     console.log(senatorsByState);
-    var districtLayer = new L.GeoJSON.AJAX("districts.geojson", {
+    var districtLayer = new L.GeoJSON.AJAX("/data/districts.geojson", {
       middleware: addMoCsToDistrict,
       style: function(state) { return setStyle(state); }
     });
     districtLayer.bindTooltip(showTooltip, {
       sticky: true,
     }).addTo(map);
-
+    console.log(map);
     populateGroups(mapToGroups(MoCs));
     bindFilterEvents();
     addMoCCards();
