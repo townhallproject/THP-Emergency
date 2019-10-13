@@ -28,8 +28,8 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 get116thCongress()
-.then(function (MoCs) {
-
+.then(function (returnedMoCs) {
+  MoCs = returnedMoCs;
   MoCsByDistrict = mapToDistrictDict(MoCs);
   senatorsByState = mapToStateDict(MoCs);
   let districtLayer = new L.GeoJSON.AJAX("/data/districts.geojson", {
