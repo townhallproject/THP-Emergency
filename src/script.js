@@ -86,7 +86,7 @@ $.ajax({
     districtLayer.bindTooltip(showTooltip, {
       sticky: true,
     }).addTo(map);
-    console.log(map);
+    
     populateGroups(mapToGroups(MoCs));
     bindFilterEvents();
     addMoCCards();
@@ -192,6 +192,7 @@ function calculateZoom() {
 }
 
 function addMoCsToDistrict(districtGeoJson) {
+  console.log(districtGeoJson);
   districtGeoJson.features.forEach(function(district) {
     district = districtTHPAdapter(district);
     district.properties.MoCs = MoCsByDistrict[district.properties.DISTRICT];
@@ -203,6 +204,7 @@ function addMoCsToDistrict(districtGeoJson) {
       return crisisCount.filter(function(val) { return val === a }).length - crisisCount.filter(function(val) { return val === b }).length;
     }).pop();
   });
+  console.log(districtGeoJson);
   return districtGeoJson;
 }
 
@@ -220,7 +222,7 @@ function districtTHPAdapter(district) {
 function setStyle(district) {
   return {
     color: 'white',
-    fillColor: fillColor(state),
+    fillColor: fillColor(district),
     fillOpacity: 1,
     opacity: 1,
     weight: 1,
