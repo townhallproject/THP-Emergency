@@ -28,8 +28,8 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 get116thCongress()
-.then(function (MoCs) {
-
+.then(function (returnedMoCs) {
+  MoCs = returnedMoCs;
   MoCsByDistrict = mapToDistrictDict(MoCs);
   senatorsByState = mapToStateDict(MoCs);
   let districtLayer = new L.GeoJSON.AJAX("/data/districts.geojson", {
@@ -91,9 +91,16 @@ function scrollToAnchor(target) {
   }, 1000);
 }
 
+$('.scroll-link').on('click', (e) => {
+    e.preventDefault()
+    const link = $(e.target).attr('data-link')
+    scrollToAnchor(link)
+})
+
 function makeRow(name, status){
    return '<div class="d-flex justify-content-between"><span>' + name + '</span><span class="response background-' + responseClass[status] + '"> ' + responseDictPopover[status] + '</span></div > ';
 }
+
 function showTooltip(e) {
   let tooltip = 
     '<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">' + e.feature.properties.DISTRICT + '</h4><h4>Position</h4></div>';
