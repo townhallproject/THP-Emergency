@@ -47,7 +47,6 @@ get116thCongress()
   addMoCCards();
 });
 
-
 // Data mapping
 function mapToDistrictDict(MoCs) {
   return MoCs.reduce(function(res, MoC) {
@@ -73,7 +72,7 @@ function mapToStateDict(MoCs) {
 
 function mapToGroups(MoCs) {
   return MoCs.reduce(function(acc, curr){
-    let statusName = responseClass[curr.crisis_status];
+    var statusName = responseClass[curr.crisis_status];
     if (statusName) {
       if (!acc[statusName]){
         acc[statusName] = [];
@@ -121,7 +120,7 @@ function showTooltip(e) {
   let tooltip = 
     '<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">' + e.feature.properties.DISTRICT + '</h4><h4>Position</h4></div>';
   tooltip += '<div class="subtitle">HOUSE</div>'
-  tooltip += makeRow(e.feature.properties.MoCs[0].displayName, e.feature.properties.MoCs[0].crisis_status)
+  tooltip += makeRow(e.feature.properties.MoCs[0].displayName, e.feature.properties.MoCs[0].crisis_status);
   tooltip += '<div class="subtitle">SENATE</div>'
   senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)].forEach(function(senator) {
     tooltip += makeRow(senator.displayName, senator.crisis_status)
@@ -178,7 +177,6 @@ function addMoCsToDistrict(districtGeoJson) {
       return crisisCount.filter(function(val) { return val === a }).length - crisisCount.filter(function(val) { return val === b }).length;
     }).pop();
   });
-
   return districtGeoJson;
 }
 
@@ -193,10 +191,10 @@ function districtTHPAdapter(district) {
   return district;
 }
 
-function setStyle(state) {
+function setStyle(district) {
   return {
     color: 'white',
-    fillColor: fillColor(state),
+    fillColor: fillColor(district),
     fillOpacity: 1,
     opacity: 1,
     weight: 1,
@@ -225,7 +223,7 @@ function createMoCCard(MoC) {
   let res = '<div class="card">' +
       '<div class="card-header p-0">' +
         '<div class="row background-' + responseClass[MoC.crisis_status] + ' m-0">' +
-          '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-50px.jpeg"></div>' +
+          '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-100px.jpeg"></div>' +
           '<div class="col-8 col-sm-9">' +
             '<h4>' + MoC.displayName + '</h4>' +
             '<small class="rep-card-position">'
@@ -242,10 +240,8 @@ function createMoCCard(MoC) {
       '</div>' +
       '<div class="card-body">' +
         '<div class="row m-0 pt-2">';
-
-  if (MoC.phone) {
-    res += '<div class="col-12 col-sm-5 p-0">D.C. Office Phone:<div>' + MoC.phone + '</div></div>';
-  }
+  
+  res += `<div class="col-12 col-sm-5 p-0">${MoC.phone ? 'D.C. Office Phone:' : ' '}<div>${MoC.phone || ' '}</div></div>`;
 
   res += '<div class="col-12 col-sm-7 p-0 text-right">';
 
@@ -266,7 +262,7 @@ function createMoCCard(MoC) {
               '<i class="fa fa fa-external-link-square" aria-hidden="true"></i>' +
             '</a>'
   }
-
+  
   return res += '</div></div></div>';
 }
 
@@ -372,6 +368,5 @@ function signUp(form) {
                               '</div>');
     }
   });
-
   return false;
 }
