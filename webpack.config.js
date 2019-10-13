@@ -6,8 +6,6 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const devMode = process.env.NODE_ENV !== 'production'
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const { EnvironmentPlugin } = require('webpack');
-
 const plugins = [
   new HTMLPlugin({
     template: `${__dirname}/src/index.html`,
