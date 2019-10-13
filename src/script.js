@@ -1,4 +1,10 @@
 // window.alert("NB:  This site is currently in testing mode.  Data is incomplete, and may be inaccurate.")
+import {
+  responseClass,
+  mapColors,
+  responseDict,
+  responseDictPopover,
+} from './constants';
 
 import "./scss/style.scss";
 
@@ -34,14 +40,14 @@ firebasedb.ref('mocData/').once('value')
   snapshot.forEach(function(ele) {
     // TODO once all MoCs have crisis values remove this stub
     let MoC = ele.val();
-    MoC.crisis_status = Number(MoC.crisis_status) || 6;
+    // MoC.crisis_status = Number(MoC.crisis_status) || 6;
     MoCs.push(MoC);
   })
   MoCs = MoCs.filter(function (MoC) {
     // Remove out of office people, and test data
     return MoC.hasOwnProperty('in_office') && 
-      MoC.in_office === true && 
-      (MoC.type === 'sen' || MoC.type === 'rep') &&
+      MoC.in_office === true &&
+      MoC.crisis_status &&
       MoC.ballotpedia_id !== 'Testing McTesterson';
   });
 
@@ -62,34 +68,6 @@ firebasedb.ref('mocData/').once('value')
   addMoCCards();
 });
 
-// Static Dicts
-let responseDict = {
-  1: 'Supports Special Counsel Independence and Integrity Act',
-  2: 'Supports Other Action',
-  3: 'Opposes Special Counsel Independence and Integrity Act',
-  4: 'Not on record',
-}
-
-const responseDictPopover = {
-    1: 'supports bill',
-    2: 'for other action(s)',
-    3: 'opposes bill',
-    4: 'unknown',
-}
-
-let responseClass = {
-  1: 'support',
-  2: 'action',
-  3: 'oppose',
-  4: 'unknown',
-}
-
-const mapColors = {
-  1: '#542788',
-  2: '#998ec3',
-  3: '#f1a340',
-  4: '#e3e3e3',
-}
 
 // Data mapping
 function mapToDistrictDict(MoCs) {
@@ -116,6 +94,7 @@ function mapToStateDict(MoCs) {
 
 function mapToGroups(MoCs) {
   return MoCs.reduce(function(acc, curr){
+    console.log(curr.crisis_status)
     let statusName = responseClass[curr.crisis_status];
     if (statusName) {
       if (!acc[statusName]){
@@ -152,9 +131,16 @@ function showTooltip(e) {
 
 function populateGroups(groups) {
   Object.keys(groups).forEach(function(key) {
-    document.getElementById("count-" + key).innerHTML = groups[key].length;
+    const id = `count-${key}`
+    const el = document.getElementById(id);
+    if (el) {
+      el.innerHTML = groups[key].length;
+    }
     let photoContainer = document.getElementById("photos-" + key);
-
+    if (!photoContainer) {
+      console.log(key)
+      return;
+    }
     groups[key].sort(function(a, b){
       return parseInt(b.seniority) - parseInt(a.seniority)})
                .slice(0, 8)
