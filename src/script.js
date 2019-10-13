@@ -1,14 +1,15 @@
 // window.alert("NB:  This site is currently in testing mode.  Data is incomplete, and may be inaccurate.")
 
-// TODO add babel so we can use ES6 like sane people
-var map;
-var MoCs = [];
-var MoCsByDistrict;
-var senatorsByState;
-var filters = {};
+import "./scss/style.scss";
+
+let map;
+let MoCs = [];
+let MoCsByDistrict;
+let senatorsByState;
+const filters = {};
 
 // Wait for the DOM to be ready then add the Map and restrict movement
-document.addEventListener("DOMContentLoaded", function(event) {
+document.addEventListener("DOMContentLoaded", function() {
   map = L.map('map', { zoomControl: false, zoomSnap: 0.1, attributionControl: false }).setView([37.8, -96], calculateZoom());
   map.dragging.disable();
   map.touchZoom.disable();
@@ -17,22 +18,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
 });
 
 // TODO break this out into setup file
-var fbconfig = {
-  apiKey: 'AIzaSyDwZ41RWIytGELNBnVpDr7Y_k1ox2F2Heg',
+let fbconfig = {
+  apiKey: 'AIzaSyCXyjAOvBKDEX5pckTwuI7LODWKNlL21gc',
   authDomain: 'townhallproject-86312.firebaseapp.com',
   databaseURL: 'https://townhallproject-86312.firebaseio.com',
   storageBucket: 'townhallproject-86312.appspot.com',
   messagingSenderId: '208752196071'
 };
 firebase.initializeApp(fbconfig);
-var firebasedb = firebase.database();
+let firebasedb = firebase.database();
 
 firebasedb.ref('mocData/').once('value')
 .then(function(snapshot) {
   // Get MoCs and flatten into array
   snapshot.forEach(function(ele) {
     // TODO once all MoCs have crisis values remove this stub
-    var MoC = ele.val();
+    let MoC = ele.val();
     MoC.crisis_status = Number(MoC.crisis_status) || 6;
     MoCs.push(MoC);
   })
@@ -46,7 +47,7 @@ firebasedb.ref('mocData/').once('value')
 
   MoCsByDistrict = mapToDistrictDict(MoCs);
   senatorsByState = mapToStateDict(MoCs);
-  var districtLayer = new L.GeoJSON.AJAX("districts.geojson", {
+  let districtLayer = new L.GeoJSON.AJAX("/data/districts.geojson", {
     middleware: addMoCsToDistrict,
     style: function(state) { return setStyle(state); }
   });
@@ -62,7 +63,7 @@ firebasedb.ref('mocData/').once('value')
 });
 
 // Static Dicts
-var responseDict = {
+let responseDict = {
   1: 'Supports Special Counsel Independence and Integrity Act',
   2: 'Supports Other Action',
   3: 'Opposes Special Counsel Independence and Integrity Act',
@@ -76,7 +77,7 @@ const responseDictPopover = {
     4: 'unknown',
 }
 
-var responseClass = {
+let responseClass = {
   1: 'support',
   2: 'action',
   3: 'oppose',
@@ -115,7 +116,7 @@ function mapToStateDict(MoCs) {
 
 function mapToGroups(MoCs) {
   return MoCs.reduce(function(acc, curr){
-    var statusName = responseClass[curr.crisis_status];
+    let statusName = responseClass[curr.crisis_status];
     if (statusName) {
       if (!acc[statusName]){
         acc[statusName] = [];
@@ -137,7 +138,7 @@ function makeRow(name, status){
    return '<div class="d-flex justify-content-between"><span>' + name + '</span><span class="response background-' + responseClass[status] + '"> ' + responseDictPopover[status] + '</span></div > ';
 }
 function showTooltip(e) {
-  var tooltip = 
+  let tooltip = 
     '<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">' + e.feature.properties.DISTRICT + '</h4><h4>Position</h4></div>';
   tooltip += '<div class="subtitle">HOUSE</div>'
   tooltip += makeRow(e.feature.properties.MoCs[0].displayName, e.feature.properties.MoCs[0].crisis_status)
@@ -152,7 +153,7 @@ function showTooltip(e) {
 function populateGroups(groups) {
   Object.keys(groups).forEach(function(key) {
     document.getElementById("count-" + key).innerHTML = groups[key].length;
-    var photoContainer = document.getElementById("photos-" + key);
+    let photoContainer = document.getElementById("photos-" + key);
 
     groups[key].sort(function(a, b){
       return parseInt(b.seniority) - parseInt(a.seniority)})
@@ -169,7 +170,7 @@ function populateGroups(groups) {
 // Map Helpers
 
 function calculateZoom() {
-  var sw = screen.width;
+  let sw = screen.width;
 
   return sw >= 1700 ? 4.7 :
          sw >= 1600 ? 4.3 :
@@ -183,7 +184,7 @@ function addMoCsToDistrict(districtGeoJson) {
     if (!district.properties.MoCs) { return; }
 
     // Calculate the value that occurs the most often in the dataset
-    var crisisCount = MoCsByDistrict[district.properties.DISTRICT].map(function(MoC) { return MoC.crisis_status });
+    let crisisCount = MoCsByDistrict[district.properties.DISTRICT].map(function(MoC) { return MoC.crisis_status });
     district.properties.crisisMode = crisisCount.sort(function(a, b) {
       return crisisCount.filter(function(val) { return val === a }).length - crisisCount.filter(function(val) { return val === b }).length;
     }).pop();
@@ -205,11 +206,11 @@ function districtTHPAdapter(district) {
 
 function setStyle(state) {
   return {
-    fillColor: fillColor(state),
-    weight: 1,
-    opacity: 1,
     color: 'white',
-    fillOpacity: 1
+    fillColor: fillColor(state),
+    fillOpacity: 1,
+    opacity: 1,
+    weight: 1,
   };
 }
 
@@ -219,7 +220,7 @@ function fillColor(district) {
 
 // MoC section
 function addMoCCards() {
-  var container = $('#MoCCardContainer');
+  let container = $('#MoCCardContainer');
   container.empty();
   // Filter MoCs and render results
   filterMoCs().forEach(function(MoC) {
@@ -229,10 +230,10 @@ function addMoCCards() {
 
 function createMoCCard(MoC) {
   // TODO break this out into template
-  var facebook = MoC.facebook_official_account || MoC.facebook_account || MoC.facebook;
-  var twitter = MoC.twitter_account || MoC.twitter;
-  var website = MoC.contact_form || MoC.url;
-  var res = '<div class="card">' +
+  let facebook = MoC.facebook_official_account || MoC.facebook_account || MoC.facebook;
+  let twitter = MoC.twitter_account || MoC.twitter;
+  let website = MoC.contact_form || MoC.url;
+  let res = '<div class="card">' +
       '<div class="card-header p-0">' +
         '<div class="row background-' + responseClass[MoC.crisis_status] + ' m-0">' +
           '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/data/photos/' + MoC.govtrack_id + '-50px.jpeg"></div>' +
@@ -286,8 +287,8 @@ function bindFilterEvents() {
 }
 
 function setFilter(e) {
-  var type  = e.currentTarget.getAttribute('data-type');
-  var value = e.currentTarget.getAttribute('data-value');
+  let type  = e.currentTarget.getAttribute('data-type');
+  let value = e.currentTarget.getAttribute('data-value');
       value = parseInt(value) || value;
 
   if (Object.keys(filters).indexOf(type) === -1) {
@@ -305,8 +306,8 @@ function setFilter(e) {
 }
 
 function removeFilter(e) {
-  var type  = e.currentTarget.parentElement.getAttribute('data-type');
-  var value = e.currentTarget.parentElement.getAttribute('data-value');
+  let type  = e.currentTarget.parentElement.getAttribute('data-type');
+  let value = e.currentTarget.parentElement.getAttribute('data-value');
       value = parseInt(value) || value;
   if (filters.hasOwnProperty(type) && filters[type].indexOf(value) !== -1 ) {
     filters[type].splice(filters[type].indexOf(value), 1);
@@ -319,7 +320,7 @@ function removeFilter(e) {
 }
 
 function filterMoCs() {
-  var filteredMoCs = MoCs;
+  let filteredMoCs = MoCs;
   Object.keys(filters).forEach(function(key) {
     filteredMoCs = filteredMoCs.filter(function(MoC) {
       return filters[key].indexOf(MoC[key]) !== -1;
@@ -329,10 +330,10 @@ function filterMoCs() {
 }
 
 function signUp(form) {
-  var zipcodeRegEx = /^(\d{5}-\d{4}|\d{5}|\d{9})$|^([a-zA-Z]\d[a-zA-Z] \d[a-zA-Z]\d)$/g;
-  var emailRegEx = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-  var phoneRegEx = /^(\d{11})$/;
-  var errors = [];
+  let zipcodeRegEx = /^(\d{5}-\d{4}|\d{5}|\d{9})$|^([a-zA-Z]\d[a-zA-Z] \d[a-zA-Z]\d)$/g;
+  let emailRegEx = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+  let phoneRegEx = /^(\d{11})$/;
+  let errors = [];
 
   if (!form.last.value || !form.first.value || !form.zipcode.value || !form.email.value || !form.phone.value) {
     errors.push("Please fill in all fields.")
@@ -355,7 +356,7 @@ function signUp(form) {
     return false;
   }
 
-  var person = {
+  let person = {
     'person' : {
       'family_name': form.last.value,
       'given_name': form.first.value,
