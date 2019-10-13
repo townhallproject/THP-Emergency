@@ -27,76 +27,25 @@ document.addEventListener("DOMContentLoaded", function() {
   map.scrollWheelZoom.disable();
 });
 
-// TODO break this out into setup file
-// var fbconfig = {
-//   apiKey: 'AIzaSyDwZ41RWIytGELNBnVpDr7Y_k1ox2F2Heg',
-//   authDomain: 'townhallproject-86312.firebaseapp.com',
-//   databaseURL: 'https://townhallproject-86312.firebaseio.com',
-//   storageBucket: 'townhallproject-86312.appspot.com',
-//   messagingSenderId: '208752196071'
-// };
-// firebase.initializeApp(fbconfig);
-// var firebasedb = firebase.database();
+get116thCongress()
+.then(function (returnedMoCs) {
+  MoCs = returnedMoCs;
+  MoCsByDistrict = mapToDistrictDict(MoCs);
+  senatorsByState = mapToStateDict(MoCs);
+  let districtLayer = new L.GeoJSON.AJAX("/data/districts.geojson", {
+    middleware: addMoCsToDistrict,
+    style: function(state) { return setStyle(state); }
+  });
 
-// get116thCongress()
-// .then(function (MoCs) {
+  districtLayer.bindTooltip(showTooltip, {
+    sticky: true,
+  }).addTo(map);
 
-//   MoCsByDistrict = mapToDistrictDict(MoCs);
-//   senatorsByState = mapToStateDict(MoCs);
-//   let districtLayer = new L.GeoJSON.AJAX("/data/districts.geojson", {
-//     middleware: addMoCsToDistrict,
-//     style: function(state) { return setStyle(state); }
-//   });
-
-//   districtLayer.bindTooltip(showTooltip, {
-//     sticky: true,
-//   }).addTo(map);
-
-//   // Fill out the MoC stance groups, add photos, and generate all MoC cards
-//   populateGroups(mapToGroups(MoCs));
-//   bindFilterEvents();
-//   addMoCCards();
-// });
-
-$.ajax({
-  url: 'https://sheets.googleapis.com/v4/spreadsheets/1ulV1QPinFiHIT0e688kaz_2LRE-7HaUtz3Y9z5L0Lt4/values/A2:H?key=AIzaSyCS80PR3qP0top2NLFu_YIz2Ihnm9MtvKc',
-  dataType: 'json',
-  success: (data) => {
-    data.values.forEach((row) => {
-      const MoC = {
-        id: row[0],
-        name: row[1],
-        party: row[2],
-        chamber: row[3],
-        state: row[4],
-        district: row[5],
-        status: parseInt(row[6].slice(0,1)),
-        link: row[7],
-      }
-      MoCs.push(MoC);
-    });
-    MoCsByDistrict = mapToDistrictDict(MoCs);
-    senatorsByState = mapToStateDict(MoCs);
-    console.log(MoCsByDistrict);
-    console.log(senatorsByState);
-    var districtLayer = new L.GeoJSON.AJAX("/data/districts.geojson", {
-      middleware: addMoCsToDistrict,
-      style: function(state) { return setStyle(state); }
-    });
-    districtLayer.bindTooltip(showTooltip, {
-      sticky: true,
-    }).addTo(map);
-    
-    populateGroups(mapToGroups(MoCs));
-    bindFilterEvents();
-    addMoCCards();
-  },
-  error: (xhr, ajaxOptions, thrownError) => {
-    console.log(xhr);
-    console.log(thrownError)
-  }
+  // Fill out the MoC stance groups, add photos, and generate all MoC cards
+  populateGroups(mapToGroups(MoCs));
+  bindFilterEvents();
+  addMoCCards();
 });
-
 
 // Data mapping
 function mapToDistrictDict(MoCs) {
@@ -123,7 +72,7 @@ function mapToStateDict(MoCs) {
 
 function mapToGroups(MoCs) {
   return MoCs.reduce(function(acc, curr){
-    var statusName = responseClass[curr.status];
+    var statusName = responseClass[curr.crisis_status];
     if (statusName) {
       if (!acc[statusName]){
         acc[statusName] = [];
@@ -155,17 +104,16 @@ function showTooltip(e) {
   let tooltip = 
     '<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">' + e.feature.properties.DISTRICT + '</h4><h4>Position</h4></div>';
   tooltip += '<div class="subtitle">HOUSE</div>'
-  tooltip += makeRow(e.feature.properties.MoCs[0].name, e.feature.properties.MoCs[0].status);
+  tooltip += makeRow(e.feature.properties.MoCs[0].displayName, e.feature.properties.MoCs[0].crisis_status);
   tooltip += '<div class="subtitle">SENATE</div>'
   senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)].forEach(function(senator) {
-    tooltip += makeRow(senator.name, senator.status)
+    tooltip += makeRow(senator.displayName, senator.crisis_status)
   });
   tooltip += '</div>'
   return tooltip;
 }
 
 function populateGroups(groups) {
-  console.log(groups)
   Object.keys(groups).forEach(function(key) {
     const id = `count-${key}`
     const el = document.getElementById(id);
@@ -177,11 +125,11 @@ function populateGroups(groups) {
       return;
     }
     groups[key].sort(function(a, b){
-      return parseInt(b.id) - parseInt(a.id)})
+      return parseInt(b.seniority) - parseInt(a.seniority)})
                .slice(0, 8)
                .forEach(function(MoC) {
-                 if (MoC.id){
-                   photoContainer.innerHTML += '<img src="//www.govtrack.us/static/legislator-photos/' + MoC.id + '-50px.jpeg" />';
+                 if (MoC.govtrack_id){
+                   photoContainer.innerHTML += '<img src="//www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-50px.jpeg" />';
                  }
     });
   });
@@ -199,7 +147,6 @@ function calculateZoom() {
 }
 
 function addMoCsToDistrict(districtGeoJson) {
-  console.log(districtGeoJson);
   districtGeoJson.features.forEach(function(district) {
     district = districtTHPAdapter(district);
     district.properties.MoCs = MoCsByDistrict[district.properties.DISTRICT];
@@ -211,7 +158,6 @@ function addMoCsToDistrict(districtGeoJson) {
       return crisisCount.filter(function(val) { return val === a }).length - crisisCount.filter(function(val) { return val === b }).length;
     }).pop();
   });
-  console.log(districtGeoJson);
   return districtGeoJson;
 }
 
@@ -237,12 +183,7 @@ function setStyle(district) {
 }
 
 function fillColor(district) {
-  if (district.properties.MoCs) {
-    return mapColors[district.properties.MoCs[0].status];
-  } else {
-    console.log(district);
-    return '#ff0000';
-  }
+  return mapColors[district.properties.crisisMode] || '#c6c6c6';
 }
 
 // MoC section
@@ -262,15 +203,15 @@ function createMoCCard(MoC) {
   let website = MoC.contact_form || MoC.url;
   let res = '<div class="card">' +
       '<div class="card-header p-0">' +
-        '<div class="row background-' + responseClass[MoC.status] + ' m-0">' +
-          '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/static/legislator-photos/' + MoC.id + '-100px.jpeg"></div>' +
+        '<div class="row background-' + responseClass[MoC.crisis_status] + ' m-0">' +
+          '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-100px.jpeg"></div>' +
           '<div class="col-8 col-sm-9">' +
-            '<h4>' + MoC.name + '</h4>' +
+            '<h4>' + MoC.displayName + '</h4>' +
             '<small class="rep-card-position">'
       
-    res += responseDict[MoC.status] ? MoC.status === 4 ? responseDict[MoC.status] + '</small>' :
-                                    '<a href="' + MoC.link + '" target="blank">' +
-                                    responseDict[MoC.status] + '</a></small>' : '';
+    res += responseDict[MoC.crisis_status] ? MoC.crisis_status === 4 ? responseDict[MoC.crisis_status] + '</small>' :
+                                    '<a href="' + MoC.crisis_status_source + '" target="blank">' +
+                                    responseDict[MoC.crisis_status] + '</a></small>' : '';
 
     res += '<small class="rep-card-subtitle">' +
               (!MoC.district ? 'Sen. ' : '' ) + MoC.state + (MoC.district ? '-' + MoC.district : '') +
@@ -304,7 +245,7 @@ function createMoCCard(MoC) {
               '<i class="fa fa fa-external-link-square" aria-hidden="true"></i>' +
             '</a>'
   }
-
+  console.log(res);
   return res += '</div></div></div>';
 }
 
