@@ -1,10 +1,18 @@
 // Static Dicts
 export const responseDict = {
     1: 'Full support for impeachment',
-    2: 'Supports impeachment inquiry',
+    2: 'Support impeachment inquiry',
     3: 'No position / Unclear',
     4: 'Expressed concerns',
     5: 'Opposed to impeachment'
+}
+
+export const responseDictGroups = {
+    impeachment: 'support impeachment',
+    inquiry: 'support inquiry',
+    unclear: 'have unclear or no position',
+    concerned: 'have expressed concerns',
+    opposed: 'are opposed to impeachment',
 }
 
 export const responseDictPopover = {
