@@ -94,7 +94,6 @@ function mapToStateDict(MoCs) {
 
 function mapToGroups(MoCs) {
   return MoCs.reduce(function(acc, curr){
-    console.log(curr.crisis_status)
     let statusName = responseClass[curr.crisis_status];
     if (statusName) {
       if (!acc[statusName]){
@@ -138,7 +137,6 @@ function populateGroups(groups) {
     }
     let photoContainer = document.getElementById("photos-" + key);
     if (!photoContainer) {
-      console.log(key)
       return;
     }
     groups[key].sort(function(a, b){
@@ -146,7 +144,7 @@ function populateGroups(groups) {
                .slice(0, 8)
                .forEach(function(MoC) {
                  if (MoC.govtrack_id){
-                   photoContainer.innerHTML += '<img src="//www.govtrack.us/data/photos/' + MoC.govtrack_id + '-50px.jpeg" />';
+                   photoContainer.innerHTML += '<img src="//www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-50px.jpeg" />';
                  }
     });
   });
@@ -222,7 +220,7 @@ function createMoCCard(MoC) {
   let res = '<div class="card">' +
       '<div class="card-header p-0">' +
         '<div class="row background-' + responseClass[MoC.crisis_status] + ' m-0">' +
-          '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/data/photos/' + MoC.govtrack_id + '-50px.jpeg"></div>' +
+          '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-50px.jpeg"></div>' +
           '<div class="col-8 col-sm-9">' +
             '<h4>' + MoC.displayName + '</h4>' +
             '<small class="rep-card-position">'
