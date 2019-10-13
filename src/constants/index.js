@@ -26,7 +26,7 @@ export const responseClass = {
 export const mapColors = {
     1: '#542788',
     2: '#998ec3',
-    3: '#c6c6c6',
-    4: '#f1a340',
-    5: '#b35806',
+    3: '#e7e7e7',
+    4: '#fdb863',
+    5: '#e66101',
 }

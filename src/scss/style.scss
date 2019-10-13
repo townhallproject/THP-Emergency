@@ -5,8 +5,8 @@ $yellow           : #FFE400;
 $dark-orange      : #D37000;
 $lighest-purple   : #ddcae5;
 $midtone     : #c6c6c6;
-$orange     : #f1a340;
-$brown     : #b35806;
+$orange : #fdb863;
+$brown : #e66101;
 $red         : #ff2800;
 $white       : #fefefe;
 $middle-grey:  #bcc8d3;
@@ -239,11 +239,11 @@ h3.callToAction {
 }
 
 .mocCounts-concerned {
-  color: $yellow;
+  color: $orange;
 }
 
 .mocCounts-opposed {
-  color: $dark-orange;
+  color: $brown;
 }
 
 .number {
