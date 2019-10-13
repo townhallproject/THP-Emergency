@@ -51,10 +51,11 @@ get116thCongress()
 function mapToDistrictDict(MoCs) {
   return MoCs.reduce(function(res, MoC) {
     if (!MoC.district) { return res; }
-    if (!res.hasOwnProperty(MoC.state + '-' + MoC.district)) {
-        res[MoC.state + '-' + MoC.district] = [];
+    const district = `${MoC.state}-${MoC.district}`;
+    if (!res.hasOwnProperty(district)) {
+        res[district] = [];
     }
-    res[MoC.state + '-' + MoC.district].push(MoC);
+    res[district].push(MoC);
     return res;
   }, {});
 }
@@ -105,7 +106,6 @@ function makeRow(name, status){
 
 function showTooltip(e) {
   if (!e.feature.properties.MoCs || !e.feature.properties.MoCs.length) {
-    console.log(e.feature.properties)
       let tooltip =
         '<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">' + e.feature.properties.DISTRICT + '</h4><h4>Position</h4></div>';
       tooltip += '<div class="subtitle">HOUSE</div>'
@@ -167,7 +167,6 @@ function addMoCsToDistrict(districtGeoJson) {
     district = districtTHPAdapter(district);
     district.properties.MoCs = MoCsByDistrict[district.properties.DISTRICT];
     if (!district.properties.MoCs) { 
-      console.log('no mocs for district', district.properties.DISTRICT)
       return; 
     }
 
