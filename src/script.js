@@ -4,6 +4,7 @@ import {
   mapColors,
   responseDict,
   responseDictPopover,
+  responseDictGroups,
 } from './constants';
 
 import {
@@ -42,9 +43,13 @@ get116thCongress()
   }).addTo(map);
 
   // Fill out the MoC stance groups, add photos, and generate all MoC cards
-  populateGroups(mapToGroups(MoCs));
+  const groups = mapToGroups(MoCs)
+  populateGroups(groups);
+  populateHouseBars(groups);
+  populateSenateBars(groups);
   bindFilterEvents();
   addMoCCards();
+  $('[data-toggle="tooltip"]').tooltip()
 });
 
 // Data mapping
@@ -128,6 +133,37 @@ function showTooltip(e) {
   tooltip += '</div>'
   return tooltip;
 }
+
+function populateHouseBars(groups) {
+    const total = MoCs.filter((moc) => moc.chamber === 'lower').length;
+    Object.keys(groups).forEach(function (key) {
+      const className = `.bar-house-${key}`
+      const el = $(className);
+      const length = groups[key]
+        .filter(function (MoC) {
+          return MoC.chamber === 'lower';
+        }).length;
+      const percentage = length / total * 100;
+      el.width(`${percentage}%`);
+      el.attr('title', `${length} reps ${responseDictGroups[key]}`)
+    });
+}
+
+function populateSenateBars(groups) {
+  const total = MoCs.filter((moc) => moc.chamber === 'upper').length;
+  Object.keys(groups).forEach(function (key) {
+    const className = `.bar-senate-${key}`
+    const el = $(className);
+    const length = groups[key]
+      .filter(function (MoC) {
+        return MoC.chamber === 'upper';
+      }).length;
+    const percentage = length / total * 100;
+    el.width(`${percentage}%`);
+    el.attr('title', `${length} senators ${responseDictGroups[key]}`)
+  });
+}
+
 
 function populateGroups(groups) {
   Object.keys(groups).forEach(function(key) {
