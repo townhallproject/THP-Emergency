@@ -6,6 +6,10 @@ import {
   responseDictPopover,
 } from './constants';
 
+import {
+  get116thCongress,
+} from './mocs';
+
 import "./scss/style.scss";
 
 let map;
@@ -23,33 +27,8 @@ document.addEventListener("DOMContentLoaded", function() {
   map.scrollWheelZoom.disable();
 });
 
-// TODO break this out into setup file
-let fbconfig = {
-  apiKey: 'AIzaSyCXyjAOvBKDEX5pckTwuI7LODWKNlL21gc',
-  authDomain: 'townhallproject-86312.firebaseapp.com',
-  databaseURL: 'https://townhallproject-86312.firebaseio.com',
-  storageBucket: 'townhallproject-86312.appspot.com',
-  messagingSenderId: '208752196071'
-};
-firebase.initializeApp(fbconfig);
-let firebasedb = firebase.database();
-
-firebasedb.ref('mocData/').once('value')
-.then(function(snapshot) {
-  // Get MoCs and flatten into array
-  snapshot.forEach(function(ele) {
-    // TODO once all MoCs have crisis values remove this stub
-    let MoC = ele.val();
-    // MoC.crisis_status = Number(MoC.crisis_status) || 6;
-    MoCs.push(MoC);
-  })
-  MoCs = MoCs.filter(function (MoC) {
-    // Remove out of office people, and test data
-    return MoC.hasOwnProperty('in_office') && 
-      MoC.in_office === true &&
-      MoC.crisis_status &&
-      MoC.ballotpedia_id !== 'Testing McTesterson';
-  });
+get116thCongress()
+.then(function (MoCs) {
 
   MoCsByDistrict = mapToDistrictDict(MoCs);
   senatorsByState = mapToStateDict(MoCs);
