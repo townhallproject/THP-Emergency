@@ -221,10 +221,8 @@ function createMoCCard(MoC) {
       '</div>' +
       '<div class="card-body">' +
         '<div class="row m-0 pt-2">';
-
-  if (MoC.phone) {
-    res += '<div class="col-12 col-sm-5 p-0">D.C. Office Phone:<div>' + MoC.phone + '</div></div>';
-  }
+  
+  res += `<div class="col-12 col-sm-5 p-0">${MoC.phone ? 'D.C. Office Phone:' : ' '}<div>${MoC.phone || ' '}</div></div>`;
 
   res += '<div class="col-12 col-sm-7 p-0 text-right">';
 
@@ -245,7 +243,7 @@ function createMoCCard(MoC) {
               '<i class="fa fa fa-external-link-square" aria-hidden="true"></i>' +
             '</a>'
   }
-  console.log(res);
+  
   return res += '</div></div></div>';
 }
 
