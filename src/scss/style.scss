@@ -1,6 +1,8 @@
 /* Colors */
 $dark-purple      : #542788;
 $light-purple     : #998ec3;
+$yellow           : #FFE400;
+$dark-orange      : #D37000;
 $lighest-purple   : #ddcae5;
 $midtone     : #c6c6c6;
 $orange     : #f1a340;
@@ -96,7 +98,7 @@ strong {
   background-color: $dark-purple;
 }
 
-.background-resignation {
+.background-inquiry {
   color: $white;
   background-color: $light-purple;
 }
@@ -224,28 +226,24 @@ h3.callToAction {
   }
 }
 
-.mocCounts-support {
+.mocCounts-impeachment {
   color: $dark-purple;
 }
 
-.mocCounts-resignation {
+.mocCounts-inquiry {
   color: $light-purple;
 }
 
-.mocCounts-action {
-  color: $light-purple;
-}
-
-.mocCounts-unkown {
-  color: $midtone;
+.mocCounts-unclear {
+  color: $middle-grey;
 }
 
 .mocCounts-concerned {
-  color: $lighest-purple;
+  color: $yellow;
 }
 
-.mocCounts-oppose {
-  color: $orange;
+.mocCounts-opposed {
+  color: $dark-orange;
 }
 
 .number {
