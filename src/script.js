@@ -18,6 +18,7 @@ let MoCs = [];
 let MoCsByDistrict;
 let senatorsByState;
 const filters = {};
+let searchName;
 
 // Wait for the DOM to be ready then add the Map and restrict movement
 document.addEventListener("DOMContentLoaded", function() {
@@ -245,9 +246,13 @@ function addMoCCards() {
   let container = $('#MoCCardContainer');
   container.empty();
   // Filter MoCs and render results
-  filterMoCs().forEach(function(MoC) {
+  const filteredMoCs = filterMoCs();
+  filteredMoCs.forEach(function(MoC) {
     container.append(createMoCCard(MoC));
-  })
+  });
+  if (filteredMoCs.length % 2 !== 0) {
+    container.append('<div class="card" style="border: none; height: 0;"></div>');
+  }
 }
 
 function createMoCCard(MoC) {
@@ -302,7 +307,31 @@ function createMoCCard(MoC) {
 
 function bindFilterEvents() {
   $('#onTheRecord .dropdown .dropdown-item').click(setFilter);
+  $('#onTheRecord .search-name').click(setNameSearch);
+  $('#search-name-input').on('keyup', function(e) {
+    if (e.keyCode === 13) setNameSearch(e);
+  });
   $(document).on('click', '#filter-info > button > i.fa-times', removeFilter);
+  // name search clear hide/show
+  $('.has-clear input[type="text"]').on('input propertychange', function() {
+    var $this = $(this);
+    $this.siblings('.search-name-clear').toggleClass('d-none', !Boolean($this.val()));
+  }).trigger('propertychange');
+  $('.search-name-clear').click(function() {
+    $(this).siblings('input[type="text"]').val('')
+      .trigger('propertychange').focus();
+    clearNameSearch();
+  });
+}
+
+function setNameSearch(e) {
+  searchName = $('#search-name-input').val();
+  addMoCCards();
+}
+
+function clearNameSearch() {
+  searchName = '';
+  addMoCCards();
 }
 
 function setFilter(e) {
@@ -344,7 +373,12 @@ function filterMoCs() {
     filteredMoCs = filteredMoCs.filter(function(MoC) {
       return filters[key].indexOf(MoC[key]) !== -1;
     })
-  })
+  });
+  if (searchName) {
+    filteredMoCs = filteredMoCs.filter(function(MoC) {
+      return MoC.displayName.toUpperCase().includes(searchName.toUpperCase());
+    });
+  }
   return filteredMoCs;
 }
 
