@@ -15,12 +15,22 @@
 <body>
   <div class="container-fluid">
     <header>
+      <nav class="sticky-top">
+        <ul class="nav nav-tabs justify-content-center congress-toggle">
+          <li class="nav-item">
+            <a class="nav-link active" href="#" data-value="full">Full congress</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-value="lower">House</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-value="upper">Senate</a>
+          </li>
+        </ul>
+      </nav>
     </header>
-      <div class="row">
-        <div class="col">
-          <h4>House</h4>
-        </div>
-        <div class="col col-11">
+      <div class="row bar-graph-house bar-graph">
+        <div class="col progress-container">
           <div class="progress">
             <div class="progress-bar bar-house-impeachment background-impeachment" role="progressbar" style="width: 0%"
               aria-valuenow="15"
@@ -46,13 +56,11 @@
               data-toggle="tooltip" data-placement="bottom" title="Oppose impeachment"
             ></div>
           </div>
+          <div class="text-center">HOUSE</div>
         </div>
       </div>
-      <div class="row">
-        <div class="col">
-          <h4>Senate</h4>
-        </div>
-        <div class="col col-11">
+      <div class="row bar-graph-senate bar-graph">
+        <div class="col progress-container">
           <div class="progress">
             <div class="progress-bar bar-senate-impeachment background-impeachment" role="progressbar" style="width: 0%"
               aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
@@ -75,6 +83,7 @@
               data-toggle="tooltip" data-placement="bottom" title="Oppose impeachment"
             ></div>
           </div>
+          <div class="text-center">SENATE</div>
         </div>
       </div>
     <div id="map"></div>
@@ -135,7 +144,8 @@
         </div>
       </div>
       <div class="dropdown">
-        <button class="btn btn-sm dropdown-toggle" type="button" id="buttonParty" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-sm dropdown-toggle chamber-filter" type="button" id="buttonParty" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
           Chamber
         </button>
         <div class="dropdown-menu" aria-labelledby="buttonParty">
@@ -206,6 +216,17 @@
           <div class="dropdown-item" data-type="state" data-value="WY">Wyoming</div>
         </div>
       </div>
+      <div class="input-group has-clear">
+        <input id ="search-name-input" type="text" class="form-control" placeholder="Search by name">
+        <button class="btn bg-transparent search-name-clear d-none" style="margin-left: -40px; z-index: 100;">
+          <i class="fa fa-times"></i>
+        </button>
+        <div class="input-group-append">
+          <button class="btn btn-secondary search-name" type="button">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+      </div>
     </div>
     <div id="filter-info"></div>
     <div id="MoCCardContainer" class="row mt-4 card-deck"></div>
@@ -224,5 +245,5 @@
       </filter>
     </defs>
   </svg>
-<script type="text/javascript" src="bundle.f8154afaab505e84b303.js"></script></body>
+<script type="text/javascript" src="bundle.b59167869527807e3536.js"></script></body>
 </html>
