@@ -5,6 +5,7 @@ import {
   responseDict,
   responseDictPopover,
   responseDictGroups,
+  FULL_CONGRESS,
 } from './constants';
 
 import {
@@ -17,8 +18,23 @@ let map;
 let MoCs = [];
 let MoCsByDistrict;
 let senatorsByState;
+let selectedTab = FULL_CONGRESS;
+let districtLayer;
+
 const filters = {};
 
+$('.congress-toggle a').on('click', function (e) {
+  e.preventDefault()
+  $('.congress-toggle a').removeClass('active');
+  $(this).addClass('active');
+  let newSelectedTab = $(this).attr('data-value');
+  if (newSelectedTab !== selectedTab) {
+    let mocList = newSelectedTab === 'full' ? MoCs : MoCs.filter((moc) => moc.chamber === newSelectedTab);
+    const groups = mapToGroups(mocList)
+    render(mocList, groups, newSelectedTab);
+    selectedTab = newSelectedTab;
+  }
+})
 // Wait for the DOM to be ready then add the Map and restrict movement
 document.addEventListener("DOMContentLoaded", function() {
   map = L.map('map', { zoomControl: false, zoomSnap: 0.1, attributionControl: false }).setView([37.8, -96], calculateZoom());
@@ -28,12 +44,34 @@ document.addEventListener("DOMContentLoaded", function() {
   map.scrollWheelZoom.disable();
 });
 
+function render(MocList, groups, selectedTab) {
+    districtLayer.bindTooltip(showTooltip, {
+      sticky: true,
+    }).addTo(map);
+
+    populateGroups(groups);
+    $('.bar-graph').hide();
+    $('.chamber-filter').hide();
+    if (selectedTab === 'upper') {
+      populateSenateBars(groups);
+    } else if (selectedTab === 'lower') {
+      populateHouseBars(groups);
+    } else {
+      $('.chamber-filter').show();
+      populateSenateBars(groups);
+      populateHouseBars(groups);
+    }
+    bindFilterEvents();
+    addMoCCards(MocList);
+    $('[data-toggle="tooltip"]').tooltip()
+}
+
 get116thCongress()
 .then(function (returnedMoCs) {
   MoCs = returnedMoCs;
   MoCsByDistrict = mapToDistrictDict(MoCs);
   senatorsByState = mapToStateDict(MoCs);
-  let districtLayer = new L.GeoJSON.AJAX("/data/districts.geojson", {
+  districtLayer = new L.GeoJSON.AJAX("/data/districts.geojson", {
     middleware: addMoCsToDistrict,
     style: function(state) { return setStyle(state); }
   });
@@ -44,12 +82,7 @@ get116thCongress()
 
   // Fill out the MoC stance groups, add photos, and generate all MoC cards
   const groups = mapToGroups(MoCs)
-  populateGroups(groups);
-  populateHouseBars(groups);
-  populateSenateBars(groups);
-  bindFilterEvents();
-  addMoCCards();
-  $('[data-toggle="tooltip"]').tooltip()
+  render(MoCs, groups, selectedTab)
 });
 
 // Data mapping
@@ -109,7 +142,32 @@ function makeRow(name, status){
    return '<div class="d-flex justify-content-between"><span>' + name + '</span><span class="response background-' + responseClass[status] + '"> ' + responseDictPopover[status] + '</span></div > ';
 }
 
+const senateToolTip = (state, senators) => `<div class="tooltip-container">
+      <div class="d-flex justify-content-between">
+        <h4 class="title">${state}</h4>
+        <h4>Position</h4>
+      </div>
+    <div class="subtitle">SENATE</div>
+      ${senators.map((senator) => makeRow(senator.displayName, senator.crisis_status)).join('')}
+    </div>
+    `
+const houseToolTip = (district, rep) => `
+    <div class="tooltip-container">
+      <div class="d-flex justify-content-between">
+        <h4 class="title">${district}</h4>
+        <h4>Position</h4>
+      </div>
+      ${makeRow(rep.displayName, rep.crisis_status)}
+    </div>
+`
+
 function showTooltip(e) {
+  console.log(selectedTab)
+  if (selectedTab === 'lower' && e.feature.properties.MoCs) {
+    return houseToolTip(e.feature.properties.DISTRICT, e.feature.properties.MoCs[0])
+  } else if (selectedTab === 'upper') {
+    return senateToolTip(e.feature.properties.ABR, senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)])
+  }
   if (!e.feature.properties.MoCs || !e.feature.properties.MoCs.length) {
       let tooltip =
         '<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">' + e.feature.properties.DISTRICT + '</h4><h4>Position</h4></div>';
@@ -135,6 +193,7 @@ function showTooltip(e) {
 }
 
 function populateHouseBars(groups) {
+   $('.bar-graph-house').show();
     const total = MoCs.filter((moc) => moc.chamber === 'lower').length;
     Object.keys(groups).forEach(function (key) {
       const className = `.bar-house-${key}`
@@ -150,6 +209,7 @@ function populateHouseBars(groups) {
 }
 
 function populateSenateBars(groups) {
+  $('.bar-graph-senate').show();
   const total = MoCs.filter((moc) => moc.chamber === 'upper').length;
   Object.keys(groups).forEach(function (key) {
     const className = `.bar-senate-${key}`
@@ -176,6 +236,8 @@ function populateGroups(groups) {
     if (!photoContainer) {
       return;
     }
+    // clear previous images
+    photoContainer.innerHTML = '';
     groups[key].sort(function(a, b){
       return parseInt(b.seniority) - parseInt(a.seniority)})
                .slice(0, 8)
@@ -240,12 +302,28 @@ function fillColor(district) {
   return mapColors[district.properties.crisisMode] || '#c6c6c6';
 }
 
+const sortReps = (a, b) => {
+  if (a.stateName > b.stateName) {
+    return 1;
+  } else if (a.stateName < b.stateName) {
+    return -1;
+  } else if (a.stateName === b.stateName) {
+    if (a.chamber === 'upper' && b.chamber === 'lower') {
+      return -1;
+    } else if (b.chamber === 'upper' && a.chamber === 'lower') {
+      return 1;
+    } else if (a.chamber === 'lower' && b.chamber === 'lower') {
+      return Number(a.district) - Number(b.district);
+    }
+  }
+  return 0;
+}
 // MoC section
-function addMoCCards() {
+function addMoCCards(MoCs) {
   let container = $('#MoCCardContainer');
   container.empty();
   // Filter MoCs and render results
-  filterMoCs().forEach(function(MoC) {
+  filterMoCs(MoCs).sort(sortReps).forEach(function (MoC) {
     container.append(createMoCCard(MoC));
   })
 }
@@ -320,7 +398,7 @@ function setFilter(e) {
       '<button class="btn btn-secondary btn-xs" data-type="' + type + '" data-value="' + value + '">' +
       e.currentTarget.innerText + '<i class="fa fa-times" aria-hidden="true"></i></button>'
     )
-    addMoCCards();
+    addMoCCards(selectedTab === FULL_CONGRESS ? MoCs : MoCs.filter(moc => moc.chamber === selectedTab));
   }
 }
 
@@ -335,10 +413,10 @@ function removeFilter(e) {
     delete filters[type];
   }
   e.currentTarget.parentElement.remove();
-  addMoCCards();
+    addMoCCards(selectedTab === FULL_CONGRESS ? MoCs : MoCs.filter(moc => moc.chamber === selectedTab));
 }
 
-function filterMoCs() {
+function filterMoCs(MoCs) {
   let filteredMoCs = MoCs;
   Object.keys(filters).forEach(function(key) {
     filteredMoCs = filteredMoCs.filter(function(MoC) {
