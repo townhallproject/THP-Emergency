@@ -303,6 +303,15 @@ function createMoCCard(MoC) {
 function bindFilterEvents() {
   $('#onTheRecord .dropdown .dropdown-item').click(setFilter);
   $(document).on('click', '#filter-info > button > i.fa-times', removeFilter);
+  $('.has-clear input[type="text"]').on('input propertychange', function() {
+    var $this = $(this);
+    var visible = Boolean($this.val());
+    $this.siblings('.search-name-clear').toggleClass('d-none', !visible);
+  }).trigger('propertychange');
+  $('.search-name-clear').click(function() {
+    $(this).siblings('input[type="text"]').val('')
+      .trigger('propertychange').focus();
+  });
 }
 
 function setFilter(e) {
