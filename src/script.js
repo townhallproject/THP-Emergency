@@ -304,6 +304,9 @@ function createMoCCard(MoC) {
 function bindFilterEvents() {
   $('#onTheRecord .dropdown .dropdown-item').click(setFilter);
   $('#onTheRecord .search-name').click(setNameSearch);
+  $('#search-name-input').on('keyup', function(e) {
+    if (e.keyCode === 13) setNameSearch(e);
+  });
   $(document).on('click', '#filter-info > button > i.fa-times', removeFilter);
   // name search clear hide/show
   $('.has-clear input[type="text"]').on('input propertychange', function() {
@@ -369,7 +372,7 @@ function filterMoCs() {
   });
   if (searchName) {
     filteredMoCs = filteredMoCs.filter(function(MoC) {
-      return MoC.displayName.includes(searchName);
+      return MoC.displayName.toUpperCase().includes(searchName.toUpperCase());
     });
   }
   return filteredMoCs;
