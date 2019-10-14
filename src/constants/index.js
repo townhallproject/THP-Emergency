@@ -1,3 +1,4 @@
+const FULL_CONGRESS = 'full';
 // Static Dicts
 export const responseDict = {
     1: 'Full support for impeachment',

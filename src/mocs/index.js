@@ -15,12 +15,17 @@ export const get116thCongress = () => {
                         let MoCs = [];
                         // Get MoCs and flatten into array
                         snapshot.forEach(function (ele) {
-                            // TODO once all MoCs have crisis values remove this stub
                             let MoC = ele.val();
-                            // MoC.crisis_status = Number(MoC.crisis_status) || 6;
+                            if (!MoC.displayName) {
+                                return;
+                            }
+                            if (MoC.party && MoC.party.length > 1) {
+                                MoC.party = MoC.party.substring(0, 1);
+                            }
+
                             MoCs.push(MoC);
                         })
-                        MoCs = MoCs.filter(function (MoC) {
+                        return MoCs.filter(function (MoC) {
                             // Remove out of office people, and test data
                             return MoC.hasOwnProperty('in_office') &&
                                 MoC.in_office === true &&
@@ -28,7 +33,6 @@ export const get116thCongress = () => {
                                 allIds.indexOf(MoC.govtrack_id) !== -1 &&
                                 MoC.ballotpedia_id !== 'Testing McTesterson';
                         });
-                        return MoCs;
         })
     })
 }

@@ -29,6 +29,21 @@ body {
   background: $light-grey;
 }
 
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+  border-color: transparent;
+}
+.nav-link.active {
+  border-color: transparent;
+  border-bottom: 2px solid $brand-primary!important;
+}
+
+.nav-tabs .nav-link:focus,
+.nav-tabs .nav-link:hover {
+  border-color: transparent;
+  border-bottom: 2px solid $dark-purple;
+}
+
 .navbar.navbar-light {
   border-bottom: $brand-secondary 2px solid;
   padding-left: 3vw;
@@ -51,9 +66,15 @@ body {
     }
   }
 }
+.progress-container {
+  margin: auto;
+}
+
+.bar-graph {
+  margin-top: 20px;
+}
 
 .container-fluid, .container {
-  padding-top: 2.5vh;
   background: $white;
 }
 
@@ -143,7 +164,7 @@ h3.callToAction {
 }
 
 #map {
-  min-height: 80vh;
+  min-height: 75vh;
   margin: 4vh 0;
 
   &.leaflet-container {
@@ -399,10 +420,6 @@ h3.callToAction {
         width: 40px;
       }
     }
-  }
-
-  #onTheRecord .card {
-    min-width: 440px;
   }
 }
 
