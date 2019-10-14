@@ -18,6 +18,7 @@ let MoCs = [];
 let MoCsByDistrict;
 let senatorsByState;
 const filters = {};
+let searchName;
 
 // Wait for the DOM to be ready then add the Map and restrict movement
 document.addEventListener("DOMContentLoaded", function() {
@@ -302,6 +303,7 @@ function createMoCCard(MoC) {
 
 function bindFilterEvents() {
   $('#onTheRecord .dropdown .dropdown-item').click(setFilter);
+  $('#onTheRecord .search-name').click(setNameSearch);
   $(document).on('click', '#filter-info > button > i.fa-times', removeFilter);
   $('.has-clear input[type="text"]').on('input propertychange', function() {
     var $this = $(this);
@@ -312,6 +314,11 @@ function bindFilterEvents() {
     $(this).siblings('input[type="text"]').val('')
       .trigger('propertychange').focus();
   });
+}
+
+function setNameSearch(e) {
+  searchName = $('#search-name-input').val();
+  addMoCCards();
 }
 
 function setFilter(e) {
@@ -353,7 +360,12 @@ function filterMoCs() {
     filteredMoCs = filteredMoCs.filter(function(MoC) {
       return filters[key].indexOf(MoC[key]) !== -1;
     })
-  })
+  });
+  if (searchName) {
+    filteredMoCs = filteredMoCs.filter(function(MoC) {
+      return MoC.displayName.includes(searchName);
+    });
+  }
   return filteredMoCs;
 }
 
