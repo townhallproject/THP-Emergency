@@ -305,19 +305,25 @@ function bindFilterEvents() {
   $('#onTheRecord .dropdown .dropdown-item').click(setFilter);
   $('#onTheRecord .search-name').click(setNameSearch);
   $(document).on('click', '#filter-info > button > i.fa-times', removeFilter);
+  // name search clear hide/show
   $('.has-clear input[type="text"]').on('input propertychange', function() {
     var $this = $(this);
-    var visible = Boolean($this.val());
-    $this.siblings('.search-name-clear').toggleClass('d-none', !visible);
+    $this.siblings('.search-name-clear').toggleClass('d-none', !Boolean($this.val()));
   }).trigger('propertychange');
   $('.search-name-clear').click(function() {
     $(this).siblings('input[type="text"]').val('')
       .trigger('propertychange').focus();
+    clearNameSearch();
   });
 }
 
 function setNameSearch(e) {
   searchName = $('#search-name-input').val();
+  addMoCCards();
+}
+
+function clearNameSearch() {
+  searchName = '';
   addMoCCards();
 }
 
