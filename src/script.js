@@ -246,9 +246,13 @@ function addMoCCards() {
   let container = $('#MoCCardContainer');
   container.empty();
   // Filter MoCs and render results
-  filterMoCs().forEach(function(MoC) {
+  const filteredMoCs = filterMoCs();
+  filteredMoCs.forEach(function(MoC) {
     container.append(createMoCCard(MoC));
-  })
+  });
+  if (filteredMoCs.length % 2 !== 0) {
+    container.append('<div class="card" style="border: none; height: 0;"></div>');
+  }
 }
 
 function createMoCCard(MoC) {
