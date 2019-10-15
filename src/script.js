@@ -9,11 +9,6 @@ import {
   get116thCongress,
 } from './mocs';
 
-import {
-  showTooltip,
-  showStateTooltip,
-} from './map/tooltip';
-
 import CongressMap from './map';
 
 import "./scss/style.scss";
@@ -34,14 +29,14 @@ $('.congress-toggle a').on('click', function (e) {
   $(this).addClass('active');
   let newSelectedTab = $(this).attr('data-value');
   if (newSelectedTab !== selectedTab) {
-    let mocList = newSelectedTab === 'full' ? MoCs : MoCs.filter((moc) => moc.chamber === newSelectedTab);
+    let mocList = newSelectedTab === FULL_CONGRESS ? MoCs : MoCs.filter((moc) => moc.chamber === newSelectedTab);
     const groups = mapToGroups(mocList)
     render(mocList, groups, newSelectedTab);
+    mapContainer.toggleChamber(newSelectedTab);
     selectedTab = newSelectedTab;
     if (selectedTab === 'upper') {
       mapContainer.districtLayer.remove();
       mapContainer.addStateLayer();
-      
     }
   }
 })
@@ -55,9 +50,6 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function render(MocList, groups, selectedTab) {
-    mapContainer.districtLayer.bindTooltip(showTooltip, {
-      sticky: true,
-    }).addTo(mapContainer.map);
 
     populateGroups(groups);
     $('.bar-graph').hide();
@@ -85,12 +77,6 @@ get116thCongress()
   
   mapContainer = new CongressMap(map, senatorsByState, MoCsByDistrict);
   mapContainer.createLayers();
-  mapContainer.stateLayer.bindTooltip(showStateTooltip, {
-    sticky: true,
-  }).addTo(map);
-  mapContainer.districtLayer.bindTooltip(showTooltip, {
-    sticky: true,
-  }).addTo(map);
 
   // Fill out the MoC stance groups, add photos, and generate all MoC cards
   const groups = mapToGroups(MoCs)
@@ -178,7 +164,6 @@ function populateSenateBars(groups) {
     el.attr('title', `${length} senators ${responseDictGroups[key]}`)
   });
 }
-
 
 function populateGroups(groups) {
   Object.keys(groups).forEach(function(key) {

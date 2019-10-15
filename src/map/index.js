@@ -7,7 +7,9 @@ import {
 } from '../constants';
 
 import {
-    showSenatorTooltip
+    showSenatorTooltip,
+    showStateTooltip,
+    showTooltip,
 } from './tooltip';
 
 export default class CongressMap {
@@ -44,6 +46,18 @@ export default class CongressMap {
         this.addMoCsToDistrict = this.addMoCsToDistrict.bind(this);
     }
 
+    addSenateLayer() {
+        this.stateLayer.bindTooltip(showStateTooltip, {
+            sticky: true,
+        }).addTo(this.map);
+    }
+
+    addDistrictLayer() {
+        this.districtLayer.bindTooltip(showTooltip, {
+            sticky: true,
+        }).addTo(this.map);
+    }
+
     createLayers() {
         this.stateLayer = new L.GeoJSON.AJAX("../data/states.geojson", {
             middleware: this.addSenatorsToState,
@@ -57,6 +71,17 @@ export default class CongressMap {
                 return CongressMap.setStyle(state);
             }
         });
+        this.addDistrictLayer();    
+    }
+
+    toggleChamber(chamber) {
+        if (chamber === 'upper') {
+            this.districtLayer.remove();
+            this.addSenateLayer();
+        } else {
+            this.stateLayer.remove();
+            this.addDistrictLayer();
+        }
     }
 
     addSenatorsToState(statesGeoJson) {
