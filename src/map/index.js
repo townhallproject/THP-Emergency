@@ -1,21 +1,98 @@
+import { find } from 'lodash';
+
 import Point from './point';
 import states from '../data/state-centers';
 import {
-    responseClass,
-    responseDictPopover,
+    mapColors,
 } from '../constants';
 
-function makeRow(name, status) {
-    if (!status) {
-        return '<div class="d-flex justify-content-between"><span>' + name + '</span><span class="response background-' + 'NA' + '"> ' + 'NA' + '</span></div > ';
+import {
+    showSenatorTooltip
+} from './tooltip';
+
+export default class CongressMap {
+    static getFillColor(district) {
+        return mapColors[district.properties.crisisMode] || '#c6c6c6';
     }
-    return '<div class="d-flex justify-content-between"><span>' + name + '</span><span class="response background-' + responseClass[status] + '"> ' + responseDictPopover[status] + '</span></div > ';
-}
-export default class Map {
-    constructor(map, senatorsByState) {
+
+    static setStyle(district) {
+        return {
+            color: 'white',
+            fillColor: CongressMap.getFillColor(district),
+            fillOpacity: 1,
+            opacity: 1,
+            weight: 1,
+        };
+    }
+
+    static districtTHPAdapter(district) {
+        let formattedDistrict = district.properties.GEOID.substring(2);
+        // Change -00 districts to -At-Large
+        // remove leading zeros to numbers
+        formattedDistrict = formattedDistrict === '00' ? formattedDistrict.replace('00', 'At-Large') : Number(formattedDistrict);
+        formattedDistrict = `${district.properties.ABR}-${formattedDistrict}`;
+        district.properties.DISTRICT = formattedDistrict;
+        return district;
+    }
+
+    constructor(map, senatorsByState, MoCsByDistrict) {
         this.map = map;
+        this.MoCsByDistrict = MoCsByDistrict;
         this.senatorsByState = senatorsByState;
         this.featuresHome = this.createFeatures(states, senatorsByState);
+        this.addSenatorsToState = this.addSenatorsToState.bind(this);
+        this.addMoCsToDistrict = this.addMoCsToDistrict.bind(this);
+    }
+
+    createLayers() {
+        this.stateLayer = new L.GeoJSON.AJAX("../data/states.geojson", {
+            middleware: this.addSenatorsToState,
+            style: function (state) {
+                return CongressMap.setStyle(state);
+            }
+        })
+        this.districtLayer = new L.GeoJSON.AJAX("../data/districts.geojson", {
+            middleware: this.addMoCsToDistrict,
+            style: function (state) {
+                return CongressMap.setStyle(state);
+            }
+        });
+    }
+
+    addSenatorsToState(statesGeoJson) {
+        let { senatorsByState } = this;
+        statesGeoJson.features.forEach(function (stateFeature) {
+            const stateData = find(states, (stateInfo) => stateInfo.stateName === stateFeature.properties.name);
+            if (stateData) {
+                stateFeature.properties.SENATORS = senatorsByState[stateData.state];
+            }
+        })
+        return statesGeoJson;
+    }
+
+
+    addMoCsToDistrict(districtGeoJson) {
+        let { MoCsByDistrict } = this;
+        districtGeoJson.features.forEach(function (district) {
+            district = CongressMap.districtTHPAdapter(district);
+            district.properties.MoCs = MoCsByDistrict[district.properties.DISTRICT];
+            if (!district.properties.MoCs) {
+                return;
+            }
+
+            // Calculate the value that occurs the most often in the dataset
+            let crisisCount = MoCsByDistrict[district.properties.DISTRICT].map(function (MoC) {
+                return MoC.crisis_status
+            });
+            district.properties.crisisMode = crisisCount.sort(function (a, b) {
+                return crisisCount.filter(function (val) {
+                    return val === a
+                }).length - crisisCount.filter(function (val) {
+                    return val === b
+                }).length;
+            }).pop();
+        });
+        return districtGeoJson;
     }
 
     createFeatures(items, senatorsByState) {
@@ -41,12 +118,6 @@ export default class Map {
         this.addLayer(this.featuresHome);
     }
 
-    showStateTooltip(e) {
-        console.log(e.feature.properties)
-        // return senateToolTip(e.feature.properties.name, e.feature.properties.SENATORS)
-        return makeRow(e.feature.properties.senator.displayName, e.feature.properties.crisis_status);
-    }
-
      addLayer(featuresHome) {
          this.markerLayer = L.geoJSON(featuresHome, {
              pointToLayer(geoJsonPoint, latlng) {
@@ -58,7 +129,7 @@ export default class Map {
                  });
              },
          });
-         this.markerLayer.bindTooltip(this.showStateTooltip, {
+         this.markerLayer.bindTooltip(showSenatorTooltip, {
              sticky: true,
          }).addTo(this.map);
      }

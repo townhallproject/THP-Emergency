@@ -1,12 +1,9 @@
-import { find } from 'lodash';
 import {
   responseClass,
-  mapColors,
   responseDict,
   responseDictGroups,
   FULL_CONGRESS,
 } from './constants';
-import states from './data/state-centers';
 
 import {
   get116thCongress,
@@ -17,7 +14,7 @@ import {
   showStateTooltip,
 } from './map/tooltip';
 
-import Map from './map';
+import CongressMap from './map';
 
 import "./scss/style.scss";
 
@@ -27,8 +24,6 @@ let MoCs = [];
 let MoCsByDistrict;
 export let senatorsByState;
 export let selectedTab = FULL_CONGRESS;
-let districtLayer;
-let stateLayer;
 
 const filters = {};
 let searchName;
@@ -44,7 +39,7 @@ $('.congress-toggle a').on('click', function (e) {
     render(mocList, groups, newSelectedTab);
     selectedTab = newSelectedTab;
     if (selectedTab === 'upper') {
-      districtLayer.remove();
+      mapContainer.districtLayer.remove();
       mapContainer.addStateLayer();
       
     }
@@ -60,9 +55,9 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function render(MocList, groups, selectedTab) {
-    districtLayer.bindTooltip(showTooltip, {
+    mapContainer.districtLayer.bindTooltip(showTooltip, {
       sticky: true,
-    }).addTo(map);
+    }).addTo(mapContainer.map);
 
     populateGroups(groups);
     $('.bar-graph').hide();
@@ -80,28 +75,20 @@ function render(MocList, groups, selectedTab) {
     addMoCCards(MocList);
     $('[data-toggle="tooltip"]').tooltip()
 }
+
 get116thCongress()
 .then(function (returnedMoCs) {
+  $('.loading').hide();
   MoCs = returnedMoCs;
   MoCsByDistrict = mapToDistrictDict(MoCs);
   senatorsByState = mapToStateDict(MoCs);
-
-  stateLayer = new L.GeoJSON.AJAX("/data/states.geojson", {
-    middleware: addSenatorsToState,
-    style: function (state) {
-      return setStyle(state);
-    }
-  });
-  districtLayer = new L.GeoJSON.AJAX("/data/districts.geojson", {
-    middleware: addMoCsToDistrict,
-    style: function(state) { return setStyle(state); }
-  });
   
-  mapContainer = new Map(map, senatorsByState);
-  stateLayer.bindTooltip(showStateTooltip, {
+  mapContainer = new CongressMap(map, senatorsByState, MoCsByDistrict);
+  mapContainer.createLayers();
+  mapContainer.stateLayer.bindTooltip(showStateTooltip, {
     sticky: true,
   }).addTo(map);
-  districtLayer.bindTooltip(showTooltip, {
+  mapContainer.districtLayer.bindTooltip(showTooltip, {
     sticky: true,
   }).addTo(map);
 
@@ -228,58 +215,6 @@ function calculateZoom() {
                       4.5 ;
 }
 
-function addSenatorsToState(statesGeoJson) {
-  statesGeoJson.features.forEach(function (stateFeature) {
-    const stateData = find(states, (stateInfo) => stateInfo.stateName === stateFeature.properties.name);
-    if (stateData) {
-      stateFeature.properties.SENATORS = senatorsByState[stateData.state];
-    }
-  })
-  return statesGeoJson;
-}
-
-function addMoCsToDistrict(districtGeoJson) {
-  districtGeoJson.features.forEach(function(district) {
-    district = districtTHPAdapter(district);
-    district.properties.MoCs = MoCsByDistrict[district.properties.DISTRICT];
-    if (!district.properties.MoCs) { 
-      return; 
-    }
-
-    // Calculate the value that occurs the most often in the dataset
-    let crisisCount = MoCsByDistrict[district.properties.DISTRICT].map(function(MoC) { return MoC.crisis_status });
-    district.properties.crisisMode = crisisCount.sort(function(a, b) {
-      return crisisCount.filter(function(val) { return val === a }).length - crisisCount.filter(function(val) { return val === b }).length;
-    }).pop();
-  });
-  return districtGeoJson;
-}
-
-// Takes a district and transforms all field names and data to THP standards
-function districtTHPAdapter(district) {
-  let formattedDistrict = district.properties.GEOID.substring(2);
-  // Change -00 districts to -At-Large
-  // remove leading zeros to numbers
-  formattedDistrict = formattedDistrict === '00' ? formattedDistrict.replace('00', 'At-Large') : Number(formattedDistrict);
-  formattedDistrict = `${district.properties.ABR}-${formattedDistrict}`;
-  district.properties.DISTRICT = formattedDistrict;
-  return district;
-}
-
-function setStyle(district) {
-  return {
-    color: 'white',
-    fillColor: fillColor(district),
-    fillOpacity: 1,
-    opacity: 1,
-    weight: 1,
-  };
-}
-
-function fillColor(district) {
-  return mapColors[district.properties.crisisMode] || '#c6c6c6';
-}
-
 const sortReps = (a, b) => {
   if (a.stateName > b.stateName) {
     return 1;
@@ -371,7 +306,7 @@ function bindFilterEvents() {
   // name search clear hide/show
   $('.has-clear input[type="text"]').on('input propertychange', function() {
     var $this = $(this);
-    $this.siblings('.search-name-clear').toggleClass('d-none', !Boolean($this.val()));
+    $this.siblings('.search-name-clear').toggleClass('d-none', !($this.val()));
   }).trigger('propertychange');
   $('.search-name-clear').click(function() {
     $(this).siblings('input[type="text"]').val('')
@@ -380,14 +315,14 @@ function bindFilterEvents() {
   });
 }
 
-function setNameSearch(e) {
+function setNameSearch() {
   searchName = $('#search-name-input').val();
-  addMoCCards();
+  addMoCCards(MoCs);
 }
 
 function clearNameSearch() {
   searchName = '';
-  addMoCCards();
+  addMoCCards(MoCs);
 }
 
 function setFilter(e) {
