@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 export default [{
         "stateName": "Alabama",
         "lat": 32.806671,
