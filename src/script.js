@@ -1,4 +1,4 @@
-// window.alert("NB:  This site is currently in testing mode.  Data is incomplete, and may be inaccurate.")
+import { find } from 'lodash';
 import {
   responseClass,
   mapColors,
@@ -7,19 +7,24 @@ import {
   responseDictGroups,
   FULL_CONGRESS,
 } from './constants';
+import states from './data/state-centers';
 
 import {
   get116thCongress,
 } from './mocs';
 
+import Map from './map';
+
 import "./scss/style.scss";
 
 let map;
+let mapContainer;
 let MoCs = [];
 let MoCsByDistrict;
 let senatorsByState;
 let selectedTab = FULL_CONGRESS;
 let districtLayer;
+let stateLayer;
 
 const filters = {};
 let searchName;
@@ -34,6 +39,11 @@ $('.congress-toggle a').on('click', function (e) {
     const groups = mapToGroups(mocList)
     render(mocList, groups, newSelectedTab);
     selectedTab = newSelectedTab;
+    if (selectedTab === 'upper') {
+      districtLayer.remove();
+      mapContainer.addStateLayer();
+      
+    }
   }
 })
 // Wait for the DOM to be ready then add the Map and restrict movement
@@ -66,17 +76,27 @@ function render(MocList, groups, selectedTab) {
     addMoCCards(MocList);
     $('[data-toggle="tooltip"]').tooltip()
 }
-
 get116thCongress()
 .then(function (returnedMoCs) {
   MoCs = returnedMoCs;
   MoCsByDistrict = mapToDistrictDict(MoCs);
   senatorsByState = mapToStateDict(MoCs);
+
+  stateLayer = new L.GeoJSON.AJAX("/data/states.geojson", {
+    middleware: addSenatorsToState,
+    style: function (state) {
+      return setStyle(state);
+    }
+  });
   districtLayer = new L.GeoJSON.AJAX("/data/districts.geojson", {
     middleware: addMoCsToDistrict,
     style: function(state) { return setStyle(state); }
   });
-
+  
+  mapContainer = new Map(map, senatorsByState);
+  stateLayer.bindTooltip(showStateTooltip, {
+    sticky: true,
+  }).addTo(map);
   districtLayer.bindTooltip(showTooltip, {
     sticky: true,
   }).addTo(map);
@@ -163,34 +183,32 @@ const houseToolTip = (district, rep) => `
 `
 
 function showTooltip(e) {
-  console.log(selectedTab)
   if (selectedTab === 'lower' && e.feature.properties.MoCs) {
     return houseToolTip(e.feature.properties.DISTRICT, e.feature.properties.MoCs[0])
   } else if (selectedTab === 'upper') {
     return senateToolTip(e.feature.properties.ABR, senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)])
   }
   if (!e.feature.properties.MoCs || !e.feature.properties.MoCs.length) {
-      let tooltip =
-        '<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">' + e.feature.properties.DISTRICT + '</h4><h4>Position</h4></div>';
-      tooltip += '<div class="subtitle">HOUSE</div>'
-      tooltip += makeRow('vacant')
-      tooltip += '<div class="subtitle">SENATE</div>'
-      senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)].forEach(function (senator) {
-        tooltip += makeRow(senator.displayName, senator.crisis_status)
-      });
-      tooltip += '</div>'
-    return tooltip;
+      return `<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">${e.feature.properties.DISTRICT}</h4><h4>Position</h4></div>
+      <div class="subtitle">HOUSE</div>
+      ${makeRow('vacant')}
+      <div class="subtitle">SENATE</div>
+      ${senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)].map(function (senator) {
+        return makeRow(senator.displayName, senator.crisis_status)
+      }).join('')}</div>`
   }
-  let tooltip = 
-    '<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">' + e.feature.properties.DISTRICT + '</h4><h4>Position</h4></div>';
-  tooltip += '<div class="subtitle">HOUSE</div>'
-  tooltip += makeRow(e.feature.properties.MoCs[0].displayName, e.feature.properties.MoCs[0].crisis_status);
-  tooltip += '<div class="subtitle">SENATE</div>'
-  senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)].forEach(function(senator) {
-    tooltip += makeRow(senator.displayName, senator.crisis_status)
-  });
-  tooltip += '</div>'
-  return tooltip;
+  return `<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">${e.feature.properties.DISTRICT}</h4><h4>Position</h4></div>
+  <div class="subtitle">HOUSE</div>
+  ${makeRow(e.feature.properties.MoCs[0].displayName, e.feature.properties.MoCs[0].crisis_status)}
+  <div class="subtitle">SENATE</div>
+  ${senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)].map(function(senator) {
+    return makeRow(senator.displayName, senator.crisis_status)
+  }).join('')}</div>`
+}
+
+function showStateTooltip(e) {
+  console.log(e.feature)
+  return senateToolTip(e.feature.properties.name, e.feature.properties.SENATORS)
 }
 
 function populateHouseBars(groups) {
@@ -259,6 +277,16 @@ function calculateZoom() {
   return sw >= 1700 ? 4.7 :
          sw >= 1600 ? 4.3 :
                       4.5 ;
+}
+
+function addSenatorsToState(statesGeoJson) {
+  statesGeoJson.features.forEach(function (stateFeature) {
+    const stateData = find(states, (stateInfo) => stateInfo.stateName === stateFeature.properties.name);
+    if (stateData) {
+      stateFeature.properties.SENATORS = senatorsByState[stateData.state];
+    }
+  })
+  return statesGeoJson;
 }
 
 function addMoCsToDistrict(districtGeoJson) {
@@ -344,7 +372,7 @@ function createMoCCard(MoC) {
         '<div class="row background-' + responseClass[MoC.crisis_status] + ' m-0">' +
           '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-100px.jpeg"></div>' +
           '<div class="col-8 col-sm-9">' +
-            '<h4>' + MoC.displayName + '</h4>' +
+            '<h4>' + MoC.displayName + ' ('+ MoC.party + ')' + '</h4>' +
             '<small class="rep-card-position">'
       
     res += responseDict[MoC.crisis_status] ? 
