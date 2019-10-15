@@ -65,6 +65,17 @@ function render(MocList, groups, selectedTab) {
     bindFilterEvents();
     addMoCCards(MocList);
     $('[data-toggle="tooltip"]').tooltip()
+    var latlngs = [
+      [ 
+        [[32.4, -135],[41, -135],[41, -127],[32.4, -123]], // outer ring
+        [[32.4, -135],[41, -135],[41, -127],[32.4, -123]] // hole
+      ],
+      [ 
+        [[27, -135],[32.4, -135],[32.4, -123],[27, -123]],
+        [[27, -135],[32.4, -135],[32.4, -123],[27, -123]]
+      ]
+    ];
+    const polygon = L.polygon(latlngs, {color: 'grey'}).addTo(map);
 }
 
 get116thCongress()
