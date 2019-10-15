@@ -10,11 +10,11 @@ class Point {
             type: 'Point',
         };
         this.properties = {
+            color: mapColors[senator.crisis_status],
+            crisis_status: senator.crisis_status,
             senator,
             state: state.state,
-            color: mapColors[senator.crisis_status],
             stateName: state.stateName,
-            crisis_status: senator.crisis_status,
         };
     }
 }
