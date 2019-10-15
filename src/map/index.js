@@ -2,11 +2,7 @@ import Point from './point';
 import states from '../data/state-centers';
 import {
     responseClass,
-    mapColors,
-    responseDict,
     responseDictPopover,
-    responseDictGroups,
-    FULL_CONGRESS,
 } from '../constants';
 
 function makeRow(name, status) {

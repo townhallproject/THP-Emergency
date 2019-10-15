@@ -3,7 +3,6 @@ import {
   responseClass,
   mapColors,
   responseDict,
-  responseDictPopover,
   responseDictGroups,
   FULL_CONGRESS,
 } from './constants';
@@ -13,6 +12,11 @@ import {
   get116thCongress,
 } from './mocs';
 
+import {
+  showTooltip,
+  showStateTooltip,
+} from './map/tooltip';
+
 import Map from './map';
 
 import "./scss/style.scss";
@@ -21,8 +25,8 @@ let map;
 let mapContainer;
 let MoCs = [];
 let MoCsByDistrict;
-let senatorsByState;
-let selectedTab = FULL_CONGRESS;
+export let senatorsByState;
+export let selectedTab = FULL_CONGRESS;
 let districtLayer;
 let stateLayer;
 
@@ -155,61 +159,6 @@ $('.scroll-link').on('click', (e) => {
     const link = $(e.target).attr('data-link')
     scrollToAnchor(link)
 })
-
-function makeRow(name, status){
-  if (!status) {
-   return '<div class="d-flex justify-content-between"><span>' + name + '</span><span class="response background-' + 'NA' + '"> ' + 'NA' + '</span></div > ';
-  }
-   return '<div class="d-flex justify-content-between"><span>' + name + '</span><span class="response background-' + responseClass[status] + '"> ' + responseDictPopover[status] + '</span></div > ';
-}
-
-const senateToolTip = (state, senators) => `<div class="tooltip-container">
-      <div class="d-flex justify-content-between">
-        <h4 class="title">${state}</h4>
-        <h4>Position</h4>
-      </div>
-    <div class="subtitle">SENATE</div>
-      ${senators.map((senator) => makeRow(senator.displayName, senator.crisis_status)).join('')}
-    </div>
-    `
-const houseToolTip = (district, rep) => `
-    <div class="tooltip-container">
-      <div class="d-flex justify-content-between">
-        <h4 class="title">${district}</h4>
-        <h4>Position</h4>
-      </div>
-      ${makeRow(rep.displayName, rep.crisis_status)}
-    </div>
-`
-
-function showTooltip(e) {
-  if (selectedTab === 'lower' && e.feature.properties.MoCs) {
-    return houseToolTip(e.feature.properties.DISTRICT, e.feature.properties.MoCs[0])
-  } else if (selectedTab === 'upper') {
-    return senateToolTip(e.feature.properties.ABR, senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)])
-  }
-  if (!e.feature.properties.MoCs || !e.feature.properties.MoCs.length) {
-      return `<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">${e.feature.properties.DISTRICT}</h4><h4>Position</h4></div>
-      <div class="subtitle">HOUSE</div>
-      ${makeRow('vacant')}
-      <div class="subtitle">SENATE</div>
-      ${senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)].map(function (senator) {
-        return makeRow(senator.displayName, senator.crisis_status)
-      }).join('')}</div>`
-  }
-  return `<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">${e.feature.properties.DISTRICT}</h4><h4>Position</h4></div>
-  <div class="subtitle">HOUSE</div>
-  ${makeRow(e.feature.properties.MoCs[0].displayName, e.feature.properties.MoCs[0].crisis_status)}
-  <div class="subtitle">SENATE</div>
-  ${senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)].map(function(senator) {
-    return makeRow(senator.displayName, senator.crisis_status)
-  }).join('')}</div>`
-}
-
-function showStateTooltip(e) {
-  console.log(e.feature)
-  return senateToolTip(e.feature.properties.name, e.feature.properties.SENATORS)
-}
 
 function populateHouseBars(groups) {
    $('.bar-graph-house').show();
@@ -487,61 +436,4 @@ function filterMoCs(MoCs) {
     });
   }
   return filteredMoCs;
-}
-
-function signUp(form) {
-  let zipcodeRegEx = /^(\d{5}-\d{4}|\d{5}|\d{9})$|^([a-zA-Z]\d[a-zA-Z] \d[a-zA-Z]\d)$/g;
-  let emailRegEx = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-  let phoneRegEx = /^(\d{11})$/;
-  let errors = [];
-
-  if (!form.last.value || !form.first.value || !form.zipcode.value || !form.email.value || !form.phone.value) {
-    errors.push("Please fill in all fields.")
-  }
-
-  if (!emailRegEx.test(form.email.value)) {
-    errors.push("Please enter a valid email.")
-  }
-
-  if (!zipcodeRegEx.test(form.zipcode.value)) {
-    errors.push("Please enter a valid zipcode.")
-  }
-
-  if (!phoneRegEx.test(form.phone.value)) {
-    errors.push("Please enter an 11 digit phone number. Do not include hyphens, parentheses, or spaces.")
-  }
-
-  if (errors.length !== 0) {
-    $('#email-signup-form-errors > .col').html(errors.join('<br />'))
-    return false;
-  }
-
-  let person = {
-    'person' : {
-      'family_name': form.last.value,
-      'given_name': form.first.value,
-      'postal_addresses': [{ 'postal_code': form.zipcode.value}],
-      'email_addresses': [{ 'address': form.email.value }],
-      'phone_numbers': [{ 'number': form.phone.value }]
-    }
-  };
-
-  $.ajax({
-    url: 'https://actionnetwork.org/api/v2/forms/47264a33-be61-4e91-aa5d-2a66b4a207d7/submissions',
-    method: 'POST',
-    dataType: 'json',
-    contentType: 'application/json',
-    data: JSON.stringify(person),
-    success: function() {
-      $('#email-signup').html('<div class="container container-fluid container-light pl-5 pr-5 pb-2">' +
-                                '<h1 class="text-center pb-3">Thanks for signing up. We&rsquo;ll be in touch!</h1>' +
-                              '</div>');
-    },
-    error: function() {
-      $('#email-signup').html('<div class="container container-fluid container-light pl-5 pr-5 pb-2">' +
-                                '<h1 class="text-center pb-3">An error has occured, please try again later.</h1>' +
-                              '</div>');
-    }
-  });
-  return false;
 }
