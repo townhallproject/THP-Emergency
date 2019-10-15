@@ -1,6 +1,7 @@
 <html>
 <head>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+  integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
   <link href="https://fonts.googleapis.com/css?family=Raleway:300,900" rel="stylesheet">
@@ -13,6 +14,13 @@
   <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
 </head>
 <body>
+  <div class="loading">
+    <div class="d-flex justify-content-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  </div>
   <div class="container-fluid">
     <header>
       <nav class="sticky-top">
@@ -29,6 +37,7 @@
         </ul>
       </nav>
     </header>
+
       <div class="row bar-graph-house bar-graph">
         <div class="col progress-container">
           <div class="progress">
@@ -119,101 +128,102 @@
   <div id="onTheRecord" class="container pl-5 pr-5 pt-5">
     <h1 class="text-center pb-1">On the record</h1>
     <h3 class="text-center pb-5">See where your representatives stand.</h3>
-
-    <div class="btn-group" role="group">
-      <div class="dropdown">
-        <button class="btn btn-sm dropdown-toggle" type="button" id="buttonPosition" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Public position
-        </button>
-        <div class="dropdown-menu" aria-labelledby="buttonPosition">
-          <div class="dropdown-item" data-type="crisis_status" data-value="1">Full support for impeachment</div>
-          <div class="dropdown-item" data-type="crisis_status" data-value="2">Supports impeachment inquiry</div>
-          <div class="dropdown-item" data-type="crisis_status" data-value="3">No position / Unclear</div>
-          <div class="dropdown-item" data-type="crisis_status" data-value="4">Expressed concerns</div>
-          <div class="dropdown-item" data-type="crisis_status" data-value="5">Opposed to impeachment</div>
+    <div class="search-bar">
+      <div class="btn-group" role="group">
+        <div class="dropdown">
+          <button class="btn btn-sm dropdown-toggle" type="button" id="buttonPosition" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Public position
+          </button>
+          <div class="dropdown-menu" aria-labelledby="buttonPosition">
+            <div class="dropdown-item" data-type="crisis_status" data-value="1">Full support for impeachment</div>
+            <div class="dropdown-item" data-type="crisis_status" data-value="2">Supports impeachment inquiry</div>
+            <div class="dropdown-item" data-type="crisis_status" data-value="3">No position / Unclear</div>
+            <div class="dropdown-item" data-type="crisis_status" data-value="4">Expressed concerns</div>
+            <div class="dropdown-item" data-type="crisis_status" data-value="5">Opposed to impeachment</div>
+          </div>
         </div>
-      </div>
-      <div class="dropdown">
-        <button class="btn btn-sm dropdown-toggle" type="button" id="buttonParty" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Political party
-        </button>
-        <div class="dropdown-menu" aria-labelledby="buttonParty">
-          <div class="dropdown-item" data-type="party" data-value="D">Democrat</div>
-          <div class="dropdown-item" data-type="party" data-value="I">Independent</div>
-          <div class="dropdown-item" data-type="party" data-value="R">Republican</div>
+        <div class="dropdown">
+          <button class="btn btn-sm dropdown-toggle" type="button" id="buttonParty" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Political party
+          </button>
+          <div class="dropdown-menu" aria-labelledby="buttonParty">
+            <div class="dropdown-item" data-type="party" data-value="D">Democrat</div>
+            <div class="dropdown-item" data-type="party" data-value="I">Independent</div>
+            <div class="dropdown-item" data-type="party" data-value="R">Republican</div>
+          </div>
         </div>
-      </div>
-      <div class="dropdown">
-        <button class="btn btn-sm dropdown-toggle chamber-filter" type="button" id="buttonParty" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
-          Chamber
-        </button>
-        <div class="dropdown-menu" aria-labelledby="buttonParty">
-          <div class="dropdown-item" data-type="chamber" data-value="lower">House</div>
-          <div class="dropdown-item" data-type="chamber" data-value="upper">Senate</div>
+        <div class="dropdown">
+          <button class="btn btn-sm dropdown-toggle chamber-filter" type="button" id="buttonParty" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Chamber
+          </button>
+          <div class="dropdown-menu" aria-labelledby="buttonParty">
+            <div class="dropdown-item" data-type="chamber" data-value="lower">House</div>
+            <div class="dropdown-item" data-type="chamber" data-value="upper">Senate</div>
+          </div>
         </div>
-      </div>
-      <div class="dropdown">
-        <button class="btn btn-sm dropdown-toggle" type="button" id="buttonState" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          State
-        </button>
-        <div class="dropdown-menu" aria-labelledby="buttonState">
-          <div class="dropdown-item" data-type="state" data-value="AL">Alabama</div>
-          <div class="dropdown-item" data-type="state" data-value="AK">Alaska</div>
-          <div class="dropdown-item" data-type="state" data-value="AS">American Samoa</div>
-          <div class="dropdown-item" data-type="state" data-value="AZ">Arizona</div>
-          <div class="dropdown-item" data-type="state" data-value="AR">Arkansas</div>
-          <div class="dropdown-item" data-type="state" data-value="CA">California</div>
-          <div class="dropdown-item" data-type="state" data-value="CO">Colorado</div>
-          <div class="dropdown-item" data-type="state" data-value="CT">Connecticut</div>
-          <div class="dropdown-item" data-type="state" data-value="DE">Delaware</div>
-          <div class="dropdown-item" data-type="state" data-value="DC">District Of Columbia</div>
-          <div class="dropdown-item" data-type="state" data-value="FL">Florida</div>
-          <div class="dropdown-item" data-type="state" data-value="GA">Georgia</div>
-          <div class="dropdown-item" data-type="state" data-value="GU">Guam</div>
-          <div class="dropdown-item" data-type="state" data-value="HI">Hawaii</div>
-          <div class="dropdown-item" data-type="state" data-value="ID">Idaho</div>
-          <div class="dropdown-item" data-type="state" data-value="IL">Illinois</div>
-          <div class="dropdown-item" data-type="state" data-value="IN">Indiana</div>
-          <div class="dropdown-item" data-type="state" data-value="IA">Iowa</div>
-          <div class="dropdown-item" data-type="state" data-value="KS">Kansas</div>
-          <div class="dropdown-item" data-type="state" data-value="KY">Kentucky</div>
-          <div class="dropdown-item" data-type="state" data-value="LA">Louisiana</div>
-          <div class="dropdown-item" data-type="state" data-value="ME">Maine</div>
-          <div class="dropdown-item" data-type="state" data-value="MD">Maryland</div>
-          <div class="dropdown-item" data-type="state" data-value="MA">Massachusetts</div>
-          <div class="dropdown-item" data-type="state" data-value="MI">Michigan</div>
-          <div class="dropdown-item" data-type="state" data-value="MN">Minnesota</div>
-          <div class="dropdown-item" data-type="state" data-value="MS">Mississippi</div>
-          <div class="dropdown-item" data-type="state" data-value="MO">Missouri</div>
-          <div class="dropdown-item" data-type="state" data-value="MT">Montana</div>
-          <div class="dropdown-item" data-type="state" data-value="NE">Nebraska</div>
-          <div class="dropdown-item" data-type="state" data-value="NV">Nevada</div>
-          <div class="dropdown-item" data-type="state" data-value="NH">New Hampshire</div>
-          <div class="dropdown-item" data-type="state" data-value="NJ">New Jersey</div>
-          <div class="dropdown-item" data-type="state" data-value="NM">New Mexico</div>
-          <div class="dropdown-item" data-type="state" data-value="NY">New York</div>
-          <div class="dropdown-item" data-type="state" data-value="NC">North Carolina</div>
-          <div class="dropdown-item" data-type="state" data-value="ND">North Dakota</div>
-          <div class="dropdown-item" data-type="state" data-value="MP">Northern Mariana Islands</div>
-          <div class="dropdown-item" data-type="state" data-value="OH">Ohio</div>
-          <div class="dropdown-item" data-type="state" data-value="OK">Oklahoma</div>
-          <div class="dropdown-item" data-type="state" data-value="OR">Oregon</div>
-          <div class="dropdown-item" data-type="state" data-value="PA">Pennsylvania</div>
-          <div class="dropdown-item" data-type="state" data-value="PR">Puerto Rico</div>
-          <div class="dropdown-item" data-type="state" data-value="RI">Rhode Island</div>
-          <div class="dropdown-item" data-type="state" data-value="SC">South Carolina</div>
-          <div class="dropdown-item" data-type="state" data-value="SD">South Dakota</div>
-          <div class="dropdown-item" data-type="state" data-value="TN">Tennessee</div>
-          <div class="dropdown-item" data-type="state" data-value="TX">Texas</div>
-          <div class="dropdown-item" data-type="state" data-value="UT">Utah</div>
-          <div class="dropdown-item" data-type="state" data-value="VT">Vermont</div>
-          <div class="dropdown-item" data-type="state" data-value="VI">Virgin Islands</div>
-          <div class="dropdown-item" data-type="state" data-value="VA">Virginia</div>
-          <div class="dropdown-item" data-type="state" data-value="WA">Washington</div>
-          <div class="dropdown-item" data-type="state" data-value="WV">West Virginia</div>
-          <div class="dropdown-item" data-type="state" data-value="WI">Wisconsin</div>
-          <div class="dropdown-item" data-type="state" data-value="WY">Wyoming</div>
+        <div class="dropdown">
+          <button class="btn btn-sm dropdown-toggle" type="button" id="buttonState" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            State
+          </button>
+          <div class="dropdown-menu" aria-labelledby="buttonState">
+            <div class="dropdown-item" data-type="state" data-value="AL">Alabama</div>
+            <div class="dropdown-item" data-type="state" data-value="AK">Alaska</div>
+            <div class="dropdown-item" data-type="state" data-value="AS">American Samoa</div>
+            <div class="dropdown-item" data-type="state" data-value="AZ">Arizona</div>
+            <div class="dropdown-item" data-type="state" data-value="AR">Arkansas</div>
+            <div class="dropdown-item" data-type="state" data-value="CA">California</div>
+            <div class="dropdown-item" data-type="state" data-value="CO">Colorado</div>
+            <div class="dropdown-item" data-type="state" data-value="CT">Connecticut</div>
+            <div class="dropdown-item" data-type="state" data-value="DE">Delaware</div>
+            <div class="dropdown-item" data-type="state" data-value="DC">District Of Columbia</div>
+            <div class="dropdown-item" data-type="state" data-value="FL">Florida</div>
+            <div class="dropdown-item" data-type="state" data-value="GA">Georgia</div>
+            <div class="dropdown-item" data-type="state" data-value="GU">Guam</div>
+            <div class="dropdown-item" data-type="state" data-value="HI">Hawaii</div>
+            <div class="dropdown-item" data-type="state" data-value="ID">Idaho</div>
+            <div class="dropdown-item" data-type="state" data-value="IL">Illinois</div>
+            <div class="dropdown-item" data-type="state" data-value="IN">Indiana</div>
+            <div class="dropdown-item" data-type="state" data-value="IA">Iowa</div>
+            <div class="dropdown-item" data-type="state" data-value="KS">Kansas</div>
+            <div class="dropdown-item" data-type="state" data-value="KY">Kentucky</div>
+            <div class="dropdown-item" data-type="state" data-value="LA">Louisiana</div>
+            <div class="dropdown-item" data-type="state" data-value="ME">Maine</div>
+            <div class="dropdown-item" data-type="state" data-value="MD">Maryland</div>
+            <div class="dropdown-item" data-type="state" data-value="MA">Massachusetts</div>
+            <div class="dropdown-item" data-type="state" data-value="MI">Michigan</div>
+            <div class="dropdown-item" data-type="state" data-value="MN">Minnesota</div>
+            <div class="dropdown-item" data-type="state" data-value="MS">Mississippi</div>
+            <div class="dropdown-item" data-type="state" data-value="MO">Missouri</div>
+            <div class="dropdown-item" data-type="state" data-value="MT">Montana</div>
+            <div class="dropdown-item" data-type="state" data-value="NE">Nebraska</div>
+            <div class="dropdown-item" data-type="state" data-value="NV">Nevada</div>
+            <div class="dropdown-item" data-type="state" data-value="NH">New Hampshire</div>
+            <div class="dropdown-item" data-type="state" data-value="NJ">New Jersey</div>
+            <div class="dropdown-item" data-type="state" data-value="NM">New Mexico</div>
+            <div class="dropdown-item" data-type="state" data-value="NY">New York</div>
+            <div class="dropdown-item" data-type="state" data-value="NC">North Carolina</div>
+            <div class="dropdown-item" data-type="state" data-value="ND">North Dakota</div>
+            <div class="dropdown-item" data-type="state" data-value="MP">Northern Mariana Islands</div>
+            <div class="dropdown-item" data-type="state" data-value="OH">Ohio</div>
+            <div class="dropdown-item" data-type="state" data-value="OK">Oklahoma</div>
+            <div class="dropdown-item" data-type="state" data-value="OR">Oregon</div>
+            <div class="dropdown-item" data-type="state" data-value="PA">Pennsylvania</div>
+            <div class="dropdown-item" data-type="state" data-value="PR">Puerto Rico</div>
+            <div class="dropdown-item" data-type="state" data-value="RI">Rhode Island</div>
+            <div class="dropdown-item" data-type="state" data-value="SC">South Carolina</div>
+            <div class="dropdown-item" data-type="state" data-value="SD">South Dakota</div>
+            <div class="dropdown-item" data-type="state" data-value="TN">Tennessee</div>
+            <div class="dropdown-item" data-type="state" data-value="TX">Texas</div>
+            <div class="dropdown-item" data-type="state" data-value="UT">Utah</div>
+            <div class="dropdown-item" data-type="state" data-value="VT">Vermont</div>
+            <div class="dropdown-item" data-type="state" data-value="VI">Virgin Islands</div>
+            <div class="dropdown-item" data-type="state" data-value="VA">Virginia</div>
+            <div class="dropdown-item" data-type="state" data-value="WA">Washington</div>
+            <div class="dropdown-item" data-type="state" data-value="WV">West Virginia</div>
+            <div class="dropdown-item" data-type="state" data-value="WI">Wisconsin</div>
+            <div class="dropdown-item" data-type="state" data-value="WY">Wyoming</div>
+          </div>
         </div>
       </div>
       <div class="input-group has-clear">
@@ -245,5 +255,5 @@
       </filter>
     </defs>
   </svg>
-<script type="text/javascript" src="bundle.b59167869527807e3536.js"></script></body>
+<script type="text/javascript" src="bundle.55afa23de269caaee53f.js"></script></body>
 </html>
