@@ -1,9 +1,6 @@
-// window.alert("NB:  This site is currently in testing mode.  Data is incomplete, and may be inaccurate.")
 import {
   responseClass,
-  mapColors,
   responseDict,
-  responseDictPopover,
   responseDictGroups,
   FULL_CONGRESS,
 } from './constants';
@@ -12,14 +9,16 @@ import {
   get116thCongress,
 } from './mocs';
 
+import CongressMap from './map';
+
 import "./scss/style.scss";
 
 let map;
+let mapContainer;
 let MoCs = [];
 let MoCsByDistrict;
-let senatorsByState;
-let selectedTab = FULL_CONGRESS;
-let districtLayer;
+export let senatorsByState;
+export let selectedTab = FULL_CONGRESS;
 
 const filters = {};
 let searchName;
@@ -30,10 +29,15 @@ $('.congress-toggle a').on('click', function (e) {
   $(this).addClass('active');
   let newSelectedTab = $(this).attr('data-value');
   if (newSelectedTab !== selectedTab) {
-    let mocList = newSelectedTab === 'full' ? MoCs : MoCs.filter((moc) => moc.chamber === newSelectedTab);
+    let mocList = newSelectedTab === FULL_CONGRESS ? MoCs : MoCs.filter((moc) => moc.chamber === newSelectedTab);
     const groups = mapToGroups(mocList)
     render(mocList, groups, newSelectedTab);
+    mapContainer.toggleChamber(newSelectedTab);
     selectedTab = newSelectedTab;
+    if (selectedTab === 'upper') {
+      mapContainer.districtLayer.remove();
+      mapContainer.addStateLayer();
+    }
   }
 })
 // Wait for the DOM to be ready then add the Map and restrict movement
@@ -46,9 +50,6 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function render(MocList, groups, selectedTab) {
-    districtLayer.bindTooltip(showTooltip, {
-      sticky: true,
-    }).addTo(map);
 
     populateGroups(groups);
     $('.bar-graph').hide();
@@ -69,17 +70,13 @@ function render(MocList, groups, selectedTab) {
 
 get116thCongress()
 .then(function (returnedMoCs) {
+  $('.loading').hide();
   MoCs = returnedMoCs;
   MoCsByDistrict = mapToDistrictDict(MoCs);
   senatorsByState = mapToStateDict(MoCs);
-  districtLayer = new L.GeoJSON.AJAX("/data/districts.geojson", {
-    middleware: addMoCsToDistrict,
-    style: function(state) { return setStyle(state); }
-  });
-
-  districtLayer.bindTooltip(showTooltip, {
-    sticky: true,
-  }).addTo(map);
+  
+  mapContainer = new CongressMap(map, senatorsByState, MoCsByDistrict);
+  mapContainer.createLayers();
 
   // Fill out the MoC stance groups, add photos, and generate all MoC cards
   const groups = mapToGroups(MoCs)
@@ -136,63 +133,6 @@ $('.scroll-link').on('click', (e) => {
     scrollToAnchor(link)
 })
 
-function makeRow(name, status){
-  if (!status) {
-   return '<div class="d-flex justify-content-between"><span>' + name + '</span><span class="response background-' + 'NA' + '"> ' + 'NA' + '</span></div > ';
-  }
-   return '<div class="d-flex justify-content-between"><span>' + name + '</span><span class="response background-' + responseClass[status] + '"> ' + responseDictPopover[status] + '</span></div > ';
-}
-
-const senateToolTip = (state, senators) => `<div class="tooltip-container">
-      <div class="d-flex justify-content-between">
-        <h4 class="title">${state}</h4>
-        <h4>Position</h4>
-      </div>
-    <div class="subtitle">SENATE</div>
-      ${senators.map((senator) => makeRow(senator.displayName, senator.crisis_status)).join('')}
-    </div>
-    `
-const houseToolTip = (district, rep) => `
-    <div class="tooltip-container">
-      <div class="d-flex justify-content-between">
-        <h4 class="title">${district}</h4>
-        <h4>Position</h4>
-      </div>
-      ${makeRow(rep.displayName, rep.crisis_status)}
-    </div>
-`
-
-function showTooltip(e) {
-  console.log(selectedTab)
-  if (selectedTab === 'lower' && e.feature.properties.MoCs) {
-    return houseToolTip(e.feature.properties.DISTRICT, e.feature.properties.MoCs[0])
-  } else if (selectedTab === 'upper') {
-    return senateToolTip(e.feature.properties.ABR, senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)])
-  }
-  if (!e.feature.properties.MoCs || !e.feature.properties.MoCs.length) {
-      let tooltip =
-        '<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">' + e.feature.properties.DISTRICT + '</h4><h4>Position</h4></div>';
-      tooltip += '<div class="subtitle">HOUSE</div>'
-      tooltip += makeRow('vacant')
-      tooltip += '<div class="subtitle">SENATE</div>'
-      senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)].forEach(function (senator) {
-        tooltip += makeRow(senator.displayName, senator.crisis_status)
-      });
-      tooltip += '</div>'
-    return tooltip;
-  }
-  let tooltip = 
-    '<div class="tooltip-container"><div class="d-flex justify-content-between"><h4 class="title">' + e.feature.properties.DISTRICT + '</h4><h4>Position</h4></div>';
-  tooltip += '<div class="subtitle">HOUSE</div>'
-  tooltip += makeRow(e.feature.properties.MoCs[0].displayName, e.feature.properties.MoCs[0].crisis_status);
-  tooltip += '<div class="subtitle">SENATE</div>'
-  senatorsByState[e.feature.properties.DISTRICT.slice(0, 2)].forEach(function(senator) {
-    tooltip += makeRow(senator.displayName, senator.crisis_status)
-  });
-  tooltip += '</div>'
-  return tooltip;
-}
-
 function populateHouseBars(groups) {
    $('.bar-graph-house').show();
     const total = MoCs.filter((moc) => moc.chamber === 'lower').length;
@@ -224,7 +164,6 @@ function populateSenateBars(groups) {
     el.attr('title', `${length} senators ${responseDictGroups[key]}`)
   });
 }
-
 
 function populateGroups(groups) {
   Object.keys(groups).forEach(function(key) {
@@ -259,48 +198,6 @@ function calculateZoom() {
   return sw >= 1700 ? 4.7 :
          sw >= 1600 ? 4.3 :
                       4.5 ;
-}
-
-function addMoCsToDistrict(districtGeoJson) {
-  districtGeoJson.features.forEach(function(district) {
-    district = districtTHPAdapter(district);
-    district.properties.MoCs = MoCsByDistrict[district.properties.DISTRICT];
-    if (!district.properties.MoCs) { 
-      return; 
-    }
-
-    // Calculate the value that occurs the most often in the dataset
-    let crisisCount = MoCsByDistrict[district.properties.DISTRICT].map(function(MoC) { return MoC.crisis_status });
-    district.properties.crisisMode = crisisCount.sort(function(a, b) {
-      return crisisCount.filter(function(val) { return val === a }).length - crisisCount.filter(function(val) { return val === b }).length;
-    }).pop();
-  });
-  return districtGeoJson;
-}
-
-// Takes a district and transforms all field names and data to THP standards
-function districtTHPAdapter(district) {
-  let formattedDistrict = district.properties.GEOID.substring(2);
-  // Change -00 districts to -At-Large
-  // remove leading zeros to numbers
-  formattedDistrict = formattedDistrict === '00' ? formattedDistrict.replace('00', 'At-Large') : Number(formattedDistrict);
-  formattedDistrict = `${district.properties.ABR}-${formattedDistrict}`;
-  district.properties.DISTRICT = formattedDistrict;
-  return district;
-}
-
-function setStyle(district) {
-  return {
-    color: 'white',
-    fillColor: fillColor(district),
-    fillOpacity: 1,
-    opacity: 1,
-    weight: 1,
-  };
-}
-
-function fillColor(district) {
-  return mapColors[district.properties.crisisMode] || '#c6c6c6';
 }
 
 const sortReps = (a, b) => {
@@ -344,7 +241,7 @@ function createMoCCard(MoC) {
         '<div class="row background-' + responseClass[MoC.crisis_status] + ' m-0">' +
           '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-100px.jpeg"></div>' +
           '<div class="col-8 col-sm-9">' +
-            '<h4>' + MoC.displayName + '</h4>' +
+            '<h4>' + MoC.displayName + ' ('+ MoC.party + ')' + '</h4>' +
             '<small class="rep-card-position">'
       
     res += responseDict[MoC.crisis_status] ? 
@@ -394,7 +291,7 @@ function bindFilterEvents() {
   // name search clear hide/show
   $('.has-clear input[type="text"]').on('input propertychange', function() {
     var $this = $(this);
-    $this.siblings('.search-name-clear').toggleClass('d-none', !Boolean($this.val()));
+    $this.siblings('.search-name-clear').toggleClass('d-none', !($this.val()));
   }).trigger('propertychange');
   $('.search-name-clear').click(function() {
     $(this).siblings('input[type="text"]').val('')
@@ -403,14 +300,14 @@ function bindFilterEvents() {
   });
 }
 
-function setNameSearch(e) {
+function setNameSearch() {
   searchName = $('#search-name-input').val();
-  addMoCCards();
+  addMoCCards(MoCs);
 }
 
 function clearNameSearch() {
   searchName = '';
-  addMoCCards();
+  addMoCCards(MoCs);
 }
 
 function setFilter(e) {
@@ -459,61 +356,4 @@ function filterMoCs(MoCs) {
     });
   }
   return filteredMoCs;
-}
-
-function signUp(form) {
-  let zipcodeRegEx = /^(\d{5}-\d{4}|\d{5}|\d{9})$|^([a-zA-Z]\d[a-zA-Z] \d[a-zA-Z]\d)$/g;
-  let emailRegEx = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-  let phoneRegEx = /^(\d{11})$/;
-  let errors = [];
-
-  if (!form.last.value || !form.first.value || !form.zipcode.value || !form.email.value || !form.phone.value) {
-    errors.push("Please fill in all fields.")
-  }
-
-  if (!emailRegEx.test(form.email.value)) {
-    errors.push("Please enter a valid email.")
-  }
-
-  if (!zipcodeRegEx.test(form.zipcode.value)) {
-    errors.push("Please enter a valid zipcode.")
-  }
-
-  if (!phoneRegEx.test(form.phone.value)) {
-    errors.push("Please enter an 11 digit phone number. Do not include hyphens, parentheses, or spaces.")
-  }
-
-  if (errors.length !== 0) {
-    $('#email-signup-form-errors > .col').html(errors.join('<br />'))
-    return false;
-  }
-
-  let person = {
-    'person' : {
-      'family_name': form.last.value,
-      'given_name': form.first.value,
-      'postal_addresses': [{ 'postal_code': form.zipcode.value}],
-      'email_addresses': [{ 'address': form.email.value }],
-      'phone_numbers': [{ 'number': form.phone.value }]
-    }
-  };
-
-  $.ajax({
-    url: 'https://actionnetwork.org/api/v2/forms/47264a33-be61-4e91-aa5d-2a66b4a207d7/submissions',
-    method: 'POST',
-    dataType: 'json',
-    contentType: 'application/json',
-    data: JSON.stringify(person),
-    success: function() {
-      $('#email-signup').html('<div class="container container-fluid container-light pl-5 pr-5 pb-2">' +
-                                '<h1 class="text-center pb-3">Thanks for signing up. We&rsquo;ll be in touch!</h1>' +
-                              '</div>');
-    },
-    error: function() {
-      $('#email-signup').html('<div class="container container-fluid container-light pl-5 pr-5 pb-2">' +
-                                '<h1 class="text-center pb-3">An error has occured, please try again later.</h1>' +
-                              '</div>');
-    }
-  });
-  return false;
 }

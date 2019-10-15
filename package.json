@@ -26,7 +26,8 @@
   "homepage": "https://github.com/pdvorchik/THP-Emergency#readme",
   "dependencies": {
     "http-server": "^0.11.1",
-    "livereload": "^0.8.2"
+    "livereload": "^0.8.2",
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
