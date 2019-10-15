@@ -231,11 +231,11 @@ h3.callToAction {
       right: 0;
     }
 
-    &#photos-support:before {
+    &#photos-impeachment:before {
       background: rgba($dark-purple, 0.25);
     }
 
-    &#photos-resignation:before {
+    &#photos-inquiry:before {
       background: rgba($light-purple, 0.25);
     }
 
@@ -243,16 +243,16 @@ h3.callToAction {
       background: rgba($light-purple, 0.25);
     }
 
-    &#photos-unknown:before {
+    &#photos-unclear:before {
       background: rgba($midtone, 0.25);
     }
 
     &#photos-concerned:before {
-      background: rgba($lighest-purple, 0.25);
+      background: rgba($orange, 0.25);
     }
 
-    &#photos-oppose:before {
-      background: rgba($orange, 0.25);
+    &#photos-opposed:before {
+      background: rgba($brown, 0.25);
     }
 
     img {
