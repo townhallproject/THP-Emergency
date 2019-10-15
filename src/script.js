@@ -38,11 +38,11 @@ $('.congress-toggle a').on('click', function (e) {
 })
 // Wait for the DOM to be ready then add the Map and restrict movement
 document.addEventListener("DOMContentLoaded", function() {
-  map = L.map('map', { zoomControl: false, zoomSnap: 0.1, attributionControl: false }).setView([37.8, -96], calculateZoom());
-  // map.dragging.disable();
-  // map.touchZoom.disable();
-  // map.doubleClickZoom.disable();
-  // map.scrollWheelZoom.disable();
+  map = L.map('map', { zoomControl: false, zoomSnap: 0.1, attributionControl: false }).setView([37.8, -100], calculateZoom());
+  map.dragging.disable();
+  map.touchZoom.disable();
+  map.doubleClickZoom.disable();
+  map.scrollWheelZoom.disable();
 });
 
 function render(MocList, groups, selectedTab) {
