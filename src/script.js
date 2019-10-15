@@ -16,6 +16,7 @@ import "./scss/style.scss";
 
 let map;
 let MoCs = [];
+var mocList;
 let MoCsByDistrict;
 let senatorsByState;
 let selectedTab = FULL_CONGRESS;
@@ -30,12 +31,13 @@ $('.congress-toggle a').on('click', function (e) {
   $(this).addClass('active');
   let newSelectedTab = $(this).attr('data-value');
   if (newSelectedTab !== selectedTab) {
-    let mocList = newSelectedTab === 'full' ? MoCs : MoCs.filter((moc) => moc.chamber === newSelectedTab);
+    mocList = newSelectedTab === 'full' ? MoCs : MoCs.filter((moc) => moc.chamber === newSelectedTab);
     const groups = mapToGroups(mocList)
     render(mocList, groups, newSelectedTab);
     selectedTab = newSelectedTab;
   }
 })
+
 // Wait for the DOM to be ready then add the Map and restrict movement
 document.addEventListener("DOMContentLoaded", function() {
   map = L.map('map', { zoomControl: false, zoomSnap: 0.1, attributionControl: false }).setView([37.8, -96], calculateZoom());
@@ -70,6 +72,7 @@ function render(MocList, groups, selectedTab) {
 get116thCongress()
 .then(function (returnedMoCs) {
   MoCs = returnedMoCs;
+  mocList = returnedMoCs;
   MoCsByDistrict = mapToDistrictDict(MoCs);
   senatorsByState = mapToStateDict(MoCs);
   districtLayer = new L.GeoJSON.AJAX("/data/districts.geojson", {
@@ -163,7 +166,6 @@ const houseToolTip = (district, rep) => `
 `
 
 function showTooltip(e) {
-  console.log(selectedTab)
   if (selectedTab === 'lower' && e.feature.properties.MoCs) {
     return houseToolTip(e.feature.properties.DISTRICT, e.feature.properties.MoCs[0])
   } else if (selectedTab === 'upper') {
@@ -329,9 +331,9 @@ function addMoCCards(MoCs) {
   filteredMoCs.forEach(function(MoC) {
     container.append(createMoCCard(MoC));
   });
-  if (filteredMoCs.length % 2 !== 0) {
-    container.append('<div class="card" style="border: none; height: 0;"></div>');
-  }
+  container.append(
+    '<div class="card" style="border: none; height: 0;"></div>' + 
+    '<div class="card" style="border: none; height: 0;"></div>');
 }
 
 function createMoCCard(MoC) {
@@ -405,12 +407,12 @@ function bindFilterEvents() {
 
 function setNameSearch(e) {
   searchName = $('#search-name-input').val();
-  addMoCCards();
+  addMoCCards(mocList);
 }
 
 function clearNameSearch() {
   searchName = '';
-  addMoCCards();
+  addMoCCards(mocList);
 }
 
 function setFilter(e) {
