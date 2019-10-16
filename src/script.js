@@ -237,9 +237,9 @@ function addMoCCards(MoCs) {
   filteredMoCs.forEach(function(MoC) {
     container.append(createMoCCard(MoC));
   });
-  if (filteredMoCs.length % 2 !== 0) {
-    container.append('<div class="card" style="border: none; height: 0;"></div>');
-  }
+  container.append(
+    '<div class="card" style="border: none; height: 0;"></div>' + 
+    '<div class="card" style="border: none; height: 0;"></div>');
 }
 
 function createMoCCard(MoC) {
@@ -313,12 +313,12 @@ function bindFilterEvents() {
 
 function setNameSearch() {
   searchName = $('#search-name-input').val();
-  addMoCCards(MoCs);
+  addMoCCards(selectedTab === FULL_CONGRESS ? MoCs : MoCs.filter(moc => moc.chamber === selectedTab));
 }
 
 function clearNameSearch() {
   searchName = '';
-  addMoCCards(MoCs);
+  addMoCCards(selectedTab === FULL_CONGRESS ? MoCs : MoCs.filter(moc => moc.chamber === selectedTab));
 }
 
 function setFilter(e) {
