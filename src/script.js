@@ -18,23 +18,34 @@ let mapContainer;
 let MoCs = [];
 let MoCsByDistrict;
 export let senatorsByState;
-export let selectedTab = FULL_CONGRESS;
+let searchName;
 
 const filters = {};
-let searchName;
+
+const data = {
+  allMoCs: [],
+  MoCsByDistrict,
+  senatorsByState,
+}
+
+export const userSelections = {
+  selectedTab: FULL_CONGRESS,
+  filters: {},
+  selectedUsState: '',
+}
 
 $('.congress-toggle a').on('click', function (e) {
   e.preventDefault()
   $('.congress-toggle a').removeClass('active');
   $(this).addClass('active');
   let newSelectedTab = $(this).attr('data-value');
-  if (newSelectedTab !== selectedTab) {
+  if (newSelectedTab !== userSelections.selectedTab) {
     let mocList = newSelectedTab === FULL_CONGRESS ? MoCs : MoCs.filter((moc) => moc.chamber === newSelectedTab);
     const groups = mapToGroups(mocList)
     render(mocList, groups, newSelectedTab);
     mapContainer.toggleChamber(newSelectedTab);
-    selectedTab = newSelectedTab;
-    if (selectedTab === 'upper') {
+    userSelections.selectedTab = newSelectedTab;
+    if (userSelections.selectedTab === 'upper') {
       mapContainer.districtLayer.remove();
       mapContainer.addStateLayer();
     }
@@ -80,7 +91,7 @@ get116thCongress()
 
   // Fill out the MoC stance groups, add photos, and generate all MoC cards
   const groups = mapToGroups(MoCs)
-  render(MoCs, groups, selectedTab)
+  render(MoCs, groups, userSelections.selectedTab)
 });
 
 // Data mapping
@@ -325,7 +336,7 @@ function setFilter(e) {
       '<button class="btn btn-secondary btn-xs" data-type="' + type + '" data-value="' + value + '">' +
       e.currentTarget.innerText + '<i class="fa fa-times" aria-hidden="true"></i></button>'
     )
-    addMoCCards(selectedTab === FULL_CONGRESS ? MoCs : MoCs.filter(moc => moc.chamber === selectedTab));
+    addMoCCards(userSelections.selectedTab === FULL_CONGRESS ? MoCs : MoCs.filter(moc => moc.chamber === selectedTab));
   }
 }
 
@@ -340,7 +351,7 @@ function removeFilter(e) {
     delete filters[type];
   }
   e.currentTarget.parentElement.remove();
-    addMoCCards(selectedTab === FULL_CONGRESS ? MoCs : MoCs.filter(moc => moc.chamber === selectedTab));
+    addMoCCards(userSelections.selectedTab === FULL_CONGRESS ? MoCs : MoCs.filter(moc => moc.chamber === userSelections.selectedTab));
 }
 
 function filterMoCs(MoCs) {
