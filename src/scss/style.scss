@@ -180,6 +180,27 @@ h3.callToAction {
   min-height: 75vh;
   margin: 4vh 0;
 
+  .leaflet-control-container {
+    .leaflet-bar {
+      border: 1px solid $middle-grey;
+    }
+
+    .mapboxgl-ctrl-usa.ant-btn {
+      padding: 0;
+      border: none;
+    }
+
+    .usa-icon {
+      width: 20px;
+      height: 20px;
+      margin: 5px;
+      background-image: url('../assets/images/usa.svg');
+      background-size: 20px 20px;
+      background-repeat: no-repeat;
+      display: inline-block;
+    }
+  }
+
   &.leaflet-container {
     background-color:rgba(0,0,0,0.0);
   }

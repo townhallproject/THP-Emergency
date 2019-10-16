@@ -6,6 +6,7 @@ import bboxes from '../data/bboxes';
 
 import {
     mapColors,
+    deSaturatedMapColors,
 } from '../constants';
 
 import {
@@ -14,8 +15,30 @@ import {
     showTooltip,
 } from './tooltip';
 
+import {
+    setUsState,
+    userSelections,
+    addFilter,
+    clearStateFilter
+} from '../script';
+
+const center = [37.8, -96]
+
+function calculateZoom() {
+    let sw = screen.width;
+
+    return sw >= 1700 ? 4.7 :
+        sw >= 1600 ? 4.3 :
+        4.5;
+}
 export default class CongressMap {
     static getFillColor(district) {
+        if (userSelections.selectedUsState) {
+            if (district.properties.ABR === userSelections.selectedUsState) {
+                return mapColors[district.properties.crisisMode] || '#c6c6c6';
+            }
+            return deSaturatedMapColors[district.properties.crisisMode] || '#c6c6c6';
+        }
         return mapColors[district.properties.crisisMode] || '#c6c6c6';
     }
 
@@ -46,7 +69,11 @@ export default class CongressMap {
         this.featuresHome = this.createFeatures(states, senatorsByState);
         this.addSenatorsToState = this.addSenatorsToState.bind(this);
         this.addMoCsToDistrict = this.addMoCsToDistrict.bind(this);
-        L.control.zoom().addTo(map);
+        this.reset = this.reset.bind(this);
+        L.control.zoom({
+            position: 'topright'
+        }).addTo(map);
+        this.makeZoomToNationalButton();
     }
 
 
@@ -57,13 +84,17 @@ export default class CongressMap {
     }
 
     addDistrictLayer() {
-        const { map } = this;
+        const { map, districtLayer} = this;
         this.districtLayer.bindTooltip(showTooltip, {
             sticky: true,
         }).addTo(this.map);
           this.districtLayer.on('click', (e) => {
             const state = e.layer.feature.properties.ABR;
             const boundingBox = bboxes[state];
+            setUsState(state);
+            districtLayer.setStyle(CongressMap.setStyle);
+            clearStateFilter();
+            addFilter('state', state, state);
             map.flyToBounds([
                 [boundingBox[1], boundingBox[0]],
                 [boundingBox[3], boundingBox[2]]
@@ -76,15 +107,15 @@ export default class CongressMap {
 
     createLayers() {
         this.stateLayer = new L.GeoJSON.AJAX("../data/states.geojson", {
-            middleware: this.addSenatorsToState,
             interactive: true,
+            middleware: this.addSenatorsToState,
             style: function (state) {
                 return CongressMap.setStyle(state);
             }
         })
         this.districtLayer = new L.GeoJSON.AJAX("../data/districts.geojson", {
-            middleware: this.addMoCsToDistrict,
             interactive: true,
+            middleware: this.addMoCsToDistrict,
             style: function (state) {
                 return CongressMap.setStyle(state);
             }
@@ -102,6 +133,10 @@ export default class CongressMap {
         }
     }
 
+    clearStateSelectedStyling() {
+        this.districtLayer.setStyle(CongressMap.setStyle);
+    }
+
     addSenatorsToState(statesGeoJson) {
         let { senatorsByState } = this;
         statesGeoJson.features.forEach(function (stateFeature) {
@@ -111,6 +146,17 @@ export default class CongressMap {
             }
         })
         return statesGeoJson;
+    }
+
+    zoomToNational() {
+        this.map.flyTo(center, calculateZoom());
+    }
+
+    reset() {
+        setUsState('');
+        clearStateFilter();
+        this.zoomToNational()
+        this.clearStateSelectedStyling();
     }
 
 
@@ -157,8 +203,18 @@ export default class CongressMap {
       
     
     addStateLayer() {
-        // this.markerLayer.remove();
         this.addLayer(this.featuresHome);
+    }
+
+    // Creates the button in our zoom controls to go to the national view
+    makeZoomToNationalButton() {
+        const usaButton = document.createElement('button');
+        usaButton.className = 'mapboxgl-ctrl-icon mapboxgl-ctrl-usa ant-btn';
+
+        usaButton.innerHTML = '<span class="usa-icon"></span>';
+    
+        usaButton.addEventListener('click', this.reset);
+        document.querySelector('.leaflet-control-zoom').appendChild(usaButton);
     }
 
      addLayer(featuresHome) {
