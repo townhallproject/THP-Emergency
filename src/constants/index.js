@@ -39,3 +39,11 @@ export const mapColors = {
     4: '#fdb863',
     5: '#e66101',
 }
+
+export const deSaturatedMapColors = {
+    1: '#75628a',
+    2: '#b2acc7',
+    3: '#c9c9c9',
+    4: '#facd96',
+    5: '#e69459',
+}

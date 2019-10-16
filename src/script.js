@@ -18,15 +18,19 @@ let mapContainer;
 let searchName;
 
 export const data = {
-  allMoCs: [],
   MoCsByDistrict: {},
+  allMoCs: [],
   senatorsByState: {},
 }
 
 export const userSelections = {
-  selectedTab: FULL_CONGRESS,
   filters: {},
+  selectedTab: FULL_CONGRESS,
   selectedUsState: '',
+}
+
+export const setUsState = (state) => {
+  userSelections.selectedUsState = state;
 }
 
 function getMocsForTab() {
@@ -57,7 +61,11 @@ $('.congress-toggle a').on('click', function (e) {
 })
 // Wait for the DOM to be ready then add the Map and restrict movement
 document.addEventListener("DOMContentLoaded", function() {
-  map = L.map('map', { zoomControl: false, zoomSnap: 0.1, attributionControl: false }).setView([37.8, -96], calculateZoom());
+  map = L.map('map', { 
+    attributionControl: false,
+    zoomControl: false, 
+    zoomSnap: 0.1, 
+  }).setView([37.8, -96], calculateZoom());
   map.dragging.disable();
   map.touchZoom.disable();
   map.doubleClickZoom.disable();
@@ -299,7 +307,7 @@ function createMoCCard(MoC) {
 }
 
 function bindFilterEvents() {
-  $('#onTheRecord .dropdown .dropdown-item').click(setFilter);
+  $('#onTheRecord .dropdown .dropdown-item').click(onSelectFilter);
   $('#onTheRecord .search-name').click(setNameSearch);
   $('#search-name-input').on('keyup', function(e) {
     if (e.keyCode === 13) setNameSearch(e);
@@ -327,11 +335,12 @@ function clearNameSearch() {
   addMoCCards(getMocsForTab());
 }
 
-function setFilter(e) {
-  let type  = e.currentTarget.getAttribute('data-type');
-  let value = e.currentTarget.getAttribute('data-value');
-      value = parseInt(value) || value;
+export function clearStateFilter() {
+   userSelections.filters.state = [];
+   $('.btn[data-type=state]').remove()
+}
 
+export function addFilter(type, value, text) {
   const {
     filters,
   } = userSelections;
@@ -343,10 +352,18 @@ function setFilter(e) {
     filters[type].push(value);
     $('#filter-info').append(
       '<button class="btn btn-secondary btn-xs" data-type="' + type + '" data-value="' + value + '">' +
-      e.currentTarget.innerText + '<i class="fa fa-times" aria-hidden="true"></i></button>'
+      text + '<i class="fa fa-times" aria-hidden="true"></i></button>'
     )
     addMoCCards(getMocsForTab());
   }
+}
+
+function onSelectFilter(e) {
+  let type  = e.currentTarget.getAttribute('data-type');
+  let value = e.currentTarget.getAttribute('data-value');
+      value = parseInt(value) || value;
+
+  addFilter(type, value, e.currentTarget.innerText);
 }
 
 function removeFilter(e) {
@@ -363,7 +380,7 @@ function removeFilter(e) {
     delete filters[type];
   }
   e.currentTarget.parentElement.remove();
-    addMoCCards(getMocsForTab());
+  addMoCCards(getMocsForTab());
 }
 
 function filterMoCs(MoCs) {
