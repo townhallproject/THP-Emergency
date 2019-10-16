@@ -4,8 +4,8 @@ import {
 } from '../constants';
 
 import {
-    senatorsByState,
-    selectedTab,
+    userSelections,
+    data,
 } from '../script';
 
 const wrapper = (title, content) => {
@@ -35,6 +35,13 @@ const senateViewTooltip = (state, senators) =>
 const houseToolTip = (district, rep) => `${wrapper(district, `${makeRow(rep.displayName, rep.crisis_status)}`)}`
 
 export function showTooltip(e) {
+    const {
+        selectedTab,
+    } = userSelections;
+
+    const {
+        senatorsByState
+    } = data;
     if (selectedTab === 'lower' && e.feature.properties.MoCs) {
         return houseToolTip(e.feature.properties.DISTRICT, e.feature.properties.MoCs[0])
     } else if (selectedTab === 'upper') {
