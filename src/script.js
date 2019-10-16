@@ -16,7 +16,6 @@ import "./scss/style.scss";
 let map;
 let mapContainer;
 let MoCs = [];
-var mocList;
 let MoCsByDistrict;
 export let senatorsByState;
 export let selectedTab = FULL_CONGRESS;
@@ -30,7 +29,7 @@ $('.congress-toggle a').on('click', function (e) {
   $(this).addClass('active');
   let newSelectedTab = $(this).attr('data-value');
   if (newSelectedTab !== selectedTab) {
-    mocList = newSelectedTab === 'full' ? MoCs : MoCs.filter((moc) => moc.chamber === newSelectedTab);
+    const mocList = newSelectedTab === 'full' ? MoCs : MoCs.filter((moc) => moc.chamber === newSelectedTab);
     const groups = mapToGroups(mocList)
     render(mocList, groups, newSelectedTab);
     mapContainer.toggleChamber(newSelectedTab);
@@ -74,7 +73,6 @@ get116thCongress()
 .then(function (returnedMoCs) {
   $('.loading').hide();
   MoCs = returnedMoCs;
-  mocList = returnedMoCs;
   MoCsByDistrict = mapToDistrictDict(MoCs);
   senatorsByState = mapToStateDict(MoCs);
   
@@ -361,12 +359,12 @@ function bindFilterEvents() {
 
 function setNameSearch() {
   searchName = $('#search-name-input').val();
-  addMoCCards(mocList);
+  addMoCCards(selectedTab === FULL_CONGRESS ? MoCs : MoCs.filter(moc => moc.chamber === selectedTab));
 }
 
 function clearNameSearch() {
   searchName = '';
-  addMoCCards(mocList);
+  addMoCCards(selectedTab === FULL_CONGRESS ? MoCs : MoCs.filter(moc => moc.chamber === selectedTab));
 }
 
 function setFilter(e) {
