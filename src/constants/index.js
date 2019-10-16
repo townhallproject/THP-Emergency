@@ -1,4 +1,4 @@
-const FULL_CONGRESS = 'full';
+export const FULL_CONGRESS = 'full';
 // Static Dicts
 export const responseDict = {
     1: 'Full support for impeachment',
@@ -38,4 +38,12 @@ export const mapColors = {
     3: '#e7e7e7',
     4: '#fdb863',
     5: '#e66101',
+}
+
+export const deSaturatedMapColors = {
+    1: '#75628a',
+    2: '#b2acc7',
+    3: '#c9c9c9',
+    4: '#facd96',
+    5: '#e69459',
 }

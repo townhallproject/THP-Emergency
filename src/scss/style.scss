@@ -29,6 +29,19 @@ body {
   background: $light-grey;
 }
 
+.loading {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 3000;
+  background: #8080807a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .nav-tabs .nav-item.show .nav-link,
 .nav-tabs .nav-link.active {
   border-color: transparent;
@@ -167,6 +180,27 @@ h3.callToAction {
   min-height: 75vh;
   margin: 4vh 0;
 
+  .leaflet-control-container {
+    .leaflet-bar {
+      border: 1px solid $middle-grey;
+    }
+
+    .mapboxgl-ctrl-usa.ant-btn {
+      padding: 0;
+      border: none;
+    }
+
+    .usa-icon {
+      width: 20px;
+      height: 20px;
+      margin: 5px;
+      background-image: url('../assets/images/usa.svg');
+      background-size: 20px 20px;
+      background-repeat: no-repeat;
+      display: inline-block;
+    }
+  }
+
   &.leaflet-container {
     background-color:rgba(0,0,0,0.0);
   }
@@ -174,6 +208,9 @@ h3.callToAction {
   .leaflet-tooltip {
     .tooltip-container{
       min-width: 200px;
+    }
+    h4 {
+      font-size: 12px;
     }
     .response {
       padding-left: 0.5em;
@@ -215,11 +252,11 @@ h3.callToAction {
       right: 0;
     }
 
-    &#photos-support:before {
+    &#photos-impeachment:before {
       background: rgba($dark-purple, 0.25);
     }
 
-    &#photos-resignation:before {
+    &#photos-inquiry:before {
       background: rgba($light-purple, 0.25);
     }
 
@@ -227,16 +264,16 @@ h3.callToAction {
       background: rgba($light-purple, 0.25);
     }
 
-    &#photos-unknown:before {
+    &#photos-unclear:before {
       background: rgba($midtone, 0.25);
     }
 
     &#photos-concerned:before {
-      background: rgba($lighest-purple, 0.25);
+      background: rgba($orange, 0.25);
     }
 
-    &#photos-oppose:before {
-      background: rgba($orange, 0.25);
+    &#photos-opposed:before {
+      background: rgba($brown, 0.25);
     }
 
     img {
@@ -288,12 +325,28 @@ h3.callToAction {
 
 /* On The Record */
 #onTheRecord {
+  .search-bar {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-flow: wrap;
+  }
+  .btn-group {
+    margin: auto;
+    .dropdown {
+      margin: auto;
+    }
+  }
   .btn-group .dropdown .btn {
     background: $brand-secondary;
     color: $brand-white;
     padding: 0.15em 0.5em;
     margin-right: 1em;
     font-size: 1em;
+  }
+
+  .input-group {
+    width: initial;
   }
 
   .dropdown-menu {

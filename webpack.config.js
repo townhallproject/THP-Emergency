@@ -16,6 +16,7 @@ const plugins = [
           from: 'src/data/*',
           to: 'data',
         },
+        {from: 'src/assets/images', to: 'images'}
       ])
 ];
 
