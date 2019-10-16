@@ -2,6 +2,8 @@ import { find } from 'lodash';
 
 import Point from './point';
 import states from '../data/state-centers';
+import bboxes from '../data/bboxes';
+
 import {
     mapColors,
 } from '../constants';
@@ -44,7 +46,9 @@ export default class CongressMap {
         this.featuresHome = this.createFeatures(states, senatorsByState);
         this.addSenatorsToState = this.addSenatorsToState.bind(this);
         this.addMoCsToDistrict = this.addMoCsToDistrict.bind(this);
+        L.control.zoom().addTo(map);
     }
+
 
     addSenateLayer() {
         this.stateLayer.bindTooltip(showStateTooltip, {
@@ -53,20 +57,34 @@ export default class CongressMap {
     }
 
     addDistrictLayer() {
+        const { map } = this;
         this.districtLayer.bindTooltip(showTooltip, {
             sticky: true,
         }).addTo(this.map);
+          this.districtLayer.on('click', (e) => {
+            const state = e.layer.feature.properties.ABR;
+            const boundingBox = bboxes[state];
+            map.flyToBounds([
+                [boundingBox[1], boundingBox[0]],
+                [boundingBox[3], boundingBox[2]]
+            ], {
+                padding: [100, 100],
+                // maxZoom: 6,
+            })
+        })
     }
 
     createLayers() {
         this.stateLayer = new L.GeoJSON.AJAX("../data/states.geojson", {
             middleware: this.addSenatorsToState,
+            interactive: true,
             style: function (state) {
                 return CongressMap.setStyle(state);
             }
         })
         this.districtLayer = new L.GeoJSON.AJAX("../data/districts.geojson", {
             middleware: this.addMoCsToDistrict,
+            interactive: true,
             style: function (state) {
                 return CongressMap.setStyle(state);
             }
