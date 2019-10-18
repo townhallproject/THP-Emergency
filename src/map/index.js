@@ -19,7 +19,9 @@ import {
     setUsState,
     userSelections,
     addFilter,
-    clearStateFilter
+    clearStateFilter,
+    getMocsForTab,
+    addMoCCards,
 } from '../script';
 
 const center = [37.8, -96]
@@ -101,7 +103,7 @@ export default class CongressMap {
             ], {
                 padding: [100, 100],
                 // maxZoom: 6,
-            })
+            });
         })
     }
 
@@ -131,6 +133,7 @@ export default class CongressMap {
             this.stateLayer.remove();
             this.addDistrictLayer();
         }
+        addMoCCards(getMocsForTab());
     }
 
     clearStateSelectedStyling() {
@@ -157,6 +160,7 @@ export default class CongressMap {
         clearStateFilter();
         this.zoomToNational()
         this.clearStateSelectedStyling();
+        addMoCCards(getMocsForTab());
     }
 
 
