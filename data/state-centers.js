@@ -7,8 +7,10 @@ export default [{
     },
     {
         "stateName": "Alaska",
-        "lat": 61.370716,
-        "lng": -152.404419,
+        // "lat": 61.370716,
+        // "lng": -152.404419,
+        "lat": 36.366043,
+        "lng": -129.480883,
         "state": 'AK',
     },
     {
@@ -68,8 +70,10 @@ export default [{
     {
         "stateName": "Hawaii",
         state: 'HI',
-        "lat": 21.094318,
-        "lng": -157.498337
+        // "lat": 21.094318,
+        // "lng": -157.498337
+        "lat": 30.313181,
+        "lng": -129.497671
     },
     {
         "stateName": "Idaho",
