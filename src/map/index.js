@@ -129,6 +129,7 @@ export default class CongressMap {
             this.addSenateLayer();
         } else {
             this.stateLayer.remove();
+            this.markerLayer.remove();
             this.addDistrictLayer();
         }
     }
