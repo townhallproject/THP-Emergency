@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function() {
     zoomControl: false, 
     zoomSnap: 0.1, 
   }).setView([37.8, -96], calculateZoom());
-  map.dragging.disable();
+  // map.dragging.disable();
   map.touchZoom.disable();
   map.doubleClickZoom.disable();
   map.scrollWheelZoom.disable();
