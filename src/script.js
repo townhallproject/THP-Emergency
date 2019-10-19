@@ -33,7 +33,7 @@ export const setUsState = (state) => {
   userSelections.selectedUsState = state;
 }
 
-function getMocsForTab() {
+export const getMocsForTab = () => {
   const {
     allMoCs
   } = data;
@@ -253,7 +253,7 @@ const sortReps = (a, b) => {
   return 0;
 }
 // MoC section
-function addMoCCards(MoCs) {
+export function addMoCCards(MoCs) {
   let container = $('#MoCCardContainer');
   container.empty();
   // Filter MoCs and render results
@@ -347,7 +347,7 @@ function clearNameSearch() {
 }
 
 export function clearStateFilter() {
-   userSelections.filters.state = [];
+  delete userSelections.filters.state;
    $('.btn[data-type=state]').remove()
 }
 
