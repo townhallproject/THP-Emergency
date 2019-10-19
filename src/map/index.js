@@ -24,15 +24,11 @@ import {
     addMoCCards,
 } from '../script';
 
-const center = [37.8, -96]
+const bounds = [
+    [23.6, -134.846217],
+    [50.2, - 65.4]
+];
 
-function calculateZoom() {
-    let sw = screen.width;
-
-    return sw >= 1700 ? 4.7 :
-        sw >= 1600 ? 4.3 :
-        4.5;
-}
 export default class CongressMap {
     static getFillColor(district) {
         if (userSelections.selectedUsState) {
@@ -76,6 +72,9 @@ export default class CongressMap {
             position: 'topright'
         }).addTo(map);
         this.makeZoomToNationalButton();
+        window.addEventListener('resize', () => {
+            this.map.flyToBounds(bounds)
+        })
     }
 
 
@@ -153,7 +152,7 @@ export default class CongressMap {
     }
 
     zoomToNational() {
-        this.map.flyTo(center, calculateZoom());
+        this.map.flyToBounds(bounds);
     }
 
     reset() {

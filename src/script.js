@@ -65,7 +65,10 @@ document.addEventListener("DOMContentLoaded", function() {
     attributionControl: false,
     zoomControl: false, 
     zoomSnap: 0.1, 
-  }).setView([37.8, -96], calculateZoom());
+  }).fitBounds([
+    [23.6, -134.846217],
+    [50.2, -65.4]
+  ]);
   // map.dragging.disable();
   map.touchZoom.disable();
   map.doubleClickZoom.disable();
