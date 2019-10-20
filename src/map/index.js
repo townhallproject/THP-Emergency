@@ -22,6 +22,7 @@ import {
     clearStateFilter,
     getMocsForTab,
     addMoCCards,
+    resetSearch,
 } from '../script';
 
 const bounds = [
@@ -84,25 +85,60 @@ export default class CongressMap {
         }).addTo(this.map);
     }
 
+    convertBoundingBox(boundingBox) {
+        return [
+            [boundingBox[1], boundingBox[0]],
+            [boundingBox[3], boundingBox[2]]
+        ]
+    }
+
+    addBoundingBoxes(bbox1, bbox2) {
+        if (!bbox2) {
+            return bbox1;
+        }
+        let masterBB = [];
+        masterBB[0] = Math.min(bbox1[0], bbox2[0]);
+        masterBB[2] = Math.min(bbox1[2], bbox2[2]);
+        masterBB[1] = Math.max(bbox1[1], bbox2[1]);
+        masterBB[3] = Math.max(bbox1[3], bbox2[3]);
+        return masterBB;
+    }
+
+    getBoundingBoxes(districts) {
+        const boundingBox = districts.map((data) => {
+            return `${data.abr}${data.dis}`;
+        }).map((district) => {
+            return bboxes[district];
+        }).reduce((acc, cur) => {
+            if (!acc) {
+                acc = cur;
+                return acc;
+            }
+            acc = this.addBoundingBoxes(acc, cur);
+            return acc;
+        })
+
+        this.map.flyToBounds(this.convertBoundingBox(boundingBox), { padding: [100, 100] })
+    }
+
+    zoomToSelectedState(state) {
+        const boundingBox = bboxes[state];
+        setUsState(state);
+        this.districtLayer.setStyle(CongressMap.setStyle);
+        clearStateFilter();
+        addFilter('state', state, state);
+        this.map.flyToBounds(this.convertBoundingBox(boundingBox), {
+            padding: [100, 100],
+        });
+    }
+
     addDistrictLayer() {
-        const { map, districtLayer} = this;
         this.districtLayer.bindTooltip(showTooltip, {
             sticky: true,
         }).addTo(this.map);
           this.districtLayer.on('click', (e) => {
             const state = e.layer.feature.properties.ABR;
-            const boundingBox = bboxes[state];
-            setUsState(state);
-            districtLayer.setStyle(CongressMap.setStyle);
-            clearStateFilter();
-            addFilter('state', state, state);
-            map.flyToBounds([
-                [boundingBox[1], boundingBox[0]],
-                [boundingBox[3], boundingBox[2]]
-            ], {
-                padding: [100, 100],
-                // maxZoom: 6,
-            });
+            this.zoomToSelectedState(state);
         })
     }
 
@@ -158,6 +194,7 @@ export default class CongressMap {
     reset() {
         setUsState('');
         clearStateFilter();
+        resetSearch();
         this.zoomToNational()
         this.clearStateSelectedStyling();
         addMoCCards(getMocsForTab());
