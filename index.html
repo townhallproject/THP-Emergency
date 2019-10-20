@@ -13,7 +13,7 @@
   <script src="https://use.fontawesome.com/316bfde8e8.js"></script>
   <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
 </head>
-<body>
+<body class="no-scroll">
   <div class="loading">
     <div class="d-flex justify-content-center">
       <div class="spinner-border" role="status">
@@ -37,7 +37,7 @@
         </ul>
       </nav>
     </header>
-
+    <div class="meta-data">
       <div class="row bar-graph-house bar-graph">
         <div class="col progress-container">
           <div class="progress">
@@ -95,34 +95,48 @@
           <div class="text-center">SENATE</div>
         </div>
       </div>
-    <div class="d-flex justify-content-around flex-wrap align-self-end mocCounts pl-5 pr-5">
-      <div class="mocCounts-impeachment count-container align-self-stretch">
-        <div class="number" id="count-impeachment"></div>
-        Support impeachment
-        <div id="photos-impeachment" class="photos"></div>
-      </div>
-      <div class="mocCounts-inquiry count-container align-self-stretch">
-        <div class="number" id="count-inquiry"></div>
-        Support impeachment inquiry
-        <div id="photos-inquiry" class="photos"></div>
-      </div>
-      <div class="mocCounts-unclear count-container align-self-stretch">
-        <div class="number" id="count-unclear"></div>
-         Not on record
-        <div id="photos-unclear" class="photos"></div>
-      </div>
-      <div class="mocCounts-concerned count-container align-self-stretch">
-        <div class="number" id="count-concerned"></div>
-          Have expressed concerns
-        <div id="photos-concerned" class="photos"></div>
-      </div>
-      <div class="mocCounts-opposed count-container align-self-stretch">
-        <div class="number" id="count-opposed"></div>
-        Oppose impeachment
-        <div id="photos-opposed" class="photos"></div>
+      <div class="d-flex justify-content-around flex-wrap align-self-end mocCounts pl-5 pr-5">
+        <div class="mocCounts-impeachment count-container align-self-stretch">
+          <div class="number" id="count-impeachment"></div>
+          Support impeachment
+          <div id="photos-impeachment" class="photos"></div>
+        </div>
+        <div class="mocCounts-inquiry count-container align-self-stretch">
+          <div class="number" id="count-inquiry"></div>
+          Support impeachment inquiry
+          <div id="photos-inquiry" class="photos"></div>
+        </div>
+        <div class="mocCounts-unclear count-container align-self-stretch">
+          <div class="number" id="count-unclear"></div>
+          Not on record
+          <div id="photos-unclear" class="photos"></div>
+        </div>
+        <div class="mocCounts-concerned count-container align-self-stretch">
+          <div class="number" id="count-concerned"></div>
+            Have expressed concerns
+          <div id="photos-concerned" class="photos"></div>
+        </div>
+        <div class="mocCounts-opposed count-container align-self-stretch">
+          <div class="number" id="count-opposed"></div>
+          Oppose impeachment
+          <div id="photos-opposed" class="photos"></div>
+        </div>
       </div>
     </div>
-    <div id="map"></div>
+    <div class="map-container">
+      <div class="input-group has-clear">
+        <input id="search-zip-input" type="text" class="form-control" placeholder="Search by zip or state">
+        <button class="btn bg-transparent search-zip-clear d-none" style="margin-left: -40px; z-index: 100;">
+          <i class="fa fa-times"></i>
+        </button>
+        <div class="input-group-append">
+          <button class="btn btn-secondary search-zip" type="button">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+      </div>
+      <div id="map"></div>
+    </div>
   </div>
   <div id="onTheRecord" class="container pl-5 pr-5 pt-5">
     <h1 class="text-center pb-1">On the record</h1>
@@ -254,5 +268,5 @@
       </filter>
     </defs>
   </svg>
-<script type="text/javascript" src="bundle.19a13200aa92ad439d53.js"></script></body>
+<script type="text/javascript" src="bundle.61d5c9f700136dda1c07.js"></script></body>
 </html>
