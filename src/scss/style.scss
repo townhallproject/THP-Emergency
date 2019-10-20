@@ -29,6 +29,10 @@ body {
   background: $light-grey;
 }
 
+.container-fluid {
+  padding: 0px;
+}
+
 .loading {
   position: absolute;
   top: 0;
@@ -79,12 +83,27 @@ body {
     }
   }
 }
+
+.meta-data {
+  padding: 20px;
+  background: #f8f9fa;
+  box-shadow: inset 0px 0px 12px 4px #dbdbdb;
+}
+
+.map-container {
+  padding: 20px;
+  .input-group {
+    width: 30%;
+    margin: auto;
+  }
+}
+
 .progress-container {
   margin: auto;
 }
 
 .bar-graph {
-  margin-top: 20px;
+  padding-top: 20px;
 }
 
 .container-fluid, .container {
@@ -229,6 +248,7 @@ h3.callToAction {
 
 .mocCounts {
   text-align: center;
+  padding-top: 1em;
   .count-container {
     max-width: 200px;
     display: flex;

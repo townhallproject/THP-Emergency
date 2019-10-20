@@ -1,3 +1,4 @@
+import { find } from 'lodash';
 import {
   responseClass,
   responseDict,
@@ -9,7 +10,10 @@ import {
   get116thCongress,
 } from './mocs';
 
+import states from './data/state-centers';
 import CongressMap from './map';
+
+import firebasedb from './utils/setup-firebase';
 
 import "./scss/style.scss";
 
@@ -231,13 +235,6 @@ function populateGroups(groups) {
 
 // Map Helpers
 
-function calculateZoom() {
-  let sw = screen.width;
-
-  return sw >= 1700 ? 4.7 :
-         sw >= 1600 ? 4.3 :
-                      4.5 ;
-}
 
 const sortReps = (a, b) => {
   if (a.stateName > b.stateName) {
@@ -323,6 +320,10 @@ function createMoCCard(MoC) {
 function bindFilterEvents() {
   $('#onTheRecord .dropdown .dropdown-item').click(onSelectFilter);
   $('#onTheRecord .search-name').click(setNameSearch);
+  $('.search-zip').click(searchByZip);
+  $('#search-zip-input').on('keyup', function (e) {
+    if (e.keyCode === 13) searchByZip();
+  });
   $('#search-name-input').on('keyup', function(e) {
     if (e.keyCode === 13) setNameSearch(e);
   });
@@ -347,6 +348,45 @@ function setNameSearch() {
 function clearNameSearch() {
   searchName = '';
   addMoCCards(getMocsForTab());
+}
+
+export function isZipCode(query) {
+  const zipCodeRegEx = /^(\d{5}-\d{4}|\d{5}|\d{9})$|^([a-zA-Z]\d[a-zA-Z] \d[a-zA-Z]\d)$/g;
+  return query.match(zipCodeRegEx);
+}
+
+export function isState(query) {
+  return find(states, state =>
+    state.state.toLowerCase().trim() === query.toLowerCase().trim() ||
+    state.stateName.toLowerCase().trim() === query.toLowerCase().trim());
+}
+
+export function resetSearch() {
+  $('#search-zip-input').val('');
+}
+
+function searchByZip() {
+  let value = $('#search-zip-input').val();
+  if (isZipCode(value)) {
+    userSelections.zip = value;
+    firebasedb.ref(`zipToDistrict/${value}`).once('value')
+      .then((snapshot) => {
+        var districts = [];
+        if (snapshot.exists()) {
+          snapshot.forEach(function (ele) {
+            districts.push(ele.val());
+          });
+        }
+        mapContainer.getBoundingBoxes(districts)
+        return districts;
+      })
+  }
+  console.log(value)
+  if (isState(value)) {
+    console.log('is stte')
+    userSelections.selectedUsState = value.toUpperCase();
+    mapContainer.zoomToSelectedState(userSelections.selectedUsState);
+  }
 }
 
 export function clearStateFilter() {
