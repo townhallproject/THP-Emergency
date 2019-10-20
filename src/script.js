@@ -111,6 +111,7 @@ function render(MocList, groups, selectedTab) {
 get116thCongress()
 .then(function (returnedMoCs) {
   $('.loading').hide();
+  $('body').removeClass('no-scroll');
   data.allMoCs = returnedMoCs;
   data.MoCsByDistrict = mapToDistrictDict(returnedMoCs);
   data.senatorsByState = mapToStateDict(returnedMoCs);

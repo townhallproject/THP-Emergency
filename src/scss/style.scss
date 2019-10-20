@@ -29,6 +29,10 @@ body {
   background: $light-grey;
 }
 
+.no-scroll {
+  overflow: hidden;
+}
+
 .container-fluid {
   padding: 0px;
 }
