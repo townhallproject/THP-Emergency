@@ -382,12 +382,11 @@ function searchByZip() {
         return districts;
       })
   }
-  console.log(value)
   if (isState(value)) {
-    console.log('is stte')
     userSelections.selectedUsState = value.toUpperCase();
-    mapContainer.zoomToSelectedState(userSelections.selectedUsState);
+    return mapContainer.zoomToSelectedState(userSelections.selectedUsState);
   }
+  $('#search-zip-input').val('');
 }
 
 export function clearStateFilter() {
