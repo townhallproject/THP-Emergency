@@ -223,14 +223,32 @@ function populateGroups(groups) {
     }
     // clear previous images
     photoContainer.innerHTML = '';
-    groups[key].sort(function(a, b){
-      return parseInt(b.seniority) - parseInt(a.seniority)})
-               .slice(0, 8)
-               .forEach(function(MoC) {
-                 if (MoC.govtrack_id){
-                   photoContainer.innerHTML += '<img src="//www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-50px.jpeg" />';
-                 }
-    });
+    // randomize MoCs
+    let currIndex = groups[key].length;
+    let tempValue, randIndex;
+    while (0 !== currIndex) {
+      randIndex = Math.floor(Math.random() * currIndex);
+      currIndex -= 1;
+      tempValue = groups[key][currIndex];
+      groups[key][currIndex] = groups[key][randIndex];
+      groups[key][randIndex] = tempValue;
+    }
+    // if image won't load, get another one
+    const getGroupImages = (group, index) => {
+      const image = new Image();
+      image.onload = () => {
+        photoContainer.appendChild(image);
+      }
+      image.onerror = () => {
+        x++;
+        getGroupImages(group, x);
+      }
+      image.src = '//www.govtrack.us/static/legislator-photos/' + group[index].govtrack_id + '-50px.jpeg';
+    }
+    let x = 7;
+    for (let i=0; i<8; i++) {
+      getGroupImages(groups[key], i);
+    }
   });
 }
 
