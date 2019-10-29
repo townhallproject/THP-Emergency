@@ -246,7 +246,7 @@ function populateGroups(groups) {
       image.src = '//www.govtrack.us/static/legislator-photos/' + group[index].govtrack_id + '-50px.jpeg';
     }
     let x = 7;
-    for (let i=0; i<8; i++) {
+    for (let i=0; i<8 && i<groups[key].length; i++) {
       getGroupImages(groups[key], i);
     }
   });
