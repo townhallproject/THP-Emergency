@@ -449,6 +449,26 @@ h3.callToAction {
   }
 }
 
+@media (max-width: 570px) {
+  #onTheRecord {
+    .card {
+      h4 {
+        font-size: 1.2rem;
+        line-height: 2rem;
+        font-weight: 500;
+      }
+      .card-header {
+        img {
+          height: auto;
+          width: 100%;
+          border-radius: 50%;
+          margin-top: 10%;
+          margin-left: 10%;
+        }
+      }
+    }
+  }
+}
 
 // Make anything under 1400 full bleed.   Yes, I know we should use columns for this...but it just seems like so much extra code for no good reason
 @media (max-width:1400px) {

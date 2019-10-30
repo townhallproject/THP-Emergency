@@ -276,8 +276,8 @@ function createMoCCard(MoC) {
   let res = '<div class="card">' +
       '<div class="card-header p-0">' +
         '<div class="row background-' + responseClass[MoC.crisis_status] + ' m-0">' +
-          '<div class="col-4 col-sm-3 p-0"><img src="https://www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-100px.jpeg"></div>' +
-          '<div class="col-8 col-sm-9">' +
+          '<div class="col-2 col-sm-3 col-md-4 p-0"><img src="https://www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-100px.jpeg"></div>' +
+          '<div class="col-10 col-sm-9 col-md-8">' +
             '<h4>' + MoC.displayName + ' ('+ MoC.party + ')' + '</h4>' +
             '<small class="rep-card-position">'
       
@@ -293,9 +293,9 @@ function createMoCCard(MoC) {
       '<div class="card-body">' +
         '<div class="row m-0 pt-2">';
   
-  res += `<div class="col-12 col-sm-5 p-0">${MoC.phone ? 'D.C. Office Phone:' : ' '}<div>${MoC.phone || ' '}</div></div>`;
+  res += `<div class="col-7 col-sm-7 p-0">${MoC.phone ? 'D.C. Office Phone:' : ' '}<div>${MoC.phone || ' '}</div></div>`;
 
-  res += '<div class="col-12 col-sm-7 p-0 text-right">';
+  res += '<div class="col-5 col-sm-5 p-0 text-right">';
 
   if (twitter && twitter.length) {
     res += '<a href="//twitter.com/' + twitter + '" class="social-icon" target="_blank">' +
