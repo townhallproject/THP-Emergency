@@ -293,7 +293,7 @@ function createMoCCard(MoC) {
   let website = MoC.contact_form || MoC.url;
   let res = '<div class="card">' +
       '<div class="card-header p-0">' +
-        '<div class="row background-' + responseClass[MoC.crisis_status] + ' m-0">' +
+        '<div class="row card-header-background background-' + responseClass[MoC.crisis_status] + ' m-0">' +
           '<div class="col-2 col-sm-3 col-md-4 p-0"><img src="https://www.govtrack.us/static/legislator-photos/' + MoC.govtrack_id + '-100px.jpeg"></div>' +
           '<div class="col-10 col-sm-9 col-md-8">' +
             '<h4>' + MoC.displayName + ' ('+ MoC.party + ')' + '</h4>' +

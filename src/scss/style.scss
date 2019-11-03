@@ -149,7 +149,9 @@ body {
 strong {
   font-weight: 800;
 }
-
+.card-header-background {
+  min-height: 100%;
+}
 .background-impeachment {
   color: $white;
   background-color: $dark-purple;
@@ -349,6 +351,9 @@ h3.callToAction {
 
 /* On The Record */
 #onTheRecord {
+  .card h4 {
+    font-size: 1.4rem;
+  }
   .search-bar {
     display: flex;
     justify-content: space-between;
