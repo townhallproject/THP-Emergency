@@ -2,7 +2,7 @@ export const FULL_CONGRESS = 'full';
 // Static Dicts
 export const responseDict = {
     1: 'Full support for impeachment',
-    2: 'Support impeachment inquiry',
+    2: 'Supports inquiry',
     3: 'No position / Unclear',
     4: 'Expressed concerns',
     5: 'Opposed to impeachment'
