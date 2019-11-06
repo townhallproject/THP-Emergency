@@ -162,11 +162,11 @@ export default class CongressMap {
 
     toggleChamber(chamber) {
         if (chamber === 'upper') {
-            this.districtLayer.remove();
+            if (this.districtLayer) this.districtLayer.remove();
             this.addSenateLayer();
         } else {
-            this.stateLayer.remove();
-            this.markerLayer.remove();
+            if (this.stateLayer) this.stateLayer.remove();
+            if (this.markerLayer) this.markerLayer.remove();
             this.addDistrictLayer();
         }
         addMoCCards(getMocsForTab());
